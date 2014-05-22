@@ -1,8 +1,0 @@
-<RCC>
-    <qresource prefix="/">
-        <file>qml/main.qml</file>
-        <file>qml/Overview.qml</file>
-        <file>qml/Transfer.qml</file>
-        <file>qml/AboutDialog.qml</file>
-    </qresource>
-</RCC>
