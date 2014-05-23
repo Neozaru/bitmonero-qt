@@ -30,7 +30,7 @@ JsonRPCRequest* JsonRPCCommunicator::sendRequest(const QString& pMethod, const Q
     qDebug() << lReq.url();
 
 
-    JsonRPCRequest* lJsonReq = new JsonRPCRequest();
+    JsonRPCRequest* lJsonReq = new JsonRPCRequest(pParams);
     QNetworkReply* lReply = network_access_mgr.post(lReq,lJsonDoc.toJson());
 //    lReply->setUserData(0,(QObjectUserData*)lJsonReq);
 

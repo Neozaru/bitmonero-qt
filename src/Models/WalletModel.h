@@ -46,6 +46,7 @@ public:
 
 signals:
     void balanceChanged();
+    void transferSuccessful(const QString& tx_hash, double amount, const QString& address, int fee);
 
 public slots:
     void update() {

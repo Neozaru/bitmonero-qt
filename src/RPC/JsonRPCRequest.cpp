@@ -4,7 +4,7 @@
 #include <QJsonDocument>
 
 
-JsonRPCRequest::JsonRPCRequest()
+JsonRPCRequest::JsonRPCRequest(const QJsonObject& pOriginalParams) : original_params(pOriginalParams)
 {
 }
 
@@ -23,14 +23,7 @@ void JsonRPCRequest::onRequestFinished() {
         QJsonDocument lResJson = QJsonDocument::fromJson(lData);
         QJsonObject lJsonObj = lResJson.object()["result"].toObject();
 
-//        if ( lJsonObj["status"].isString() &&
-//             lJsonObj["status"].toString().compare("OK") == 0 ) {
-
-            emit jsonResponseReceived(lJsonObj);
-//        }
-//        else {
-//            qDebug() << "That's an error !";
-//        }
+        emit jsonResponseReceived(lJsonObj,original_params);
 
     }
 

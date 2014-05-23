@@ -4,5 +4,7 @@
         <file>qml/Overview.qml</file>
         <file>qml/Transfer.qml</file>
         <file>qml/AboutDialog.qml</file>
+        <file>qml/TransferSuccessfulDialog.qml</file>
+        <file>qml/History.qml</file>
     </qresource>
 </RCC>

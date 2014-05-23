@@ -8,7 +8,8 @@ TARGET = bitmonero-qt-lib
 
 SOURCES += \
     Models/WalletModel.cpp \
-    Models/MoneroModel.cpp
+    Models/MoneroModel.cpp \
+    Models/TransactionsListModel.cpp
 
 SOURCES += \
     RPC/JsonRPCCommunicator.cpp \
@@ -21,7 +22,8 @@ HEADERS += \
     Models/WalletModel.h \
     Models/MoneroModel.h \
     Interfaces/MoneroInterface.h \
-    Interfaces/WalletInterface.h
+    Interfaces/WalletInterface.h \
+    Models/TransactionsListModel.h
 
 HEADERS += \
     RPC/JsonRPCCommunicator.h \

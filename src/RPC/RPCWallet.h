@@ -17,12 +17,8 @@ class RPCWallet :  public QObject, public WalletInterface
 public:
     RPCWallet(WalletModel& pModel, const QString& pHost, unsigned int pPort);
 
-    virtual void getBalance() {
-        JsonRPCRequest* req = rpc.sendRequest("getbalance");
-        QObject::connect(req,SIGNAL(jsonResponseReceived(QJsonObject)),this,SLOT(balanceResponse(QJsonObject)));
-    }
 
-    virtual void transfer(double pAmount, const QString& pAddress) {
+    virtual void transfer(double pAmount, const QString& pAddress, int pFee) {
         QJsonObject lObj;
         QJsonArray lDests;
 
@@ -31,9 +27,17 @@ public:
         lDst["amount"] = pAmount;
         lDst["address"] = pAddress;
         lDests.append(lDst);
+        lObj["destinations"] = lDests;
 
-        lObj.insert("destinations", lDests);
-        rpc.sendRequest("transfer",lObj);
+        lObj["fee"] = pFee;
+
+        /* TODO */
+        lObj["mixin"]= 0;
+        lObj["unlock_time"] = 0;
+        /**/
+
+        JsonRPCRequest* lReq = rpc.sendRequest("transfer",lObj);
+        QObject::connect(lReq,SIGNAL(jsonResponseReceived(QJsonObject,QJsonObject)),this,SLOT(transferResponse(QJsonObject,QJsonObject)));
     }
 
     virtual void store() {
@@ -49,13 +53,60 @@ public:
     }
 
 public slots:
-    void balanceResponse(const QJsonObject& obj) {
-        qDebug() << "Received !";
-        qDebug() << obj;
 
+    virtual void getBalance() {
+        JsonRPCRequest* lReq = rpc.sendRequest("getbalance");
+        QObject::connect(lReq,SIGNAL(jsonResponseReceived(QJsonObject,QJsonObject)),this,SLOT(balanceResponse(QJsonObject)));
+    }
 
-        if ( obj["unlocked_balance"].isDouble()) {
-            onBalanceUpdated(obj["unlocked_balance"].toDouble());
+    void balanceResponse(const QJsonObject& pObjResponse)
+    {
+        qDebug() << "Received balance response";
+        qDebug() << pObjResponse;
+
+        if ( pObjResponse["unlocked_balance"].isDouble()) {
+            onBalanceUpdated(pObjResponse["unlocked_balance"].toDouble());
+        }
+        else {
+            qDebug() << "Format error";
+        }
+    }
+
+    void transferResponse(const QJsonObject& pObjResponse, const QJsonObject& pObjOriginalParams)
+    {
+        qDebug() << "Received transfer resposnse";
+        qDebug() << pObjResponse;
+        qDebug() << "With original params : ";
+        qDebug() << pObjOriginalParams;
+
+        if ( pObjResponse["tx_hash"].isString() ) {
+
+            if ( !pObjOriginalParams["destinations"].isArray() ) {
+                qDebug() << "WTF no destinations";
+                return;
+            }
+
+            QJsonArray lDsts = pObjOriginalParams["destinations"].toArray();
+            if ( lDsts.empty() ) {
+                qDebug() << "WTF empty destinations";
+                return;
+            }
+
+            const QJsonObject& lDestination = lDsts[0].toObject();
+            if ( !lDestination["address"].isString() || !lDestination["amount"].isDouble() ) {
+                qDebug() << "WTF destination with bad args";
+                return;
+            }
+
+            int lOriginalFee = 1000000;
+            if ( pObjOriginalParams["fee"].isDouble() ) {
+                lOriginalFee = pObjOriginalParams["fee"].toInt();
+            }
+
+            onTransferSuccessful(pObjResponse["tx_hash"].toString(), lDestination["amount"].toInt(), lDestination["address"].toString(), lOriginalFee);
+
+//            Ok
+
         }
         else {
             qDebug() << "Format error";

@@ -8,14 +8,16 @@ import QtQuick.Dialogs 1.0
 
 //import "AboutDialog"
 
+
 ApplicationWindow {
     visible: true
     title: "Monero Wallet"
 
-    width: 340
+
+
+    width: 750
     height: 480
-    minimumWidth: 340
-    minimumHeight: 480
+
 
     property string loremIpsum:
             "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor "+
@@ -76,9 +78,10 @@ ApplicationWindow {
             }
             Item { Layout.fillWidth: true }
             CheckBox {
-                id: enabledCheck
+                id: advancedInterfaceCheckbox
                 text: "Advanced Interface"
-                checked: true
+                checked: false
+                enabled: false
             }
         }
     }
@@ -132,12 +135,12 @@ ApplicationWindow {
 
     TabView {
         id:frame
-        enabled: enabledCheck.checked
-//        tabPosition: controlPage.item ? controlPage.item.tabPosition : Qt.TopEdge
+
         anchors.fill: parent
         anchors.margins: Qt.platform.os === "osx" ? 12 : 2
 
         Tab {
+
             id: controlPage
             title: "Overview"
             Overview {}
@@ -148,6 +151,12 @@ ApplicationWindow {
             title: "Transfer"
             Transfer {}
         }
+
+        Tab {
+            title: "History"
+            History {}
+        }
+
 //        Tab {
 //            title: "Styles"
 //        }

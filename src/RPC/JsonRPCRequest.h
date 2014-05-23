@@ -8,13 +8,16 @@ class JsonRPCRequest : public QObject
 {
     Q_OBJECT
 public:
-    JsonRPCRequest();
+    JsonRPCRequest(const QJsonObject& pOriginalParams = QJsonObject());
 
 public slots:
     void onRequestFinished();
 
 signals:
-    void jsonResponseReceived(QJsonObject);
+    void jsonResponseReceived(QJsonObject,QJsonObject);
+
+private:
+    QJsonObject original_params;
 };
 
 #endif // JSONRPCREQUEST_H

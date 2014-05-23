@@ -17,7 +17,11 @@ int main(int argc, char *argv[])
 {
     QGuiApplication app(argc, argv);
 
+    qmlRegisterType<WalletModel>("info.neozaru.bitmonero-qt.walletmodel", 1, 0, "WalletModel");
+
     MoneroInterface* monero = new RPCMonero("localhost/json_rpc",18081);
+
+
 
     WalletModel wm;
     WalletInterface* w = new RPCWallet(wm,"localhost",19091);
@@ -31,6 +35,7 @@ int main(int argc, char *argv[])
     if ( !component.isReady() ) {
         qDebug() << "/!\ Component not ready";
         qDebug() << "Error " << component.errors();
+        return 2;
     }
 
     return app.exec();

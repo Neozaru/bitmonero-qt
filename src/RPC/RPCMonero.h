@@ -27,11 +27,6 @@ private:
     JsonRPCCommunicator rpc;
     WalletModel wallet_model;
 
-
-//    QNetworkAccessManager network_access_mgr;
-
-//    QUrl endpoint_uri;
-//    QNetworkReply* request_reply;
 };
 
 #endif // RPCMONERO_H
