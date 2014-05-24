@@ -11,6 +11,7 @@
 #include <QSettings>
 #include <QStandardPaths>
 #include <QDir>
+#include <QFile>
 
 #include "Models/MoneroModel.h"
 #include "Models/WalletModel.h"
@@ -29,7 +30,13 @@ int main(int argc, char *argv[])
     const QString& lConfigFile = QDir::homePath() + "/.bitmonero-qt/bitmonero-qt.conf";
     QSettings lSettings(lConfigFile, QSettings::IniFormat);
 
-    lSettings.beginGroup("MainConfig");
+
+    /* Used for auto creating config file */
+    if ( !lSettings.value("mining_enabled").isValid() ) {
+        lSettings.setValue("mining_enabled", false);
+    }
+
+    bool lMiningEnabled = lSettings.value("mining_enabled",false).toBool();
 
     const QString& lMoneroUri = lSettings.value("daemon_uri", "localhost/json_rpc").toString();
     int lMoneroPort = lSettings.value("daemon_port", 18081).toInt();
@@ -39,8 +46,6 @@ int main(int argc, char *argv[])
 
     const QString& lMinerUri = lSettings.value("miner_uri", "localhost").toString();
     int lMinerPort = lSettings.value("miner_port", 19091).toInt();
-
-    lSettings.endGroup();
 
 
     qDebug() << "[Loaded config]";
@@ -52,12 +57,12 @@ int main(int argc, char *argv[])
 
     qmlRegisterType<WalletModel>("info.neozaru.bitmonero-qt.walletmodel", 1, 0, "WalletModel");
 
-    MoneroInterface* monero = new RPCMonero("localhost/json_rpc",18081);
+    MoneroInterface* monero = new RPCMonero(lMoneroUri, lMoneroPort);
 
     MoneroModel lMoneroModel;
 
     WalletModel lWalletModel;
-    WalletInterface* lWallet = new RPCWallet(lWalletModel,"localhost",19091);
+    WalletInterface* lWallet = new RPCWallet(lWalletModel,lWalletUri,lWalletPort);
 
     MinerModel lMinerModel;
 
