@@ -24,7 +24,7 @@ public:
     JsonRPCCommunicator(const QString& pHost = "localhost", unsigned int pPort = 80, const QString& pUri = "/json_rpc", const QString& pRpcVersion = "2.0");
     ~JsonRPCCommunicator();
 
-    JsonRPCRequest* sendRequest(const QString& pMethod, const QJsonObject& pParams = QJsonObject());
+    JsonRPCRequest* sendRequest(const QString& pMethod, const QJsonObject& pParams = QJsonObject(), bool pDaemonHttp = false);
 
 public slots:
     void onRequestFinished();

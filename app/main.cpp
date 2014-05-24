@@ -20,6 +20,7 @@
 
 #include "RPC/RPCMonero.h"
 #include "RPC/RPCWallet.h"
+#include "RPC/RPCMiner.h"
 
 
 int main(int argc, char *argv[])
@@ -45,7 +46,7 @@ int main(int argc, char *argv[])
     int lWalletPort = lSettings.value("wallet_port", 19091).toInt();
 
     const QString& lMinerUri = lSettings.value("miner_uri", "localhost").toString();
-    int lMinerPort = lSettings.value("miner_port", 19091).toInt();
+    int lMinerPort = lSettings.value("miner_port", 18081).toInt();
 
 
     qDebug() << "[Loaded config]";
@@ -62,10 +63,10 @@ int main(int argc, char *argv[])
     MoneroModel lMoneroModel;
 
     WalletModel lWalletModel;
-    WalletInterface* lWallet = new RPCWallet(lWalletModel,lWalletUri,lWalletPort);
+    WalletInterface* lWallet = new RPCWallet(lWalletModel, lWalletUri, lWalletPort);
 
     MinerModel lMinerModel;
-
+    MinerInterface* lMiner = new RPCMiner(lMinerModel, lMinerUri, lMinerPort);
 
     QQmlEngine engine;
     engine.rootContext()->setContextProperty("monero", &lMoneroModel);

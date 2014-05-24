@@ -7,6 +7,7 @@ RPCWallet::RPCWallet(WalletModel& pModel, const QString& pHost, unsigned int pPo
 {
 
     pModel.setWalletInterface(this);
+    getAddress();
     getBalance();
 
     QTimer* lTimer = new QTimer(this);

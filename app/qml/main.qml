@@ -147,7 +147,9 @@ ApplicationWindow {
         }
 
         Tab {
-            title: "History"
+            title: "History (Not impl)"
+            enabled: false
+            active: false
             History {}
         }
 

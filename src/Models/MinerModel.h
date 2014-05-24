@@ -4,17 +4,34 @@
 #include <QObject>
 #include <QDebug>
 
+class MinerInterface;
+
 class MinerModel : public QObject
 {
     Q_OBJECT
-    Q_PROPERTY(bool enabled READ isEnabled WRITE setEnabled NOTIFY toggled)
+    Q_PROPERTY(bool enabled READ getEnabled WRITE setEnabled NOTIFY enabledChanged)
     Q_PROPERTY(unsigned int nbThreads READ getNbThreads  WRITE setNbThreads NOTIFY nbThreadsChanged)
     Q_PROPERTY(unsigned int status READ getStatus  WRITE setStatus NOTIFY statusChanged)
     Q_PROPERTY(double hashrate READ getHashrate  WRITE setHashrate NOTIFY hashrateChanged)
     Q_PROPERTY(QString address READ getAddress WRITE setAddress NOTIFY addressChanged)
 
 public:
+
+    enum miner_status_e {
+        UNKNOWN = -1,
+        OFF,
+        ON,
+        ERROR
+    };
+
     MinerModel();
+
+    void setMinerInterface(MinerInterface* iface)
+    {
+        miner_interface = iface;
+    }
+
+
     unsigned int getNbThreads() const
     {
         return nbThreads;
@@ -30,7 +47,7 @@ public:
         return hashrate;
     }
 
-    bool isEnabled() const
+    bool getEnabled() const
     {
         return enabled;
     }
@@ -42,11 +59,17 @@ public:
 
 public slots:
 
-    void startMining() {
-
-
-
+    void optionChanged() {
+        if (enabled && status == 0) {
+            startMining();
+        }
+        else if ( status == 1 ) {
+            stopMining();
+        }
     }
+
+    void startMining();
+    void stopMining();
 
     void setNbThreads(unsigned int pNbThreads)
     {
@@ -77,7 +100,7 @@ public slots:
 
         if (enabled != pEnabled) {
             enabled = pEnabled;
-            emit toggled(enabled);
+            emit enabledChanged(enabled);
         }
     }
 
@@ -96,14 +119,16 @@ signals:
     void nbThreadsChanged(unsigned int pNbThreads);
     void statusChanged(unsigned int pStatus);
     void hashrateChanged(double pHashrate);
-    void toggled(bool pEnabled);
+    void enabledChanged(bool pEnabled);
     void addressChanged(QString pAddress);
 
 private:
+    MinerInterface* miner_interface;
+
+    bool enabled;
     unsigned int nbThreads;
     unsigned int status;
     double hashrate;
-    bool enabled;
     QString address;
 };
 

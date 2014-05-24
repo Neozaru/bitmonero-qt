@@ -2,6 +2,7 @@
 #define WALLET_H
 
 #include<QObject>
+#include <QDebug>
 
 class WalletInterface;
 
@@ -9,6 +10,7 @@ class WalletModel : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(double balance READ getBalance WRITE setBalance NOTIFY balanceChanged)
+    Q_PROPERTY(QString address READ getAddress NOTIFY addressChanged)
 
 public:
     WalletModel();
@@ -40,13 +42,30 @@ public:
         wallet_interface = iface;
     }
 
-//    inline bool isUpdated() const {
-//        return updated;
-//    }
+    void setAddress(const QString& pAddress) {
+        if ( pAddress != address ) {
+
+            if ( pAddress.length() != 95 ) {
+                qDebug() << "Attempted to assign bad address : " << pAddress;
+                return;
+            }
+
+            qDebug() << "Address discovered, sir : " << pAddress;
+            address = pAddress;
+            emit addressChanged(address);
+
+        }
+    }
+
+    QString getAddress() const
+    {
+        return address;
+    }
 
 signals:
     void balanceChanged();
     void transferSuccessful(const QString& tx_hash, double amount, const QString& address, int fee);
+    void addressChanged(QString pAddress);
 
 public slots:
     void update() {
@@ -59,7 +78,8 @@ public slots:
 private:
     double balance;
     WalletInterface* wallet_interface;
-//    bool updated;
+    //    bool updated;
+    QString address;
 };
 
 #endif // WALLET_H

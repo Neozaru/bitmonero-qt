@@ -17,8 +17,7 @@ class RPCWallet :  public QObject, public WalletInterface
 public:
     RPCWallet(WalletModel& pModel, const QString& pHost, unsigned int pPort);
 
-
-    virtual void transfer(double pAmount, const QString& pAddress, int pFee) {
+    void transfer(double pAmount, const QString& pAddress, int pFee) {
         QJsonObject lObj;
         QJsonArray lDests;
 
@@ -40,17 +39,23 @@ public:
         QObject::connect(lReq,SIGNAL(jsonResponseReceived(QJsonObject,QJsonObject)),this,SLOT(transferResponse(QJsonObject,QJsonObject)));
     }
 
-    virtual void store() {
+    void store() {
         rpc.sendRequest("store");
     }
 
-    virtual void getPayments(const QString& pPaymentId) {
+    void getPayments(const QString& pPaymentId) {
 
         QJsonObject lObj;
         lObj.insert("payment_id", pPaymentId);
-        rpc.sendRequest("get_payments",lObj);
+        rpc.sendRequest("get_payments", lObj);
 
     }
+
+    void getAddress() {
+        JsonRPCRequest* lReq = rpc.sendRequest("getaddress");
+        QObject::connect(lReq,SIGNAL(jsonResponseReceived(QJsonObject,QJsonObject)),this,SLOT(addressResponse(QJsonObject)));
+    }
+
 
 public slots:
 
@@ -64,8 +69,11 @@ public slots:
         qDebug() << "Received balance response";
         qDebug() << pObjResponse;
 
-        if ( pObjResponse["unlocked_balance"].isDouble()) {
-            onBalanceUpdated(pObjResponse["unlocked_balance"].toDouble());
+//        if ( pObjResponse["unlocked_balance"].isDouble()) {
+//            onBalanceUpdated(pObjResponse["unlocked_balance"].toDouble());
+//        }
+        if ( pObjResponse["balance"].isDouble()) {
+            onBalanceUpdated(pObjResponse["balance"].toDouble());
         }
         else {
             qDebug() << "Format error";
@@ -111,6 +119,18 @@ public slots:
         else {
             qDebug() << "Format error";
         }
+    }
+
+    void addressResponse(const QJsonObject& pObjResponse)
+    {
+
+        if ( pObjResponse["address"].isString() ) {
+           this->onAddressUpdated(pObjResponse["address"].toString());
+        }
+        else {
+            qDebug() << "Bad response received for address : " << pObjResponse;
+        }
+
     }
 
 private:

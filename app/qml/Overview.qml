@@ -21,29 +21,51 @@ RowLayout {
         Layout.minimumWidth: implicitWidth
         Layout.fillWidth: false
 
-        Label {
-            text: "Balance : "
-        }
+        ColumnLayout {
+            id: balanceLayout
 
-        TextEdit {
-            readOnly: true
-            id: balanceValue
-            text: (wallet.balance * Math.pow(10,-12)).toFixed(12)
-        }
+            Label {
+                text: "Balance : "
+            }
 
-        Button {
-            text: "Copy"
-            /* Hack copy */
-            onClicked: { balanceValue.selectAll(); balanceValue.copy(); balanceValue.select(0,0)}
-//
-        }
+            TextEdit {
+                readOnly: true
+                id: balanceValue
+                text: (wallet.balance * Math.pow(10,-12)).toFixed(12)
+            }
 
-        Label {
-           id: testLabel
-//               text: (wallet.transferSuccessful && "no" || "ok")
-//               onTransferSuccessful: text = "OK"
+            Button {
+                text: "Copy balance"
+                /* Hack copy */
+                onClicked: { balanceValue.selectAll(); balanceValue.copy(); balanceValue.select(0,-3)}
+            }
 
-        }
+       }
+
+       ColumnLayout {
+
+           anchors.top: balanceLayout.bottom
+           anchors.topMargin: 20
+
+           Label {
+               text: "Your Monero address : "
+           }
+
+           TextEdit {
+               id: addressValue
+
+               readOnly: true
+               text: wallet.address
+           }
+
+           Button {
+               text: "Copy address"
+               /* Hack copy */
+               onClicked: { addressValue.selectAll(); addressValue.copy(); addressValue.select(0,0)}
+           }
+       }
+
+
 
 
     }

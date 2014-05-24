@@ -11,26 +11,34 @@ JsonRPCCommunicator::~JsonRPCCommunicator() {
 
 }
 
-JsonRPCRequest* JsonRPCCommunicator::sendRequest(const QString& pMethod, const QJsonObject& pParams )
+JsonRPCRequest* JsonRPCCommunicator::sendRequest(const QString& pMethod, const QJsonObject& pParams, bool pDaemonHttp)
 {
 
+    QUrl lUrl = endpoint_uri;
     QJsonObject lJsonRoot;
-    lJsonRoot.insert("jsonrpc",QJsonValue::fromVariant(rpc_version));
-    lJsonRoot.insert("method",QJsonValue::fromVariant(pMethod));
-    if ( !pParams.empty() ) {
-        lJsonRoot.insert("params", pParams);
+
+    if ( pDaemonHttp ) {
+        lJsonRoot = pParams;
+        lUrl.setPath("/"+pMethod);
+    }
+    else {
+        lJsonRoot.insert("jsonrpc",QJsonValue::fromVariant(rpc_version));
+        lJsonRoot.insert("method",QJsonValue::fromVariant(pMethod));
+        if ( !pParams.empty() ) {
+            lJsonRoot.insert("params", pParams);
+        }
     }
 
     QJsonDocument lJsonDoc;
     lJsonDoc.setObject(lJsonRoot);
+
+    QNetworkRequest lReq(lUrl);
+    lReq.setHeader(QNetworkRequest::ContentTypeHeader,"application/json");
+    qDebug() << "Req" << lReq.url();
     qDebug() << lJsonDoc.toJson();
 
-    QNetworkRequest lReq(endpoint_uri);
-    lReq.setHeader(QNetworkRequest::ContentTypeHeader,"application/json");
-    qDebug() << lReq.url();
 
-
-    JsonRPCRequest* lJsonReq = new JsonRPCRequest(pParams);
+    JsonRPCRequest* lJsonReq = new JsonRPCRequest(pParams,pDaemonHttp);
     QNetworkReply* lReply = network_access_mgr.post(lReq,lJsonDoc.toJson());
 //    lReply->setUserData(0,(QObjectUserData*)lJsonReq);
 
