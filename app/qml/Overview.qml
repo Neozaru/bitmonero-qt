@@ -4,54 +4,51 @@ import QtQuick.Controls 1.1
 import QtQuick.Layouts 1.0
 import QtQuick.Dialogs 1.0
 
-//import overview
+
+RowLayout {
+
+    property variant ww : wallet
+
+    Layout.minimumWidth: implicitWidth
+    Layout.fillWidth: false
 
 
+    ColumnLayout {
 
-    RowLayout {
-
-        property variant ww : wallet
+        anchors.fill: parent
+        anchors.margins: 10
 
         Layout.minimumWidth: implicitWidth
         Layout.fillWidth: false
 
+        Label {
+            text: "Balance : "
+        }
 
-        ColumnLayout {
+        TextEdit {
+            readOnly: true
+            id: balanceValue
+            text: (wallet.balance * Math.pow(10,-12)).toFixed(12)
+        }
 
-            anchors.fill: parent
-            anchors.margins: 10
-
-            Layout.minimumWidth: implicitWidth
-            Layout.fillWidth: false
-
-            Label {
-                text: "Balance : "
-            }
-
-            TextEdit {
-                readOnly: true
-                id: balanceValue
-                text: (wallet.balance * Math.pow(10,-12)).toFixed(12)
-            }
-
-            Button {
-                text: "Copy"
-                /* Hack copy */
-                onClicked: { balanceValue.selectAll(); balanceValue.copy(); balanceValue.select(0,0)}
+        Button {
+            text: "Copy"
+            /* Hack copy */
+            onClicked: { balanceValue.selectAll(); balanceValue.copy(); balanceValue.select(0,0)}
 //
-            }
+        }
 
-            Label {
-               id: testLabel
+        Label {
+           id: testLabel
 //               text: (wallet.transferSuccessful && "no" || "ok")
 //               onTransferSuccessful: text = "OK"
 
-            }
-
-
         }
 
+
     }
+
+}
 
 
 

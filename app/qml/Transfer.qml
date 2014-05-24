@@ -7,7 +7,6 @@ import QtQuick.Dialogs 1.0
 RowLayout {
 
 
-
     property string lastError: ""
     ColumnLayout {
 
@@ -20,19 +19,31 @@ RowLayout {
             onClicked: { inputAddress.text = ""; inputAddress.paste() }
         }
 
-        TextField {
+//        TextField {
 
+//            anchors.left: parent.left
+//            anchors.right: parent.right
+//            id: inputAddress
+
+//            placeholderText: "Recipient address"
+//            maximumLength: 95
+
+//            onTextChanged: lastError = ""
+//            textColor: if (acceptableInput) { "green" } else { "red" }
+
+//            validator: RegExpValidator { regExp: /[a-zA-Z0-9]{95}/ }
+//        }
+
+        AddressTextField {
+
+            id: inputAddress
             anchors.left: parent.left
             anchors.right: parent.right
-            id: inputAddress
 
             placeholderText: "Recipient address"
-            maximumLength: 95
 
             onTextChanged: lastError = ""
-            textColor: if (acceptableInput) { "green" } else { "red" }
 
-            validator: RegExpValidator { regExp: /[a-zA-Z0-9]{95}/ }
         }
 
         TextField {

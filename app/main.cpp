@@ -8,7 +8,11 @@
 #include <QQmlContext>
 #include <QQmlComponent>
 
+#include "Models/MoneroModel.h"
 #include "Models/WalletModel.h"
+#include "Models/MinerModel.h"
+
+
 #include "RPC/RPCMonero.h"
 #include "RPC/RPCWallet.h"
 
@@ -21,13 +25,18 @@ int main(int argc, char *argv[])
 
     MoneroInterface* monero = new RPCMonero("localhost/json_rpc",18081);
 
+    MoneroModel lMoneroModel;
 
+    WalletModel lWalletModel;
+    WalletInterface* lWallet = new RPCWallet(lWalletModel,"localhost",19091);
 
-    WalletModel wm;
-    WalletInterface* w = new RPCWallet(wm,"localhost",19091);
+    MinerModel lMinerModel;
+
 
     QQmlEngine engine;
-    engine.rootContext()->setContextProperty("wallet", &wm);
+    engine.rootContext()->setContextProperty("monero", &lMoneroModel);
+    engine.rootContext()->setContextProperty("wallet", &lWalletModel);
+    engine.rootContext()->setContextProperty("miner", &lMinerModel);
 
     QQmlComponent component(&engine, QUrl("qrc:/qml/main.qml"));
 

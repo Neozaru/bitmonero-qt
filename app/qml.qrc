@@ -6,5 +6,7 @@
         <file>qml/AboutDialog.qml</file>
         <file>qml/TransferSuccessfulDialog.qml</file>
         <file>qml/History.qml</file>
+        <file>qml/Mining.qml</file>
+        <file>qml/AddressTextField.qml</file>
     </qresource>
 </RCC>

@@ -16,6 +16,8 @@ public:
         }
 
         blocks_count = pCount;
+
+        /* Notify ui */
         blocksCountChanged();
     }
 
