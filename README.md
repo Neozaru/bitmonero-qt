@@ -14,14 +14,11 @@ Dependencies
 ------------
 
 The project is based on **Qt** SDK. It should work version **5.2+**.
-Arch-based distributions :
-    sudo pacman -S qt5
+* Arch-based distributions : `sudo pacman -S qt5`
 
-Debian-based distributions :
-    sudo apt-get install qt5-default qttools5-dev-tools
+* Debian-based distributions : `sudo apt-get install qt5-default qttools5-dev-tools`
     
-Or try the **Qt**'s installer :
-[http://qt-project.org/downloads]
+* Or try the **Qt**'s installer : [http://qt-project.org/downloads]
 
 
 Compiling
