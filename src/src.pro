@@ -1,10 +1,10 @@
 include(../defaults.pri)
 
 QT += core network
-CONFIG += qt
+CONFIG += qt staticlib
 
 TEMPLATE = lib
-TARGET = bitmonero-qt-lib
+TARGET = bitmonero-qt-static
 
 SOURCES += \
     Models/WalletModel.cpp \

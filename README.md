@@ -24,15 +24,12 @@ The project is based on **Qt** SDK. It should work version **5.2+**.
 Compiling
 ---------
 
+    git clone https://github.com/Neozaru/bitmonero-qt.git
+    cd bitmonero-qt
     qmake
     make
 
 The app will be installed in `./app/bitmonero-qt`
-
-You can run the app with the following command :
-    `LD_LIBRARY_PATH=src/ app/bitmonero-qt`
-
-('LD_LIBRARY_PATH' variable is required for the moment because I'm generating dynamic libraries for better structure, but they are not linked to the program by default. Will be fixed soon.)
 
 
 Usage

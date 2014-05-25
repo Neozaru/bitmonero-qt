@@ -5,13 +5,10 @@ SUBDIRS = \
     app \
 #    tests
 
-#QT += core network qml quick
 
 CONFIG += ordered
 
-
 app.depends = src
-#tests.depends = src
 
 #RESOURCES += qml.qrc
 
