@@ -50,7 +50,7 @@ public:
                 return;
             }
 
-            qDebug() << "Address discovered, sir : " << pAddress;
+            qDebug() << "Wallet address changed" << pAddress;
             address = pAddress;
             emit addressChanged(address);
 
@@ -65,7 +65,7 @@ public:
 signals:
     void balanceChanged();
     void transferSuccessful(const QString& tx_hash, double amount, const QString& address, int fee);
-    void addressChanged(QString pAddress);
+    void addressChanged(const QString& pAddress);
 
 public slots:
     void update() {

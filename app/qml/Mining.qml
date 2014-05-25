@@ -1,5 +1,4 @@
 import QtQuick 2.2
-import QtQuick 2.2
 import QtQuick.Controls 1.1
 import QtQuick.Layouts 1.0
 import QtQuick.Dialogs 1.0
@@ -114,54 +113,48 @@ ColumnLayout {
             }
 
             AddressTextField {
+                id: miningAddressInput
+
                 anchors.left: pasteMiningAddressButton.right
                 anchors.right: parent.right
-                id: miningAddressInput
+
                 placeholderText: "Target address for mining"
                 text: miner.address
                 onTextChanged: if (miningAddressInput.acceptableInput || text.length == 0) { miner.address = text }
+
+                Connections {
+                    target: wallet
+                    onAddressChanged: {
+                        console.log("AddressChanged! !!!");
+                        text = wallet.address
+                    }
+
+                }
+
             }
 
 
         }
 
 
-
-
-//        TextField {
-//            id: miningAddressInput
-//            visible: useAnotherAddressCheckbox.checked
-
-
-
-//            text: ""
-//            placeholderText: "Target address for mining"
-
-//        }
     }
 
     ColumnLayout {
 
-
         visible: miner.status == 1
-
-//        Label {
-//            id: statusLabel;
-//            text: if ( miner.status == 1 ) { "ON" } else { "OFF" }
-//        }
 
         Label {
             id: currentHashrateLabel;
 
-            text: "Current hash rate : "
+            text: "Current hash rate : NOT IMPLEMENTED YET"
         }
 
-        TextArea {
+//        TextArea {
 
-            readOnly: true;
-            text: "Hello\nmultiline"
+//            readOnly: true;
+//            text: "Hello\nmultiline"
 
-        }
+//        }
 
     }
 

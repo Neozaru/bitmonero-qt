@@ -1,5 +1,6 @@
-#include <QCoreApplication>
+#include <QObject>
 
+#include <QCoreApplication>
 #include <QGuiApplication>
 #include <QQuickWindow>
 #include <QDebug>
@@ -67,6 +68,8 @@ int main(int argc, char *argv[])
 
     MinerModel lMinerModel;
     MinerInterface* lMiner = new RPCMiner(lMinerModel, lMinerUri, lMinerPort);
+
+    QObject::connect(&lWalletModel,SIGNAL(addressChanged(QString)),&lMinerModel,SLOT(setAddress(QString)));
 
     QQmlEngine engine;
     engine.rootContext()->setContextProperty("monero", &lMoneroModel);
