@@ -19,20 +19,7 @@ RowLayout {
             onClicked: { inputAddress.text = ""; inputAddress.paste() }
         }
 
-//        TextField {
 
-//            anchors.left: parent.left
-//            anchors.right: parent.right
-//            id: inputAddress
-
-//            placeholderText: "Recipient address"
-//            maximumLength: 95
-
-//            onTextChanged: lastError = ""
-//            textColor: if (acceptableInput) { "green" } else { "red" }
-
-//            validator: RegExpValidator { regExp: /[a-zA-Z0-9]{95}/ }
-//        }
 
         AddressTextField {
 

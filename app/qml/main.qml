@@ -3,23 +3,13 @@ import QtQuick.Controls 1.1
 import QtQuick.Layouts 1.0
 import QtQuick.Dialogs 1.0
 
-//include("./AboutDialog")
-//import "Overview.qml"
-
-//import "AboutDialog"
-
 
 ApplicationWindow {
     visible: true
     title: "Monero Wallet"
 
-
-
     width: 750
     height: 480
-
-
-
 
 //    Action {
 //        id: openAction
@@ -44,8 +34,6 @@ ApplicationWindow {
     Menu {
         id: editmenu
 //        MenuItem { action: cutAction }
-//        MenuItem { action: copyAction }
-//        MenuItem { action: pasteAction }
         MenuSeparator {}
         Menu {
             title: "Text &Format"
@@ -149,7 +137,6 @@ ApplicationWindow {
         Tab {
             title: "History (Not impl)"
             enabled: false
-            active: false
             History {}
         }
 

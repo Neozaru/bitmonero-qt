@@ -1,5 +1,6 @@
 include(../defaults.pri)
 
+TARGET= bitmonero-qt
 TEMPLATE = app
 QT += qml quick
 
