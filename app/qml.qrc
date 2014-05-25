@@ -4,7 +4,6 @@
         <file>qml/Overview.qml</file>
         <file>qml/Transfer.qml</file>
         <file>qml/AboutDialog.qml</file>
-        <file>qml/TransferSuccessfulDialog.qml</file>
         <file>qml/History.qml</file>
         <file>qml/Mining.qml</file>
         <file>qml/AddressTextField.qml</file>
