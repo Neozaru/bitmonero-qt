@@ -10,7 +10,9 @@ Monero GUI Wallet (state: experimental)
 Current status : Experimental
 
 
-Usage :
+Usage
+-----
+
 bitmonero-qt depends on core **bitmonerod** and **simplewallet**. These two programs should be started before running **bitmonero-qt**.
 
     bitmonerod
@@ -18,7 +20,10 @@ bitmonero-qt depends on core **bitmonerod** and **simplewallet**. These two prog
 
 By default, bitmonero-qt will connect to daemons ports 18081 (bitmonerod) and 19091 (simplewallet).
 Your can change the configuration with the file `$HOME/.bitmonero-qt/bitmonero-qt.conf`
-Configuration file example : 
+
+
+Configuration file example
+--------------------------
 
     
     [General]
@@ -34,12 +39,14 @@ Configuration file example :
     miner_port=18081
 
 
-Available features :
+Available features
+------------------
 * Overview (balance, address)
 * Transfer (choose an amount and a recipient)
 * Mining (choose number of threads and your address, and start mining)
 
 
-Limitations :
+Limitations
+-----------
 * Transactions history is not (yet) available.
 * Mining interface can get confused if mining is started from somewhere else
