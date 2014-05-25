@@ -10,10 +10,38 @@ Monero GUI Wallet (state: experimental)
 Current status : Experimental
 
 
+Dependencies
+------------
+
+The project is based on **Qt** SDK. It should work version **5.2+**.
+Arch-based distributions :
+    sudo pacman -S qt5
+
+Debian-based distributions :
+    sudo apt-get install qt5-default qttools5-dev-tools
+    
+Or try the **Qt**'s installer :
+[http://qt-project.org/downloads]
+
+
+Compiling
+---------
+
+    qmake
+    make
+
+The app will be installed in `./app/bitmonero-qt`
+
+You can run the app with the following command :
+    LD_LIBRARY_PATH=src/ app/bitmonero-qt
+
+('LD_LIBRARY_PATH' variable is required for the moment because I'm generating dynamic libraries for better structure, but they are not linked to the program by default. Will be fixed soon.)
+
+
 Usage
 -----
 
-bitmonero-qt depends on core **bitmonerod** and **simplewallet**. These two programs should be started before running **bitmonero-qt**.
+**Monero Wallet** depends on core **bitmonerod** and **simplewallet**. These two programs should be started before running **bitmonero-qt**.
 
     bitmonerod
     simplewallet --wallet=<your_wallet_location> --pass=<your_pass> --rpc-bind-port=19091
