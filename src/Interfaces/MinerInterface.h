@@ -20,6 +20,7 @@ protected:
 
     void onStartMiningFailed(const QString& pReason) {
         miner_model.setEnabled(false);
+        qWarning() << "Mining start failed : " << pReason;
     }
 
     void onStopMiningSucceeded() {
@@ -29,6 +30,7 @@ protected:
     void onStopMiningFailed(const QString& pReason) {
         miner_model.setStatus(0);
         miner_model.setEnabled(false);
+        qWarning() << "Mining stop failed : " << pReason;
     }
 
 private:

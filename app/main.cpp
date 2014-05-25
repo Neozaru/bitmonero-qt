@@ -48,6 +48,7 @@ int main(int argc, char *argv[])
 
     const QString& lMinerUri = lSettings.value("miner_uri", "localhost").toString();
     int lMinerPort = lSettings.value("miner_port", 18081).toInt();
+    const QString& lMinerAddress = lSettings.value("miner_mining_address","").toString();
 
 
     qDebug() << "[Loaded config]";
@@ -59,18 +60,29 @@ int main(int argc, char *argv[])
 
     qmlRegisterType<WalletModel>("info.neozaru.bitmonero-qt.walletmodel", 1, 0, "WalletModel");
 
-    MoneroInterface* monero = new RPCMonero(lMoneroUri, lMoneroPort);
-
     MoneroModel lMoneroModel;
-
     WalletModel lWalletModel;
-    WalletInterface* lWallet = new RPCWallet(lWalletModel, lWalletUri, lWalletPort);
-
     MinerModel lMinerModel;
+
+
+    /* If a custom mining address is configured, assign it. Use wallet address otherwise */
+    if ( !lMinerAddress.isEmpty() ) {
+        lMinerModel.setAddress(lMinerAddress);
+    }
+    else {
+        QObject::connect(&lWalletModel,SIGNAL(addressChanged(QString)),&lMinerModel,SLOT(setAddress(QString)));
+    }
+
+
+    /* Set up RPC interfaces. TODO : Create a builder */
+    //    MoneroInterface* monero = new RPCMonero(lMoneroUri, lMoneroPort);
+
+    /* RAII */
+    WalletInterface* lWallet = new RPCWallet(lWalletModel, lWalletUri, lWalletPort);
     MinerInterface* lMiner = new RPCMiner(lMinerModel, lMinerUri, lMinerPort);
 
-    QObject::connect(&lWalletModel,SIGNAL(addressChanged(QString)),&lMinerModel,SLOT(setAddress(QString)));
 
+    /* Pushing models into views */
     QQmlEngine engine;
     engine.rootContext()->setContextProperty("monero", &lMoneroModel);
     engine.rootContext()->setContextProperty("wallet", &lWalletModel);
@@ -80,10 +92,13 @@ int main(int argc, char *argv[])
 
     component.create();
     if ( !component.isReady() ) {
-        qDebug() << "/!\ Component not ready";
+        qDebug() << "Component not ready";
         qDebug() << "Error " << component.errors();
         return 2;
     }
+
+    /* Allow to exit the application */
+    QObject::connect(&engine,SIGNAL(quit()),&app,SLOT(quit()));
 
     return app.exec();
 }

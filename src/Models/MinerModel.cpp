@@ -6,7 +6,7 @@
 
 
 MinerModel::MinerModel()
-    : enabled(false), nbThreads(1), status(0), miner_interface(NULL)
+    : miner_interface(NULL), enabled(false), nbThreads(1), status(0)
 {
     QObject::connect(this,SIGNAL(enabledChanged(bool)),this,SLOT(optionChanged()));
 }

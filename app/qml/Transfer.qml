@@ -67,10 +67,48 @@ RowLayout {
                             lastError = "Please enter a recipient address";
                         }
                         else {
-                            console.log("OK")
-                            var res = wallet.transfer(inputAmount.text, inputAddress.text);
-                            console.log(res);
+                            var res = wallet.transfer(Math.pow(10,12) * parseFloat(inputAmount.text), inputAddress.text);
+                            lastTransactionLayout.visible = false;
                         }
+
+        }
+
+        ColumnLayout {
+            id: lastTransactionLayout
+            visible: false;
+
+            Label {
+                text: "Transaction successful :"
+                color: "green"
+            }
+
+            RowLayout {
+
+                Button {
+                    text: "Copy Hash"
+                    onClicked: { lastTransactionHash.selectAll(); lastTransactionHash.copy(); lastTransactionHash.select(0,0) }
+                }
+
+                TextEdit {
+                    id: lastTransactionHash
+
+                    readOnly: true
+                }
+
+            }
+        }
+
+
+        Connections {
+            target: wallet
+            onTransferSuccessful: {
+
+                inputAmount.text = 0
+                inputAddress.text = ""
+                lastTransactionHash.text = tx_hash
+                lastTransactionLayout.visible = true;
+
+            }
 
         }
 

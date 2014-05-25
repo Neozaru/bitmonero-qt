@@ -27,9 +27,8 @@ protected:
     }
 
     void onTransferSuccessful(const QString& pTxHash, double pAmount, const QString& pAddress, int pFee) {
-        qDebug() << "SUCCESSFUL : " << pAmount << " to " << pAddress << " (fee : " << pFee << ")\nHash: " << pTxHash;
         emit wallet_model.transferSuccessful(pTxHash,pAmount,pAddress,pFee);
-//        wallet_model.
+        qDebug() << "Transfer Successful : " << pAmount << " to " << pAddress << " (fee : " << pFee << ")\nHash: " << pTxHash;
     }
 
 private:

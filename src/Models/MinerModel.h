@@ -31,7 +31,6 @@ public:
         miner_interface = iface;
     }
 
-
     unsigned int getNbThreads() const
     {
         return nbThreads;
@@ -52,12 +51,16 @@ public:
         return enabled;
     }
 
-    QString getAddress() const
+    const QString& getAddress() const
     {
         return address;
     }
 
 public slots:
+
+
+    void startMining();
+    void stopMining();
 
     void optionChanged() {
         if (enabled && status == 0) {
@@ -67,9 +70,6 @@ public slots:
             stopMining();
         }
     }
-
-    void startMining();
-    void stopMining();
 
     void setNbThreads(unsigned int pNbThreads)
     {
@@ -94,9 +94,9 @@ public slots:
         }
     }
 
-    void setEnabled(bool pEnabled)
+    void setEnabled(bool pEnabled = true)
     {
-        qDebug() << "Toggled : " << pEnabled;
+        qDebug() << "Mining enabled toggled : " << pEnabled;
 
         if (enabled != pEnabled) {
             enabled = pEnabled;
@@ -104,7 +104,7 @@ public slots:
         }
     }
 
-    void setAddress(QString pAddress)
+    void setAddress(const QString& pAddress)
     {
 
         qDebug() << "New address : " << pAddress;

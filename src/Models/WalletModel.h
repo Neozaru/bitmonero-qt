@@ -16,7 +16,7 @@ public:
     WalletModel();
     ~WalletModel();
 
-    inline void setBalance(double pBalance)
+    void setBalance(double pBalance)
     {
 
         if ( balance == pBalance ) {
@@ -24,17 +24,14 @@ public:
         }
 
         balance = pBalance;
-//        updated = true;
         emit balanceChanged();
 
     }
 
-
-    inline double getBalance() const
+    double getBalance() const
     {
         return balance;
     }
-
 
 
     void setWalletInterface(WalletInterface* iface)
@@ -46,18 +43,17 @@ public:
         if ( pAddress != address ) {
 
             if ( pAddress.length() != 95 ) {
-                qDebug() << "Attempted to assign bad address : " << pAddress;
+                qCritical() << "Attempted to assign bad address : " << pAddress;
                 return;
             }
 
-            qDebug() << "Wallet address changed" << pAddress;
             address = pAddress;
             emit addressChanged(address);
 
         }
     }
 
-    QString getAddress() const
+    const QString& getAddress() const
     {
         return address;
     }
@@ -68,17 +64,13 @@ signals:
     void addressChanged(const QString& pAddress);
 
 public slots:
-    void update() {
-        setBalance(99);
-    }
-
     Q_INVOKABLE bool transfer(double amount, const QString& address);
 
 
 private:
-    double balance;
     WalletInterface* wallet_interface;
-    //    bool updated;
+
+    double balance;
     QString address;
 };
 

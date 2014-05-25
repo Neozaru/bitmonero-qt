@@ -15,9 +15,9 @@ class RPCMonero : public MoneroInterface
 
 public:
     RPCMonero(const QString& pHost = "localhost", unsigned int pPort = 18081 );
-    virtual ~RPCMonero() {}
+    ~RPCMonero() {}
 
-    virtual WalletModel& getWalletModel();
+    WalletModel& getWalletModel();
 
 public slots:
     void update();

@@ -14,7 +14,6 @@
 #include <QJsonObject>
 #include <QJsonDocument>
 
-//class JsonRPCCommunicator;
 #include "JsonRPCRequest.h"
 
 class JsonRPCCommunicator : public QObject
@@ -25,9 +24,6 @@ public:
     ~JsonRPCCommunicator();
 
     JsonRPCRequest* sendRequest(const QString& pMethod, const QJsonObject& pParams = QJsonObject(), bool pDaemonHttp = false);
-
-public slots:
-    void onRequestFinished();
 
 signals:
     void jsonResponseReceived();

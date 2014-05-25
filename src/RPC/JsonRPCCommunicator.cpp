@@ -17,6 +17,7 @@ JsonRPCRequest* JsonRPCCommunicator::sendRequest(const QString& pMethod, const Q
     QUrl lUrl = endpoint_uri;
     QJsonObject lJsonRoot;
 
+    /* Depending of RPC type, will append method name in URI or in JSON data */
     if ( pDaemonHttp ) {
         lJsonRoot = pParams;
         lUrl.setPath("/"+pMethod);
@@ -34,13 +35,13 @@ JsonRPCRequest* JsonRPCCommunicator::sendRequest(const QString& pMethod, const Q
 
     QNetworkRequest lReq(lUrl);
     lReq.setHeader(QNetworkRequest::ContentTypeHeader,"application/json");
+
     qDebug() << "Req" << lReq.url();
     qDebug() << lJsonDoc.toJson();
 
 
-    JsonRPCRequest* lJsonReq = new JsonRPCRequest(pParams,pDaemonHttp);
-    QNetworkReply* lReply = network_access_mgr.post(lReq,lJsonDoc.toJson());
-//    lReply->setUserData(0,(QObjectUserData*)lJsonReq);
+    JsonRPCRequest* lJsonReq = new JsonRPCRequest(pParams, pDaemonHttp);
+    QNetworkReply* lReply = network_access_mgr.post(lReq, lJsonDoc.toJson());
 
     QObject::connect(lReply, SIGNAL(finished()), lJsonReq, SLOT(onRequestFinished()));
 
@@ -49,7 +50,3 @@ JsonRPCRequest* JsonRPCCommunicator::sendRequest(const QString& pMethod, const Q
 
 }
 
-
-void JsonRPCCommunicator::onRequestFinished() {
-
-}
