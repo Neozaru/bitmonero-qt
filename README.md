@@ -1,13 +1,13 @@
 bitmonero-qt
 ============
 
-Monero GUI Wallet (state: experimental)
+Monero GUI Wallet
 
 
 **DISCLAIMER : This is not an official Wallet for Monero. Use this software at your own risk.**
 
 
-Current status : Experimental
+Current status : Experimental / First draft
 
 
 Dependencies
@@ -75,3 +75,9 @@ Limitations
 -----------
 * Transactions history is not (yet) available.
 * Mining interface can get confused if mining is started from somewhere else
+
+
+Alternatives
+------------
+
+* CryptoNote Wallet ('.NET' based) : [https://github.com/BitKoot/CryptoNoteWallet]
