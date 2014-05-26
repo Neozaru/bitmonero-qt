@@ -12,6 +12,8 @@ RPCWallet::RPCWallet(WalletModel& pModel, const QString& pHost, unsigned int pPo
 
     QTimer* lTimer = new QTimer(this);
     QObject::connect(lTimer,SIGNAL(timeout()), this, SLOT(getBalance()));
+    QObject::connect(lTimer,SIGNAL(timeout()), this, SLOT(getAddress()));
+
     lTimer->start(5000);
 //    lTimer->start();
 

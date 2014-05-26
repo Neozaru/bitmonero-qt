@@ -5,6 +5,7 @@ import QtQuick.Dialogs 1.0
 
 
 ColumnLayout {
+    id: miningLayout
 
     anchors.fill: parent;
     anchors.margins: 10
@@ -53,25 +54,33 @@ ColumnLayout {
         anchors.top: statusLayout.bottom
         anchors.topMargin: 15;
 
+
+
         CheckBox {
             id: toggleMiningSwitch
             text: "Enable Mining"
+
             enabled: miningAddressInput.acceptableInput && miningNbThreadsInput.acceptableInput
             checked: miner.enabled
+
             onCheckedChanged: miner.enabled = checked
-//            onCheckedChanged: toggleMiningLayout.eee = checked
         }
+
+
 
         /* Two-ways binding not available in Qt Quick ? oO */
         Connections {
             target: miner;
             onEnabledChanged: {
+                console.log("View received miner enabled : " + miner.enabled)
                 toggleMiningSwitch.checked = miner.enabled
             }
         }
 
 
     }
+
+
 
     ColumnLayout {
 
@@ -122,15 +131,6 @@ ColumnLayout {
                 text: miner.address
                 onTextChanged: if (miningAddressInput.acceptableInput || text.length == 0) { miner.address = text }
 
-                Connections {
-                    target: wallet
-                    onAddressChanged: {
-                        console.log("AddressChanged! !!!");
-                        text = wallet.address
-                    }
-
-                }
-
             }
 
 
@@ -139,15 +139,20 @@ ColumnLayout {
 
     }
 
-    ColumnLayout {
+    RowLayout {
 
         visible: miner.status == 1
 
         Label {
             id: currentHashrateLabel;
 
-            text: "Current hash rate : NOT IMPLEMENTED YET"
+            text: "Current hash rate : "
         }
+
+        HashRate {
+            hashrate: miner.hashrate
+        }
+
 
 //        TextArea {
 

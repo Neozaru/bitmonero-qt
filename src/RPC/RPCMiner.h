@@ -19,8 +19,11 @@ public:
     void stopMining();
 
 public slots:
+    void getMiningStatus();
+
     void startMiningResponse(const QJsonObject& pJsonResponse, const QJsonObject& pOriginalParams);
     void stopMiningResponse(const QJsonObject& pJsonResponse, const QJsonObject& pOriginalParams);
+    void getMiningStatusResponse(const QJsonObject& pJsonResponse, const QJsonObject& pOriginalParams);
 
 private:
     JsonRPCCommunicator rpc;

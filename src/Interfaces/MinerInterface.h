@@ -10,7 +10,7 @@ public:
 
     virtual void startMining(const QString& pMoneroAddress, unsigned int pNbThreads = 1) = 0;
     virtual void stopMining() = 0;
-
+    virtual void getMiningStatus() = 0;
 
 protected:
 
@@ -31,6 +31,19 @@ protected:
         miner_model.setStatus(0);
         miner_model.setEnabled(false);
         qWarning() << "Mining stop failed : " << pReason;
+    }
+
+    void onGetMiningStatusResponse(bool pActive, unsigned int pThreadsCount, const QString& pAddress, unsigned int pSpeed) {
+
+        miner_model.setHashrate(pSpeed);
+        if ( pActive ) {
+            miner_model.setStatus(1);
+            miner_model.setEnabled(true);
+        }
+        else {
+            miner_model.setStatus(0);
+            miner_model.setEnabled(false);
+        }
     }
 
 private:

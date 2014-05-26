@@ -1,8 +1,16 @@
 #include "RPCMiner.h"
 
+#include <QTimer>
+
 RPCMiner::RPCMiner(MinerModel& pMinerModel, const QString& pHost, unsigned int pPort)
     : MinerInterface(pMinerModel), rpc(pHost,pPort)
 {
+
+    getMiningStatus();
+
+    QTimer* lTimer = new QTimer(this);
+    QObject::connect(lTimer,SIGNAL(timeout()), this, SLOT(getMiningStatus()));
+    lTimer->start(5000);
 }
 
 
@@ -22,6 +30,11 @@ void RPCMiner::stopMining() {
     JsonRPCRequest* lReq = rpc.sendRequest("stop_mining", QJsonObject(), true);
     QObject::connect(lReq,SIGNAL(jsonResponseReceived(QJsonObject,QJsonObject)),this,SLOT(stopMiningResponse(QJsonObject,QJsonObject)));
 
+}
+
+void RPCMiner::getMiningStatus() {
+    JsonRPCRequest* lReq = rpc.sendRequest("mining_status", QJsonObject(), true);
+    QObject::connect(lReq,SIGNAL(jsonResponseReceived(QJsonObject,QJsonObject)),this,SLOT(getMiningStatusResponse(QJsonObject,QJsonObject)));
 }
 
 void RPCMiner::startMiningResponse(const QJsonObject& pJsonResponse, const QJsonObject& pOriginalParams) {
@@ -50,6 +63,34 @@ void RPCMiner::stopMiningResponse(const QJsonObject& pJsonResponse, const QJsonO
     else {
         qWarning() << "Bad status for mining stop : " << lStatus;
         this->onStopMiningFailed(lStatus);
+    }
+
+}
+
+void RPCMiner::getMiningStatusResponse(const QJsonObject& pJsonResponse, const QJsonObject& pOriginalParams) {
+
+    qDebug() << "'mining_status' Response : " << pJsonResponse;
+    const QString& lStatus = pJsonResponse["status"].toString();
+
+    if ( lStatus == "OK" ) {
+
+        if ( !pJsonResponse["active"].isBool() ||
+             !pJsonResponse["threads_count"].isDouble() ||
+             !pJsonResponse["address"].isString() ||
+             !pJsonResponse["speed"].isDouble() ) {
+
+            qCritical() << "Invalid data format for 'mining_status' response. Is your Daemon up to date ?";
+        }
+
+        this->onGetMiningStatusResponse(
+                pJsonResponse["active"].toBool(),
+                pJsonResponse["threads_count"].toDouble(),
+                pJsonResponse["address"].toString(),
+                pJsonResponse["speed"].toDouble()
+                );
+    }
+    else {
+        qWarning() << "Bad status for mining status : " << lStatus;
     }
 
 }

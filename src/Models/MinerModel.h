@@ -94,7 +94,7 @@ public slots:
         }
     }
 
-    void setEnabled(bool pEnabled = true)
+    void setEnabled(bool pEnabled)
     {
         qDebug() << "Mining enabled toggled : " << pEnabled;
 
@@ -119,8 +119,8 @@ signals:
     void nbThreadsChanged(unsigned int pNbThreads);
     void statusChanged(unsigned int pStatus);
     void hashrateChanged(double pHashrate);
-    void enabledChanged(bool pEnabled);
-    void addressChanged(QString pAddress);
+    void enabledChanged(bool enabled);
+    void addressChanged(QString address);
 
 private:
     MinerInterface* miner_interface;

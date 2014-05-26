@@ -2,13 +2,12 @@
 #define WALLETINTERFACE_HH
 
 #include <QDebug>
-
 #include "Models/WalletModel.h"
 
 class WalletInterface
 {
 public:
-    WalletInterface(WalletModel& pWalletModel) : wallet_model(pWalletModel) {}
+    WalletInterface(WalletModel& pWalletModel) : wallet_model(pWalletModel) {};
 
     virtual void getBalance() = 0;
     virtual void getAddress() = 0;

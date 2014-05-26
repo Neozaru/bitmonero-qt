@@ -42,33 +42,6 @@ ApplicationWindow {
 
     }
 
-    toolBar: ToolBar {
-        id: toolbar
-        RowLayout {
-            id: toolbarLayout
-            spacing: 0
-            width: parent.width
-            ToolButton {
-//                iconSource: "images/window-new.png"
-                onClicked: window1.visible = !window1.visible
-                Accessible.name: "New window"
-                tooltip: "Toggle visibility of the second window"
-            }
-//            ToolButton { action: openAction }
-            ToolButton {
-//                iconSource: "images/document-save-as.png"
-                tooltip: "(Pretend to) Save as..."
-            }
-            Item { Layout.fillWidth: true }
-            CheckBox {
-                id: advancedInterfaceCheckbox
-                text: "Advanced Interface"
-                checked: false
-                enabled: false
-            }
-        }
-    }
-
     menuBar: MenuBar {
         Menu {
             title: "&File"
@@ -105,6 +78,35 @@ ApplicationWindow {
             MenuItem { action: aboutAction }
         }
     }
+    toolBar: ToolBar {
+        id: toolbar
+//        height: 30
+        RowLayout {
+            id: toolbarLayout
+            spacing: 0
+            width: parent.width
+            ToolButton {
+//                iconSource: "images/window-new.png"
+                onClicked: window1.visible = !window1.visible
+                Accessible.name: "New window"
+                tooltip: "Toggle visibility of the second window"
+            }
+//            ToolButton { action: openAction }
+            ToolButton {
+//                iconSource: "images/document-save-as.png"
+                tooltip: "(Pretend to) Save as..."
+            }
+            Item { Layout.fillWidth: true }
+            CheckBox {
+                id: advancedInterfaceCheckbox
+                text: "Advanced Interface"
+                checked: false
+                enabled: false
+            }
+        }
+    }
+
+
 
     SystemPalette {id: syspal}
     color: syspal.window
@@ -116,10 +118,69 @@ ApplicationWindow {
         ListElement { text: "Coconut" }
     }
 
+
+    statusBar: StatusBar {
+
+        RowLayout {
+            anchors.fill: parent
+
+            RowLayout {
+                anchors.left: parent.left
+
+                Label {
+                    text: "Balance : "
+                }
+
+                Balance {
+                    balance: wallet.balance
+                }
+            }
+
+            RowLayout {
+                visible: false
+                anchors.centerIn: parent
+
+                Label {
+                    text: "Status : "
+                }
+                Label {
+                    text: "0/0"
+                }
+            }
+
+            RowLayout {
+                anchors.right: parent.right
+
+                Label {
+                    text: "Mining : "
+                }
+
+
+                HashRate {
+                    visible: miner.enabled
+                    hashrate: miner.hashrate
+                    color: "green"
+                }
+
+                Label {
+                    visible: miner.enabled
+                    text: "(" + (miner.nbThreads) + "T)"
+                }
+
+                Label {
+                    visible: !miner.enabled
+                    text: "Disabled"
+                }
+            }
+
+        }
+
+    }
     TabView {
         id:frame
 
         anchors.fill: parent
+
         anchors.margins: Qt.platform.os === "osx" ? 12 : 2
 
         Tab {
@@ -142,6 +203,7 @@ ApplicationWindow {
 
 
         Tab {
+            id: miningPage
             title: "Mining"
             Mining {}
         }
@@ -151,4 +213,6 @@ ApplicationWindow {
         }
 
     }
+
+
 }

@@ -5,7 +5,7 @@ import QtQuick.Dialogs 1.0
 
 
 RowLayout {
-
+    id: transferLayout
 
     property string lastError: ""
     ColumnLayout {
@@ -15,19 +15,20 @@ RowLayout {
 
         Button {
             id: pasteInputAddress
+
             text: "Paste recipient address"
             onClicked: { inputAddress.text = ""; inputAddress.paste() }
         }
 
-
-
         AddressTextField {
-
             id: inputAddress
+
             anchors.left: parent.left
             anchors.right: parent.right
 
             placeholderText: "Recipient address"
+
+            focus: true;
 
             onTextChanged: lastError = ""
 
@@ -44,6 +45,7 @@ RowLayout {
 
         Button {
             id: buttonSend
+
             text: "Send"
             enabled: inputAmount.acceptableInput && inputAddress.acceptableInput
 

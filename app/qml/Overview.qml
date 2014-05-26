@@ -1,4 +1,3 @@
-import QtQuick 2.0
 import QtQuick 2.2
 import QtQuick.Controls 1.1
 import QtQuick.Layouts 1.0
@@ -28,10 +27,8 @@ RowLayout {
                 text: "Balance : "
             }
 
-            TextEdit {
-                readOnly: true
-                id: balanceValue
-                text: (wallet.balance * Math.pow(10,-12)).toFixed(12)
+            Balance {
+                balance: wallet.balance
             }
 
             Button {
@@ -56,6 +53,7 @@ RowLayout {
 
                readOnly: true
                text: wallet.address
+
            }
 
            Button {
