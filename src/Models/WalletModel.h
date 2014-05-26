@@ -1,12 +1,14 @@
 #ifndef WALLET_H
 #define WALLET_H
 
-#include<QObject>
+#include <QObject>
 #include <QDebug>
+
+#include "AbstractModel.h"
 
 class WalletInterface;
 
-class WalletModel : public QObject
+class WalletModel : public AbstractModel
 {
     Q_OBJECT
     Q_PROPERTY(double balance READ getBalance WRITE setBalance NOTIFY balanceChanged)
@@ -58,10 +60,13 @@ public:
         return address;
     }
 
+
 signals:
     void balanceChanged();
     void transferSuccessful(const QString& tx_hash, double amount, const QString& address, int fee);
     void addressChanged(const QString& pAddress);
+
+    void readyChanged(bool arg);
 
 public slots:
     Q_INVOKABLE bool transfer(double amount, const QString& address);

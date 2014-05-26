@@ -18,10 +18,12 @@ public:
 protected:
 
     void onBalanceUpdated(double pBalance) {
+        wallet_model.setReady(true);
         wallet_model.setBalance(pBalance);
     }
 
     void onAddressUpdated(const QString& pAddress) {
+        wallet_model.setReady(true);
         wallet_model.setAddress(pAddress);
     }
 

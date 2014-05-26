@@ -35,6 +35,7 @@ protected:
 
     void onGetMiningStatusResponse(bool pActive, unsigned int pThreadsCount, const QString& pAddress, unsigned int pSpeed) {
 
+        miner_model.setReady(true);
         miner_model.setHashrate(pSpeed);
         if ( pActive ) {
             miner_model.setStatus(1);

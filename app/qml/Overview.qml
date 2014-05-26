@@ -4,69 +4,58 @@ import QtQuick.Layouts 1.0
 import QtQuick.Dialogs 1.0
 
 
-RowLayout {
+GuardedColumnLayout {
 
-    property variant ww : wallet
-
-    Layout.minimumWidth: implicitWidth
-    Layout.fillWidth: false
-
+    anchors.fill: parent
+    anchors.margins: 10
 
     ColumnLayout {
+        id: balanceLayout
 
-        anchors.fill: parent
-        anchors.margins: 10
+        Label {
+            text: "Balance : "
+        }
 
-        Layout.minimumWidth: implicitWidth
-        Layout.fillWidth: false
+        Balance {
+            balance: wallet.balance
+        }
 
-        ColumnLayout {
-            id: balanceLayout
+        Button {
+            text: "Copy balance"
+            /* Hack copy */
+            onClicked: { balanceValue.selectAll(); balanceValue.copy(); balanceValue.select(0,-3)}
+        }
 
-            Label {
-                text: "Balance : "
-            }
+   }
 
-            Balance {
-                balance: wallet.balance
-            }
+   ColumnLayout {
 
-            Button {
-                text: "Copy balance"
-                /* Hack copy */
-                onClicked: { balanceValue.selectAll(); balanceValue.copy(); balanceValue.select(0,-3)}
-            }
+       anchors.top: balanceLayout.bottom
+       anchors.topMargin: 20
+
+       Label {
+           text: "Your Monero address : "
+       }
+
+       TextEdit {
+           id: addressValue
+
+           readOnly: true
+           text: wallet.address
 
        }
 
-       ColumnLayout {
-
-           anchors.top: balanceLayout.bottom
-           anchors.topMargin: 20
-
-           Label {
-               text: "Your Monero address : "
-           }
-
-           TextEdit {
-               id: addressValue
-
-               readOnly: true
-               text: wallet.address
-
-           }
-
-           Button {
-               text: "Copy address"
-               /* Hack copy */
-               onClicked: { addressValue.selectAll(); addressValue.copy(); addressValue.select(0,0)}
-           }
+       Button {
+           text: "Copy address"
+           /* Hack copy */
+           onClicked: { addressValue.selectAll(); addressValue.copy(); addressValue.select(0,0)}
        }
+   }
 
 
 
 
-    }
+
 
 }
 

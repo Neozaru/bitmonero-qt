@@ -9,5 +9,6 @@
         <file>qml/AddressTextField.qml</file>
         <file>qml/Balance.qml</file>
         <file>qml/HashRate.qml</file>
+        <file>qml/GuardedColumnLayout.qml</file>
     </qresource>
 </RCC>

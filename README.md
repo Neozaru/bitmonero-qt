@@ -78,6 +78,10 @@ Limitations
 * Transactions history is not (yet) available.
 * Mining interface can get confused if mining is started from somewhere else
 
+Known Issues
+-----------
+
+* Window is not repainting correctly when it is not the active window (ArchLinux)
 
 Alternatives
 ------------

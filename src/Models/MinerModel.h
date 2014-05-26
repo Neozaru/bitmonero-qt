@@ -4,9 +4,11 @@
 #include <QObject>
 #include <QDebug>
 
+#include "AbstractModel.h"
+
 class MinerInterface;
 
-class MinerModel : public QObject
+class MinerModel : public AbstractModel
 {
     Q_OBJECT
     Q_PROPERTY(bool enabled READ getEnabled WRITE setEnabled NOTIFY enabledChanged)

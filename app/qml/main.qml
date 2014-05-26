@@ -5,11 +5,14 @@ import QtQuick.Dialogs 1.0
 
 
 ApplicationWindow {
+    id: mainWindow
+
     visible: true
     title: "Monero Wallet"
 
     width: 750
     height: 480
+
 
 //    Action {
 //        id: openAction
@@ -19,7 +22,6 @@ ApplicationWindow {
 //        onTriggered: fileDialog.open()
 //        tooltip: "Open an image"
 //    }
-
 
     AboutDialog { id: aboutDialog }
 
@@ -179,20 +181,32 @@ ApplicationWindow {
     TabView {
         id:frame
 
+        property string unavailableWalletErrorMessage: wallet.ready ? "" : "Error : Your Wallet is unreachable. Please check 'simplewallet' is running and bound to correct RPC port"
+        property string unavailableMinerErrorMessage: miner.ready ? "" : "Error : Your Miner is unreachable. Please check 'bitmonerod' is running and bound to correct RPC port"
+
         anchors.fill: parent
 
         anchors.margins: Qt.platform.os === "osx" ? 12 : 2
 
         Tab {
-
             id: controlPage
+
+
             title: "Overview"
-            Overview {}
+            Overview {
+                enabled: wallet.ready
+                errorMessage: frame.unavailableWalletErrorMessage
+
+            }
 
         }
         Tab {
             title: "Transfer"
-            Transfer {}
+            Transfer {
+                enabled: wallet.ready
+                errorMessage: frame.unavailableWalletErrorMessage
+            }
+
         }
 
         Tab {
@@ -205,12 +219,15 @@ ApplicationWindow {
         Tab {
             id: miningPage
             title: "Mining"
-            Mining {}
+            Mining {
+                enabled: miner.ready
+                errorMessage: frame.unavailableMinerErrorMessage
+            }
         }
 
-        Tab {
-            title: "Debug"
-        }
+//        Tab {
+//            title: "Debug"
+//        }
 
     }
 

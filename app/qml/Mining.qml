@@ -4,7 +4,7 @@ import QtQuick.Layouts 1.0
 import QtQuick.Dialogs 1.0
 
 
-ColumnLayout {
+GuardedColumnLayout {
     id: miningLayout
 
     anchors.fill: parent;

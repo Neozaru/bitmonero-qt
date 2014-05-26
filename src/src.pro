@@ -11,6 +11,7 @@ SOURCES += \
     Models/MoneroModel.cpp \
     Models/MinerModel.cpp \
     Models/TransactionsListModel.cpp \
+    Models/AbstractModel.cpp
 
 SOURCES += \
     RPC/JsonRPCCommunicator.cpp \
@@ -27,7 +28,8 @@ HEADERS += \
     Interfaces/WalletInterface.h \
     Interfaces/MinerInterface.h \
     Models/TransactionsListModel.h \
-    Models/MinerModel.h
+    Models/MinerModel.h \
+    Models/AbstractModel.h
 
 HEADERS += \
     RPC/JsonRPCCommunicator.h \
