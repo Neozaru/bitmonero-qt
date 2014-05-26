@@ -9,6 +9,11 @@ Monero GUI Wallet
 
 Current status : Experimental / First draft
 
+Screenshots :
+
+* [https://imgur.com/4WA7VCH,Hq15yUW,SBAPxSW#2]
+* [https://imgur.com/4WA7VCH,Hq15yUW,SBAPxSW#1]
+* [https://imgur.com/4WA7VCH,Hq15yUW,SBAPxSW#0]
 
 Dependencies
 ------------
