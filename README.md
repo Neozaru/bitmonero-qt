@@ -78,3 +78,4 @@ Alternatives
 ------------
 
 * CryptoNote Wallet ('.NET' based) : [https://github.com/BitKoot/CryptoNoteWallet]
+* cryptonoteRPCwalletGUI ('python-kivy' based) : [https://github.com/jwinterm/cryptonoteRPCwalletGUI]
