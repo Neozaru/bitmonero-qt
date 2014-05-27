@@ -14,6 +14,10 @@
 #include <QDir>
 #include <QFile>
 
+#include <QProcess>
+#include <QThread>
+#include <QStringList>
+
 #include "Models/MoneroModel.h"
 #include "Models/WalletModel.h"
 #include "Models/MinerModel.h"
@@ -26,6 +30,7 @@
 
 int main(int argc, char *argv[])
 {
+
     QGuiApplication app(argc, argv);
 
     /* Loads settings. TODO : Put an interface in the GUI */
@@ -58,7 +63,46 @@ int main(int argc, char *argv[])
     /* */
 
 
-    qmlRegisterType<WalletModel>("info.neozaru.bitmonero-qt.walletmodel", 1, 0, "WalletModel");
+    QProcess* lWalletProcess = new QProcess();
+    /* If a password was set, starts the Wallet as subprocess */
+    if ( lSettings.contains("wallet_password") ) {
+
+        if ( lSettings.value("spawn_wallet", true).toBool() ) {
+
+            const QString& lWalletFile = lSettings.value("wallet_file", QDir::homePath() + "/.bitmonero/wallet.bin").toString();
+            const QString& lWalletPassword = lSettings.value("wallet_password").toString();
+            const QString& lWalletProgram = lSettings.value("wallet_program","/usr/bin/simplewallet").toString();
+            const QString& lWalletIP = lSettings.value("wallet_bind_ip", "127.0.0.1").toString();
+
+
+            QStringList lArguments;
+
+            lArguments.append("--wallet=" + lWalletFile);
+            lArguments.append("--pass=" + lWalletPassword);
+            lArguments.append("--rpc-bind-port=" + QString::number(lWalletPort));
+            lArguments.append("--rpc-bind-ip=" + lWalletIP);
+
+            lWalletProcess->start(lWalletProgram, lArguments);
+
+            qDebug() << "Wallet process started on " + lWalletIP + ":" + QString::number(lWalletPort) + " (" + lWalletProgram + ")";
+
+            QThread::sleep(3);
+
+        }
+        else {
+            qDebug() << "'spawn_wallet' disabled. Connecting to existing wallet on port" << lWalletPort;
+        }
+
+
+    }
+    else {
+        qDebug() << "Sèche linge";
+        qDebug() << "Wallet configuration not found : 'wallet_password'. Please ensure an RPC wallet (simplewallet) is running on port" << lWalletPort;
+    }
+
+
+    /* So we can finally start (TODO: Refactor init/config process) */
+
 
     MoneroModel lMoneroModel;
     WalletModel lWalletModel;
@@ -102,5 +146,13 @@ int main(int argc, char *argv[])
     /* Allow to exit the application */
     QObject::connect(&engine,SIGNAL(quit()),&app,SLOT(quit()));
 
-    return app.exec();
+    int lReturnCode = app.exec();
+
+
+    qDebug() << "End of processes";
+
+
+    lWalletProcess->kill();
+
+    return lReturnCode;
 }
