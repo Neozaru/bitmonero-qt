@@ -89,8 +89,14 @@ Limitations
 
 Known Issues
 -----------
-
 * Window is not repainting correctly when it is not the active window (ArchLinux)
+
+Roadmap
+-------
+* Improve user messages.
+* Blockchain syncing status.
+* Bitmonero C++ integration (all-in-one)
+* Advanced interface
 
 Alternatives
 ------------
