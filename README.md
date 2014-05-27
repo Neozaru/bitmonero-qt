@@ -46,6 +46,10 @@ Usage
     simplewallet --wallet=<your_wallet_location> --pass=<your_pass> --rpc-bind-port=19091
 
 By default, bitmonero-qt will connect to daemons ports 18081 (bitmonerod) and 19091 (simplewallet).
+
+EDIT : You can now auto-spawn the Wallet process from the GUI, using 'wallet_file', 'wallet_password' and 'wallet_program' options in configuration. If 'wallet_password' is not set, the GUI will attempt to connect to a running *simplewallet*. You can also disable auto-spawning using the option 'spawn_wallet=false' (default: true).
+
+
 Your can change the configuration with the file `$HOME/.bitmonero-qt/bitmonero-qt.conf`
 
 
@@ -60,6 +64,11 @@ Configuration file example
     
     wallet_uri=http://localhost
     wallet_port=19091
+
+    # Wallet auto-spawn. Settings will depend on your own system.
+    wallet_file=/home/myself/.bitmonero/wallet.bin
+    wallet_password=mysuperpassword85
+    wallet_program=/home/myself/gitcode/bitmonero/simplewallet
     
     # Same as the daemon (bitmonerod)
     miner_uri=http://localhost/json_rpc
