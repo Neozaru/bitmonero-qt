@@ -13,7 +13,6 @@ RPCMiner::RPCMiner(MinerModel& pMinerModel, const QString& pHost, unsigned int p
     lTimer->start(5000);
 }
 
-#include <QtCore/QtCore>
 
 void RPCMiner::startMining(const QString& pMoneroAddress, unsigned int pNbThreads) {
 
@@ -59,7 +58,7 @@ void RPCMiner::stopMining() {
 
 void RPCMiner::getMiningStatus() {
     JsonRPCRequest* lReq = rpc.sendRequest("mining_status", QJsonObject(), true);
-//    QObject::connect(lReq,SIGNAL(jsonResponseReceived(QJsonObject,QJsonObject)),this,SLOT(getMiningStatusResponse(QJsonObject,QJsonObject)));
+
     QObject::connect(lReq,&JsonRPCRequest::jsonResponseReceived,[this](const QJsonObject pJsonResponse) {
 
         qDebug() << "'mining_status' Response : " << pJsonResponse;
