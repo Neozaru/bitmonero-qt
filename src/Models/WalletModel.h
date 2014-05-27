@@ -66,7 +66,6 @@ signals:
     void transferSuccessful(const QString& tx_hash, double amount, const QString& address, int fee);
     void addressChanged(const QString& pAddress);
 
-    void readyChanged(bool arg);
 
 public slots:
     Q_INVOKABLE bool transfer(double amount, const QString& address);

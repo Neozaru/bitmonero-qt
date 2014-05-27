@@ -1,7 +1,7 @@
 include(../defaults.pri)
 
 QT += core network
-CONFIG += qt staticlib
+CONFIG += qt staticlib c++11
 
 TEMPLATE = lib
 TARGET = bitmonero-qt-static

@@ -97,6 +97,8 @@ int main(int argc, char *argv[])
         return 2;
     }
 
+
+    app.processEvents();
     /* Allow to exit the application */
     QObject::connect(&engine,SIGNAL(quit()),&app,SLOT(quit()));
 
