@@ -49,6 +49,7 @@ By default, bitmonero-qt will connect to daemons ports 18081 (bitmonerod) and 19
 
 EDIT : You can now auto-spawn the Wallet process from the GUI, using 'wallet_file', 'wallet_password' and 'wallet_program' options in configuration. If 'wallet_password' is not set, the GUI will attempt to connect to a running *simplewallet*. You can also disable auto-spawning using the option 'spawn_wallet=false' (default: true).
 
+Note that the *bitmonerod* daemon still needs to be started before the GUI.
 
 Your can change the configuration with the file `$HOME/.bitmonero-qt/bitmonero-qt.conf`
 
