@@ -3,6 +3,13 @@
 #include <QStringList>
 #include <QDebug>
 
+//WalletHandler::WalletHandler()
+//    : open(false)
+//{
+////    mainProcess.setProgram(pProgramPath);
+
+//}
+
 WalletHandler::WalletHandler(const QString& pProgramPath)
     : open(false)
 {
@@ -58,11 +65,50 @@ bool WalletHandler::closeWallet() {
 
 }
 
+bool WalletHandler::walletFileExists(const QString& pFile) {
+
+    if ( pFile.isEmpty() ) {
+        return false;
+    }
+
+    QFileInfo lFileInfo(pFile);
+
+    qDebug() << "Path : " << lFileInfo.dir().path();
+
+    return lFileInfo.exists() && lFileInfo.isFile();
+
+}
+
+
+bool WalletHandler::walletDirectoryExists(const QString& pFile) {
+
+    if ( pFile.isEmpty() ) {
+        return false;
+    }
+
+    QFileInfo lFileInfo(pFile);
+
+    return lFileInfo.dir().exists();
+
+}
+
+
+
 bool WalletHandler::createWallet(const QString& pFile, const QString& pPassword)
 {
 
-    if ( pFile.isEmpty() || pPassword.isEmpty() ) {
-        qWarning() << "No file or password defined";
+    if ( !walletDirectoryExists(pFile) ) {
+        qWarning() << "Path doesn't exists : " << pFile;
+        return false;
+    }
+
+    if ( walletFileExists(pFile) ) {
+        qWarning() << "Wallet file " << pFile << "already exists";
+        return false;
+    }
+
+    if ( pPassword.isEmpty() ) {
+        qWarning() << "No password defined";
         return false;
     }
 
@@ -90,4 +136,46 @@ bool WalletHandler::createWallet(const QString& pFile, const QString& pPassword)
     qDebug() << "PROCESS finished with : " << QString::number(lExitCode);
 
     return lExitCode == 0;
+}
+
+
+bool WalletHandler::tryWallet(const QString& pFile, const QString& pPassword) {
+
+    if ( !walletFileExists(pFile) ) {
+        qWarning() << "Wallet file " << pFile << "doesn't exists";
+        return false;
+    }
+
+    if ( pPassword.isEmpty() ) {
+        qWarning() << "No password defined";
+        return false;
+    }
+
+    QProcess lTryWalletProcess;
+    lTryWalletProcess.setProgram(mainProcess.program());
+
+    QStringList lArguments;
+
+    lArguments.append("--wallet=" + pFile);
+    lArguments.append("--password="+ pPassword);
+    lArguments.append("--command=getbalance"+ pPassword);
+    lArguments.append("--exit-after-cmd=true");
+    lTryWalletProcess.setArguments(lArguments);
+
+    lTryWalletProcess.start();
+
+    if ( !lTryWalletProcess.waitForFinished(2000) ) {
+        qWarning() << "tryWallet failed : SubProcess doesn't responded";
+
+        qWarning() << "Please ensure a wallet file exists at : " << pFile;
+        qWarning() << "Please ensure that your executable is located at : " << lTryWalletProcess.program();
+
+        return false;
+    }
+
+    int lExitCode = lTryWalletProcess.exitCode();
+    qDebug() << "PROCESS finished with : " << QString::number(lExitCode);
+
+    return lExitCode == 0;
+
 }

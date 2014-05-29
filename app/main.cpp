@@ -131,6 +131,8 @@ int main(int argc, char *argv[])
     engine.rootContext()->setContextProperty("wallet", &lWalletModel);
     engine.rootContext()->setContextProperty("miner", &lMinerModel);
 
+    engine.rootContext()->setContextProperty("wallet_handler", &wh);
+
     QQmlComponent component(&engine, QUrl("qrc:/qml/main.qml"));
 
     component.create();

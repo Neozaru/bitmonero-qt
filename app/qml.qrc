@@ -1,14 +1,23 @@
 <RCC>
     <qresource prefix="/">
         <file>qml/main.qml</file>
-        <file>qml/Overview.qml</file>
-        <file>qml/Transfer.qml</file>
-        <file>qml/AboutDialog.qml</file>
-        <file>qml/History.qml</file>
-        <file>qml/Mining.qml</file>
-        <file>qml/AddressTextField.qml</file>
-        <file>qml/Balance.qml</file>
-        <file>qml/HashRate.qml</file>
-        <file>qml/GuardedColumnLayout.qml</file>
+        <file>qml/SplashScreen.qml</file>
+        <file>qml/Wizard/WalletWizardWindow.qml</file>
+        <file>qml/MoneroGUI/MainWindow.qml</file>
+        <file>qml/MoneroGUI/Overview.qml</file>
+        <file>qml/MoneroGUI/Transfer.qml</file>
+        <file>qml/MoneroGUI/AboutDialog.qml</file>
+        <file>qml/MoneroGUI/History.qml</file>
+        <file>qml/MoneroGUI/Mining.qml</file>
+        <file>qml/MoneroGUI/Common/Balance.qml</file>
+        <file>qml/MoneroGUI/Common/HashRate.qml</file>
+        <file>qml/Utils/AddressTextField.qml</file>
+        <file>qml/Utils/GuardedColumnLayout.qml</file>
+        <file>qml/Utils/PasswordTextField.qml</file>
+        <file>qml/Baguette.png</file>
+        <file>qml/Wizard/AbstractPage.qml</file>
+        <file>qml/Wizard/ImportWalletPage.qml</file>
+        <file>qml/Wizard/CreateWalletPage.qml</file>
+        <file>qml/Wizard/ConfirmCreateWalletPage.qml</file>
     </qresource>
 </RCC>
