@@ -27,11 +27,14 @@
 #include "RPC/RPCWallet.h"
 #include "RPC/RPCMiner.h"
 
+#include "WalletHandler.h"
 
 int main(int argc, char *argv[])
 {
 
     QGuiApplication app(argc, argv);
+
+    int lTestMode = 0;
 
     /* Loads settings. TODO : Put an interface in the GUI */
     const QString& lConfigFile = QDir::homePath() + "/.bitmonero-qt/bitmonero-qt.conf";
@@ -55,38 +58,34 @@ int main(int argc, char *argv[])
     int lMinerPort = lSettings.value("miner_port", 18081).toInt();
     const QString& lMinerAddress = lSettings.value("miner_mining_address","").toString();
 
+    const QString& lWalletProgram = lSettings.value("wallet_program","/usr/bin/simplewallet").toString();
 
     qDebug() << "[Loaded config]";
     qDebug() << "Daemon : " << lMoneroUri << " " << lMoneroPort;
     qDebug() << "Wallet : " << lWalletUri << " " << lWalletPort;
     qDebug() << "Miner : " << lMinerUri << " " << lMinerPort;
+    qDebug() << "Wallet program : " << lWalletProgram;
     /* */
 
 
-    QProcess* lWalletProcess = new QProcess();
+    WalletHandler wh(lWalletProgram);
+
     /* If a password was set, starts the Wallet as subprocess */
     if ( lSettings.contains("wallet_password") ) {
 
+        /* spawn_wallet defaults to true when password is set in config. Check if user disabled wallet opening */
         if ( lSettings.value("spawn_wallet", true).toBool() ) {
 
             const QString& lWalletFile = lSettings.value("wallet_file", QDir::homePath() + "/.bitmonero/wallet.bin").toString();
             const QString& lWalletPassword = lSettings.value("wallet_password").toString();
-            const QString& lWalletProgram = lSettings.value("wallet_program","/usr/bin/simplewallet").toString();
             const QString& lWalletIP = lSettings.value("wallet_bind_ip", "127.0.0.1").toString();
 
-
-            QStringList lArguments;
-
-            lArguments.append("--wallet=" + lWalletFile);
-            lArguments.append("--pass=" + lWalletPassword);
-            lArguments.append("--rpc-bind-port=" + QString::number(lWalletPort));
-            lArguments.append("--rpc-bind-ip=" + lWalletIP);
-
-            lWalletProcess->start(lWalletProgram, lArguments);
-
-            qDebug() << "Wallet process started on " + lWalletIP + ":" + QString::number(lWalletPort) + " (" + lWalletProgram + ")";
-
-            QThread::sleep(3);
+            if ( wh.openWalletAsync(lWalletFile, lWalletPassword, lWalletIP, lWalletPort) ) {
+                qDebug() << "Wallet process started on " + lWalletIP + ":" + QString::number(lWalletPort) + " (" + lWalletProgram + ")";
+            }
+            else {
+                qDebug() << "Failed to start wallet ("<< lWalletProgram << ")";
+            }
 
         }
         else {
@@ -152,7 +151,7 @@ int main(int argc, char *argv[])
     qDebug() << "End of processes";
 
 
-    lWalletProcess->kill();
+    wh.closeWallet();
 
     return lReturnCode;
 }
