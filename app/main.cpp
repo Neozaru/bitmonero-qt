@@ -1,3 +1,5 @@
+#include <iostream>
+
 #include <QObject>
 
 #include <QCoreApplication>
@@ -27,6 +29,7 @@
 #include "RPC/RPCWallet.h"
 #include "RPC/RPCMiner.h"
 
+#include "WalletSettings.h"
 #include "WalletHandler.h"
 
 int main(int argc, char *argv[])
@@ -34,69 +37,33 @@ int main(int argc, char *argv[])
 
     QGuiApplication app(argc, argv);
 
-    int lTestMode = 0;
-
     /* Loads settings. TODO : Put an interface in the GUI */
-    const QString& lConfigFile = QDir::homePath() + "/.bitmonero-qt/bitmonero-qt.conf";
-    QSettings lSettings(lConfigFile, QSettings::IniFormat);
+    WalletSettings lWalletSettings;
 
 
-    /* Used for auto creating config file */
-    if ( !lSettings.value("mining_enabled").isValid() ) {
-        lSettings.setValue("mining_enabled", false);
-    }
-
-    bool lMiningEnabled = lSettings.value("mining_enabled",false).toBool();
-
-    const QString& lMoneroUri = lSettings.value("daemon_uri", "localhost/json_rpc").toString();
-    int lMoneroPort = lSettings.value("daemon_port", 18081).toInt();
-
-    const QString& lWalletUri = lSettings.value("wallet_uri", "localhost").toString();
-    int lWalletPort = lSettings.value("wallet_port", 19091).toInt();
-
-    const QString& lMinerUri = lSettings.value("miner_uri", "localhost").toString();
-    int lMinerPort = lSettings.value("miner_port", 18081).toInt();
-    const QString& lMinerAddress = lSettings.value("miner_mining_address","").toString();
-
-    const QString& lWalletProgram = lSettings.value("wallet_program","/usr/bin/simplewallet").toString();
-
-    qDebug() << "[Loaded config]";
-    qDebug() << "Daemon : " << lMoneroUri << " " << lMoneroPort;
-    qDebug() << "Wallet : " << lWalletUri << " " << lWalletPort;
-    qDebug() << "Miner : " << lMinerUri << " " << lMinerPort;
-    qDebug() << "Wallet program : " << lWalletProgram;
-    /* */
-
-
-    WalletHandler wh(lWalletProgram);
+    std::cout << lWalletSettings;
+    WalletHandler lWalletHandler(lWalletSettings.getWalletProgram());
 
     /* If a password was set, starts the Wallet as subprocess */
-    if ( lSettings.contains("wallet_password") ) {
+    if ( lWalletSettings.isWalletPasswordDefined() ) {
 
         /* spawn_wallet defaults to true when password is set in config. Check if user disabled wallet opening */
-        if ( lSettings.value("spawn_wallet", true).toBool() ) {
+        if ( lWalletSettings.shouldSpawnWallet() ) {
 
-            const QString& lWalletFile = lSettings.value("wallet_file", QDir::homePath() + "/.bitmonero/wallet.bin").toString();
-            const QString& lWalletPassword = lSettings.value("wallet_password").toString();
-            const QString& lWalletIP = lSettings.value("wallet_bind_ip", "127.0.0.1").toString();
-
-            if ( wh.openWalletAsync(lWalletFile, lWalletPassword, lWalletIP, lWalletPort) ) {
-                qDebug() << "Wallet process started on " + lWalletIP + ":" + QString::number(lWalletPort) + " (" + lWalletProgram + ")";
-            }
-            else {
-                qDebug() << "Failed to start wallet ("<< lWalletProgram << ")";
+            if ( !lWalletHandler.openWalletAsync(lWalletSettings.getWalletFile(), lWalletSettings.getWalletPassword(), lWalletSettings.getWalletIP(), lWalletSettings.getWalletPort()) ) {
+                qDebug() << "Failed to start wallet ("<< lWalletSettings.getWalletProgram() << ")";
             }
 
         }
         else {
-            qDebug() << "'spawn_wallet' disabled. Connecting to existing wallet on port" << lWalletPort;
+            qDebug() << "'spawn_wallet' disabled. Connecting to existing wallet on port" << lWalletSettings.getWalletPort();
         }
 
 
     }
     else {
         qDebug() << "Sèche linge";
-        qDebug() << "Wallet configuration not found : 'wallet_password'. Please ensure an RPC wallet (simplewallet) is running on port" << lWalletPort;
+        qDebug() << "Wallet configuration not found : 'wallet_password'. Please ensure an RPC wallet (simplewallet) is running on port" << lWalletSettings.getWalletPort();
     }
 
 
@@ -109,8 +76,8 @@ int main(int argc, char *argv[])
 
 
     /* If a custom mining address is configured, assign it. Use wallet address otherwise */
-    if ( !lMinerAddress.isEmpty() ) {
-        lMinerModel.setAddress(lMinerAddress);
+    if ( lWalletSettings.isMiningAddressConfigured() ) {
+        lMinerModel.setAddress(lWalletSettings.getMiningAddress());
     }
     else {
         QObject::connect(&lWalletModel,SIGNAL(addressChanged(QString)),&lMinerModel,SLOT(setAddress(QString)));
@@ -121,8 +88,8 @@ int main(int argc, char *argv[])
     //    MoneroInterface* monero = new RPCMonero(lMoneroUri, lMoneroPort);
 
     /* RAII */
-    WalletInterface* lWallet = new RPCWallet(lWalletModel, lWalletUri, lWalletPort);
-    MinerInterface* lMiner = new RPCMiner(lMinerModel, lMinerUri, lMinerPort);
+    WalletInterface* lWallet = new RPCWallet(lWalletModel, lWalletSettings.getWalletUri(), lWalletSettings.getWalletPort());
+    MinerInterface* lMiner = new RPCMiner(lMinerModel, lWalletSettings.getMinerUri(), lWalletSettings.getMinerPort());
 
 
     /* Pushing models into views */
@@ -131,9 +98,10 @@ int main(int argc, char *argv[])
     engine.rootContext()->setContextProperty("wallet", &lWalletModel);
     engine.rootContext()->setContextProperty("miner", &lMinerModel);
 
-    engine.rootContext()->setContextProperty("wallet_handler", &wh);
+    engine.rootContext()->setContextProperty("wallet_handler", &lWalletHandler);
 
     QQmlComponent component(&engine, QUrl("qrc:/qml/main.qml"));
+//    QQmlComponent component(&engine, QUrl("qrc:/qml/wizard.qml"));
 
     component.create();
     if ( !component.isReady() ) {
@@ -143,17 +111,19 @@ int main(int argc, char *argv[])
     }
 
 
-    app.processEvents();
+//    app.processEvents();
     /* Allow to exit the application */
     QObject::connect(&engine,SIGNAL(quit()),&app,SLOT(quit()));
 
+
+    qDebug() << "STARTING APP";
     int lReturnCode = app.exec();
 
 
     qDebug() << "End of processes";
 
 
-    wh.closeWallet();
+    lWalletHandler.closeWallet();
 
     return lReturnCode;
 }

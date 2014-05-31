@@ -9,13 +9,14 @@ import "MoneroGUI"
 
 //Item {
 
-    ApplicationWindow {
-        id: startupWindow
+//    ApplicationWindow {
+//        id: startupWindow
 
-        visible: false
+//        visible: true
 
-        width: 640
-        height: 480
+
+//        width: 640
+//        height: 480
 
 
 
@@ -32,25 +33,29 @@ import "MoneroGUI"
 
         MainWindow {
             id: mainWindow
-            visible: false
+            visible: true
+
+
+            width: 640
+            height: 480
         }
 
-        WalletWizardWindow {
-            visible: true;
+//        WalletWizardWindow {
+//            visible: true;
 
-            width: 400
-            height: 300
-
-
-            x: Screen.desktopAvailableWidth / 2
-            y: Screen.desktopAvailableHeight / 2
+//            width: 400
+//            height: 300
 
 
-            onWizardSuccess: {
-                visible = false;
-                mainWindow.visible = true;
-            }
+//            x: Screen.desktopAvailableWidth / 2
+//            y: Screen.desktopAvailableHeight / 2
 
-        }
 
-    }
+//            onWizardSuccess: {
+//                visible = false;
+//                mainWindow.visible = true;
+//            }
+
+//        }
+
+//    }
