@@ -68,7 +68,7 @@ signals:
 
 
 public slots:
-    Q_INVOKABLE bool transfer(double amount, const QString& address);
+    Q_INVOKABLE bool transfer(double amount, const QString& address, int pFee, const QString& pPaymentId);
 
 
 private:

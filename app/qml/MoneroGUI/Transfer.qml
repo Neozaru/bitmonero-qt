@@ -70,7 +70,6 @@ GuardedColumnLayout {
             anchors.left: pastePaymentIDButton.right
             anchors.right: parent.right
 
-            text: ""
             placeholderText: "Payment ID"
 
             validator: RegExpValidator{ regExp: /[a-zA-Z0-9]{64}/ }
@@ -112,7 +111,7 @@ GuardedColumnLayout {
                         lastTransferError = "Please enter a valid payment ID (64 chars) or disable it";
                     }
                     else {
-                        var res = wallet.transfer(Math.pow(10,12) * parseFloat(inputAmount.text), inputAddress.text, inputPaymentId.text);
+                        var res = wallet.transfer(Math.pow(10,12) * parseFloat(inputAmount.text), inputAddress.text, 1000000, definePaymentIdCheckbox ? inputPaymentId.text : "");
                         lastTransactionLayout.visible = false;
                     }
 

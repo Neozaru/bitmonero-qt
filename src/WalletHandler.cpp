@@ -120,7 +120,9 @@ bool WalletHandler::createWallet(const QString& pFile, const QString& pPassword)
 
     lArguments.append("--generate-new-wallet=" + pFile);
     lArguments.append("--password="+ pPassword);
-    lArguments.append("--exit-after-cmd=true");
+    /* Hack for forcing program to exit after generation */
+    lArguments.append("--command=address");
+    /**/
     lCreateWalletProcess.setArguments(lArguments);
 
     lCreateWalletProcess.start();
@@ -231,7 +233,6 @@ QProcess* WalletHandler::execTryWallet(const QString& pFile, const QString& pPas
     lArguments.append("--wallet=" + pFile);
     lArguments.append("--password="+ pPassword);
     lArguments.append("--command=getbalance");
-    lArguments.append("--exit-after-cmd=true");
     lTryWalletProcess->setArguments(lArguments);
 
     lTryWalletProcess->start();

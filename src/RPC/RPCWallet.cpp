@@ -1,6 +1,7 @@
 #include "RPCWallet.h"
 
 #include<QTimer>
+#include <iostream>
 
 RPCWallet::RPCWallet(WalletModel& pModel, const QString& pHost, unsigned int pPort)
     : WalletInterface(pModel), rpc(pHost,pPort)
