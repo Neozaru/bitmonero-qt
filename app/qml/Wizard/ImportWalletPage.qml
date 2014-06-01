@@ -62,7 +62,7 @@ AbstractPage {
             Label {
                 id: walletFromFileLabel
 
-                text: "Choose your wallet file (<wallet_name>.bin)"
+                text: "Choose your wallet file (can be located in .bitmonero/)"
             }
 
             RowLayout {
@@ -106,35 +106,31 @@ AbstractPage {
 
         }
 
+        function areAcceptableInputs() {
+            return ;
+        }
 
         Button {
             text: "Import Wallet"
 
+            enabled: ((
+                          useDefaultImportLocationCheckbox.checked && walletNameInput.acceptableInput ||
+                          walletLocationInput.length > 0
+                      )
+                      && walletPasswordInput.acceptableInput)
+
             onClicked: {
 
-                if (
-                        (
-                            useDefaultImportLocationCheckbox.checked && walletLocationInput.length > 0 ||
-                            walletNameInput.acceptableInput
-                        )
-                        && walletPasswordInput.acceptableInput) {
+                if (true) {
 
                     var default_location = wallet_handler.default_wallet_location;
 
-                    var location = useDefaultImportLocationCheckbox.checked ? default_location + walletNameInput.text : walletLocationInput.text.replace('file://','')
+                    var location = useDefaultImportLocationCheckbox.checked ? default_location + walletNameInput.text : walletLocationInput.text.replace('file://','');
 
-                    console.log("Trying to locate wallet at : " + location)
+                    settings.setWalletFile(location);
+                    settings.setWalletPassword(walletPasswordInput.text)
 
-                    var res = wallet_handler.tryWallet(location, walletPasswordInput.text);
-
-
-                    if (res) {
-                        goToNext();
-                    }
-                    else {
-                        importWalletError = "An error has occured while importing your wallet";
-                    }
-
+                    goToNext();
 
                 }
 

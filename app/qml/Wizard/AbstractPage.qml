@@ -18,7 +18,6 @@ import QtQuick.Dialogs 1.0
         }
 
     }
-//    property var next: function() { stack.push(nextPage) }
 
     Button {
 

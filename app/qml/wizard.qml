@@ -1,6 +1,9 @@
 import QtQuick 2.0
 
-Rectangle {
-    width: 100
-    height: 62
+import "qrc:/qml/Wizard"
+
+WalletWizardWindow {
+    width: 400
+    height: 300
+    visible: true
 }

@@ -4,20 +4,7 @@ import QtQuick.Layouts 1.0
 import QtQuick.Dialogs 1.0
 import QtQuick.Window 2.1
 
-import "Wizard"
 import "MoneroGUI"
-
-//Item {
-
-//    ApplicationWindow {
-//        id: startupWindow
-
-//        visible: true
-
-
-//        width: 640
-//        height: 480
-
 
 
 //        SplashScreen {
@@ -31,31 +18,12 @@ import "MoneroGUI"
 //        }
 
 
-        MainWindow {
-            id: mainWindow
-            visible: true
+MainWindow {
+    id: mainWindow
+    visible: true
 
 
-            width: 640
-            height: 480
-        }
+    width: 640
+    height: 480
+}
 
-//        WalletWizardWindow {
-//            visible: true;
-
-//            width: 400
-//            height: 300
-
-
-//            x: Screen.desktopAvailableWidth / 2
-//            y: Screen.desktopAvailableHeight / 2
-
-
-//            onWizardSuccess: {
-//                visible = false;
-//                mainWindow.visible = true;
-//            }
-
-//        }
-
-//    }

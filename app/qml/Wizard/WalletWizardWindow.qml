@@ -8,6 +8,7 @@ import "qrc:/qml/Utils"
 ApplicationWindow {
     id: walletWizardWindow
 
+
     signal walletCreated();
     signal walletImported();
     signal wizardSuccess();
@@ -43,8 +44,6 @@ ApplicationWindow {
         initialItem: welcomePage
 
     }
-
-//    myStack.initialItem: welcomePage
 
     Component {
         id: welcomePage
@@ -124,8 +123,6 @@ ApplicationWindow {
             passwordToConfirm: walletPassword
         }
 
-//        Component.onCompleted: {  }
-
     }
 
     Component {
@@ -145,18 +142,83 @@ ApplicationWindow {
 
         ColumnLayout {
 
-            Label {
-                text: "Monero Wallet was successfully configured.\n You can now start using your Wallet"
+            property int status: 0;
+
+
+            ColumnLayout {
+                visible: status == 0
+
+                Label {
+                    text: "Checking configuration...\nThis operation will take less than one minute."
+                }
+
+                ProgressBar {
+                    indeterminate: true
+                }
             }
 
-            Button {
-                text: "Go !"
+            ColumnLayout {
+                visible: status == 1
 
-                onClicked: { wizardSuccess() }
+                Label {
+                    text: "Monero Wallet was successfully configured.\n You can now start using your Wallet"
+                }
+
+                Button {
+                    text: "Go !"
+
+                    onClicked: { wizardSuccess() }
+                }
+
             }
+
+            ColumnLayout {
+                visible: status == -1
+
+                Label {
+                    text: "An error has occured during configuration :("
+                }
+
+                Button {
+                    text: "Retry"
+
+                    onClicked: { myStack.clear(); myStack.push(myStack.initialItem) }
+                }
+
+            }
+
+            Component.onCompleted: {
+
+
+                if (!wallet_handler.tryWalletAsync(settings.wallet_file,settings.wallet_password)) {
+                    status = -1
+                }
+
+
+            }
+
+            Connections {
+                target: wallet_handler
+                onTryWalletResult: {
+                    console.log(result);
+
+                    if ( result ) {
+                        status = 1
+                    }
+                    else {
+                        status = -1
+                    }
+                }
+
+            }
+
 
 
         }
+    }
+
+    onWizardSuccess: {
+        visible = false; Qt.quit()
     }
 
 

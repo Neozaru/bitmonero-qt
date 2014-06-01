@@ -140,7 +140,7 @@ ApplicationWindow {
             }
 
             RowLayout {
-                visible: false
+                visible: true
                 anchors.centerIn: parent
 
                 Label {
@@ -148,6 +148,10 @@ ApplicationWindow {
                 }
                 Label {
                     text: "0/0"
+                }
+
+                Button {
+                    onClicked: { appstate = 2 }
                 }
             }
 

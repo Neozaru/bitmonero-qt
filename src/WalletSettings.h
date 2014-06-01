@@ -1,16 +1,24 @@
 #ifndef WALLETSETTINGS_H
 #define WALLETSETTINGS_H
 
+#include <iostream>
 #include <ostream>
 #include <string>
 #include <sstream>
 
+#include <QObject>
 #include <QSettings>
 #include <QDir>
 
-class WalletSettings
+class WalletSettings : public QObject
 {
+    Q_OBJECT
+
+    Q_PROPERTY(QString wallet_password READ getWalletPassword WRITE setWalletPassword);
+    Q_PROPERTY(QString wallet_file READ getWalletFile WRITE setWalletFile);
+
 public:
+//    WalletSettings()  { }
     WalletSettings(const QString& pConfigFile = QDir::homePath() + "/.bitmonero-qt/bitmonero-qt.conf");
 
 
@@ -87,8 +95,13 @@ public:
     }
 
 
+    Q_INVOKABLE bool areSettingsAcceptable() const {
+        return ( spawn_wallet && !wallet_program.isEmpty() && !wallet_password.isEmpty() && !wallet_file.isEmpty() ) || !spawn_wallet;
+    }
 
-    const std::string& toString() const {
+    bool saveWalletConfiguration();
+
+    const std::string toString() const {
 
         std::stringstream lStr;
         lStr << "[Current config]";
@@ -96,11 +109,24 @@ public:
         lStr << "\n" << "Wallet : " << getWalletUri().toStdString() << " " << getWalletPort();
         lStr << "\n" << "Miner : " << getMinerUri().toStdString() << " " << getMinerPort();
         lStr << "\n" << "Wallet program : " << getWalletProgram().toStdString();
+        lStr << "\n" << "Wallet file : " << getWalletFile().toStdString();
 
         return lStr.str();
 
     }
 
+
+public slots:
+    void setWalletPassword(const QString& pWalletPassword)
+    {
+        wallet_password = pWalletPassword;
+    }
+
+    void setWalletFile(const QString& pWalletFile)
+    {
+        std::cout << "Set Wallet file " << pWalletFile.toStdString() << std::endl;
+        wallet_file = pWalletFile;
+    }
 
 private:
 

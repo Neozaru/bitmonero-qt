@@ -1,5 +1,11 @@
 #include "WalletSettings.h"
 
+//WalletSettings::WalletSettings()
+//    : WalletSettings(QDir::homePath() + "/.bitmonero-qt/bitmonero-qt.conf")
+//{
+
+//}
+
 WalletSettings::WalletSettings(const QString& pConfigFile)
     : settings(pConfigFile, QSettings::IniFormat)
 {
@@ -32,3 +38,18 @@ WalletSettings::WalletSettings(const QString& pConfigFile)
     spawn_wallet = settings.value("spawn_wallet", true).toBool() ;
 }
 
+
+bool WalletSettings::saveWalletConfiguration()
+{
+
+    if ( !areSettingsAcceptable() ) {
+        return false;
+    }
+
+    settings.setValue("wallet_program", wallet_program);
+    settings.setValue("wallet_file", wallet_file);
+    settings.setValue("wallet_password", wallet_password);
+
+    return true;
+
+}

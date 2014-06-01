@@ -17,8 +17,6 @@ Rectangle {
         anchors.fill: splashScreenContainer // do specify the size and position
     }
 
-//    color: "blue"
-
     MouseArea {
 
         onClicked: { splashScreenContainer.splashScreenCompleted()  }
@@ -42,9 +40,6 @@ Rectangle {
             splashScreenContainer.splashScreenCompleted();
         }
 
-//        onCompleted: {
-//            splashScreenContainer.splashScreenCompleted()
-//        }
     }
 
 

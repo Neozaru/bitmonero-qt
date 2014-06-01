@@ -32,6 +32,19 @@
 #include "WalletSettings.h"
 #include "WalletHandler.h"
 
+bool createComponent(QQmlComponent& pComponent) {
+
+    pComponent.create();
+    if ( !pComponent.isReady() ) {
+        qDebug() << "Component not ready";
+        qDebug() << "Error " << pComponent.errors();
+        return false;
+    }
+
+    return true;
+
+}
+
 int main(int argc, char *argv[])
 {
 
@@ -41,33 +54,8 @@ int main(int argc, char *argv[])
     WalletSettings lWalletSettings;
 
 
-    std::cout << lWalletSettings;
+    std::cout << lWalletSettings << std::endl;
     WalletHandler lWalletHandler(lWalletSettings.getWalletProgram());
-
-    /* If a password was set, starts the Wallet as subprocess */
-    if ( lWalletSettings.isWalletPasswordDefined() ) {
-
-        /* spawn_wallet defaults to true when password is set in config. Check if user disabled wallet opening */
-        if ( lWalletSettings.shouldSpawnWallet() ) {
-
-            if ( !lWalletHandler.openWalletAsync(lWalletSettings.getWalletFile(), lWalletSettings.getWalletPassword(), lWalletSettings.getWalletIP(), lWalletSettings.getWalletPort()) ) {
-                qDebug() << "Failed to start wallet ("<< lWalletSettings.getWalletProgram() << ")";
-            }
-
-        }
-        else {
-            qDebug() << "'spawn_wallet' disabled. Connecting to existing wallet on port" << lWalletSettings.getWalletPort();
-        }
-
-
-    }
-    else {
-        qDebug() << "Sèche linge";
-        qDebug() << "Wallet configuration not found : 'wallet_password'. Please ensure an RPC wallet (simplewallet) is running on port" << lWalletSettings.getWalletPort();
-    }
-
-
-    /* So we can finally start (TODO: Refactor init/config process) */
 
 
     MoneroModel lMoneroModel;
@@ -84,46 +72,92 @@ int main(int argc, char *argv[])
     }
 
 
-    /* Set up RPC interfaces. TODO : Create a builder */
-    //    MoneroInterface* monero = new RPCMonero(lMoneroUri, lMoneroPort);
+    /* Pushing models into views */
+    QQmlEngine lEngine;
+    lEngine.rootContext()->setContextProperty("monero", &lMoneroModel);
+    lEngine.rootContext()->setContextProperty("wallet", &lWalletModel);
+    lEngine.rootContext()->setContextProperty("miner", &lMinerModel);
+
+    lEngine.rootContext()->setContextProperty("wallet_handler", &lWalletHandler);
+
+    lEngine.rootContext()->setContextProperty("settings", &lWalletSettings);
+
 
     /* RAII */
     WalletInterface* lWallet = new RPCWallet(lWalletModel, lWalletSettings.getWalletUri(), lWalletSettings.getWalletPort());
     MinerInterface* lMiner = new RPCMiner(lMinerModel, lWalletSettings.getMinerUri(), lWalletSettings.getMinerPort());
 
 
-    /* Pushing models into views */
-    QQmlEngine engine;
-    engine.rootContext()->setContextProperty("monero", &lMoneroModel);
-    engine.rootContext()->setContextProperty("wallet", &lWalletModel);
-    engine.rootContext()->setContextProperty("miner", &lMinerModel);
+    /* Allow to exit the application */
+    QObject::connect(&lEngine,SIGNAL(quit()),&app,SLOT(quit()));
 
-    engine.rootContext()->setContextProperty("wallet_handler", &lWalletHandler);
+    {
+        bool lRunMainWindow = lWalletSettings.areSettingsAcceptable();
+        if (!lRunMainWindow) {
+            QQmlComponent lComponent(&lEngine, QUrl("qrc:/qml/wizard.qml"));
+            if ( !createComponent(lComponent) ) {
+                qDebug() << "Aborting";
+                return 1;
+            }
 
-    QQmlComponent component(&engine, QUrl("qrc:/qml/main.qml"));
-//    QQmlComponent component(&engine, QUrl("qrc:/qml/wizard.qml"));
-
-    component.create();
-    if ( !component.isReady() ) {
-        qDebug() << "Component not ready";
-        qDebug() << "Error " << component.errors();
-        return 2;
+            /* Starts the wizard */
+            app.exec();
+        }
     }
 
-
-//    app.processEvents();
-    /* Allow to exit the application */
-    QObject::connect(&engine,SIGNAL(quit()),&app,SLOT(quit()));
+    std::cout << "[New config]" << std::endl;
+    std::cout << lWalletSettings << std::endl;
 
 
-    qDebug() << "STARTING APP";
-    int lReturnCode = app.exec();
+    {
+        bool lRunMainWindow = lWalletSettings.areSettingsAcceptable();
+
+        if (lRunMainWindow) {
+
+            /* spawn_wallet defaults to true when password is set in config. Check if user disabled wallet opening */
+            if ( lWalletSettings.shouldSpawnWallet() ) {
+
+                if ( !lWalletHandler.tryWallet(lWalletSettings.getWalletFile(), lWalletSettings.getWalletPassword()) ) {
+                    qWarning() << "Wallet opening failed. Aborting.";
+                    return 2;
+                }
 
 
-    qDebug() << "End of processes";
+                if ( !lWalletHandler.openWalletAsync(lWalletSettings.getWalletFile(), lWalletSettings.getWalletPassword(), lWalletSettings.getWalletIP(), lWalletSettings.getWalletPort()) ) {
+                    qDebug() << "Failed to start wallet ("<< lWalletSettings.getWalletProgram() << ")";
+                    return 2;
+                }
+
+            }
+            else {
+                qDebug() << "'spawn_wallet' disabled. Connecting to existing wallet on port" << lWalletSettings.getWalletPort();
+            }
 
 
-    lWalletHandler.closeWallet();
 
-    return lReturnCode;
+            /* At this stage, we can consider that the program configuration is sane. Let's save it */
+            lWalletSettings.saveWalletConfiguration();
+
+            QQmlComponent lComponent(&lEngine, QUrl("qrc:/qml/main.qml"));
+
+
+            if ( !createComponent(lComponent) ) {
+                qDebug() << "Aborting";
+                return 1;
+            }
+
+            /* Starts the main app */
+            int lReturnCode = app.exec();
+            qDebug() << "End of processes";
+
+            lWalletHandler.closeWallet();
+
+            return lReturnCode;
+        }
+
+    }
+
+    qDebug() << "Not configured";
+    return 0;
+
 }

@@ -41,7 +41,8 @@ AbstractPage {
             var res = wallet_handler.createWallet(walletFileToCreate, passwordToConfirm);
             if ( res ) {
 
-//                        myStack.push(successPage);
+                settings.wallet_file = walletFileToCreate;
+                settings.wallet_password = passwordToConfirm;
                 goToNext();
 
 
