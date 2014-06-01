@@ -4,6 +4,6 @@ import QtQuick.Controls 1.1
 TextField {
 
     maximumLength: 95
-    textColor: if (acceptableInput) { "green" } else { "red" }
+    textColor: acceptableInput ? "green" : "red"
     validator: RegExpValidator { regExp: /[a-zA-Z0-9]{95}/ }
 }

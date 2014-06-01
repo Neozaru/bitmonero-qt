@@ -21,7 +21,7 @@ RPCWallet::RPCWallet(WalletModel& pModel, const QString& pHost, unsigned int pPo
 
 
 
-void RPCWallet::transfer(double pAmount, const QString& pAddress, int pFee) {
+void RPCWallet::transfer(double pAmount, const QString& pAddress, int pFee, const QString& pPaymentId) {
     QJsonObject lObj;
     QJsonArray lDests;
 
@@ -34,6 +34,7 @@ void RPCWallet::transfer(double pAmount, const QString& pAddress, int pFee) {
     /**/
 
     lObj["fee"] = pFee;
+    lObj["payment_id"] = pPaymentId;
 
     /* TODO */
     lObj["mixin"] = 0;

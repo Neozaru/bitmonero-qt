@@ -36,10 +36,53 @@ GuardedColumnLayout {
 
     }
 
+    CheckBox {
+        id: definePaymentIdCheckbox
+
+        anchors.top: inputAddress.bottom
+        anchors.topMargin: 5
+
+        text: "Define a payment ID for this transfer (useful for services/exchanges)"
+        checked: false
+    }
+
+    RowLayout {
+        id: paymentIDLayout
+
+        anchors.top: definePaymentIdCheckbox.bottom
+        anchors.left: parent.left
+        anchors.right: parent.right
+        visible: definePaymentIdCheckbox.checked
+
+        Button {
+            id: pastePaymentIDButton
+
+            anchors.top: definePaymentIdCheckbox
+
+
+            text: "Paste"
+            onClicked: { inputPaymentId.text = ""; inputPaymentId.paste() }
+        }
+
+        TextField {
+            id: inputPaymentId
+
+            anchors.left: pastePaymentIDButton.right
+            anchors.right: parent.right
+
+            text: ""
+            placeholderText: "Payment ID"
+
+            validator: RegExpValidator{ regExp: /[a-zA-Z0-9]{64}/ }
+            textColor: acceptableInput ? "green" : "red"
+        }
+
+    }
+
     TextField {
         id: inputAmount
 
-        anchors.top: inputAddress.bottom
+        anchors.top: paymentIDLayout.bottom
         anchors.topMargin: 5
 
         placeholderText: "0.00"
@@ -47,6 +90,7 @@ GuardedColumnLayout {
 
         validator: DoubleValidator { bottom: 0.0; top: 100000000 }
     }
+
 
     Button {
         id: buttonSend
@@ -64,8 +108,11 @@ GuardedColumnLayout {
                     else if (!inputAddress.acceptableInput) {
                         lastTransferError = "Please enter a recipient address";
                     }
+                    else if (inputPaymentId.text.length != 0 && !inputPaymentId.acceptableInput) {
+                        lastTransferError = "Please enter a valid payment ID (64 chars) or disable it";
+                    }
                     else {
-                        var res = wallet.transfer(Math.pow(10,12) * parseFloat(inputAmount.text), inputAddress.text);
+                        var res = wallet.transfer(Math.pow(10,12) * parseFloat(inputAmount.text), inputAddress.text, inputPaymentId.text);
                         lastTransactionLayout.visible = false;
                     }
 
