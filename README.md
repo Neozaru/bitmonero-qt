@@ -72,7 +72,8 @@ And follow the instructions of the Wizard. You can use an existing Wallet file o
 
 #### Edit ~/.bitmonero-qt/bitmonero-qt.conf
 
-You have to configure *bitmonero-qt* for not attempting to open a Wallet itself.
+You have to configure *bitmonero-qt* to not attempting to open a Wallet itself.
+
     spawn_wallet=false
 
 #### Run *bitmonerod* and *simplewallet*
