@@ -9,13 +9,15 @@
 
 #include "JsonRPCCommunicator.h"
 #include "JsonRPCRequest.h"
-//#include "Models/WalletModel.h"
+#include "WalletSettings.h"
+
+#include "Models/WalletModel.h"
 
 class RPCWallet :  public QObject, public WalletInterface
 {
     Q_OBJECT
 public:
-    RPCWallet(WalletModel& pModel, const QString& pHost, unsigned int pPort);
+    RPCWallet(WalletModel& pModel, const WalletSettings& pSettings);
 
     void transfer(double pAmount, const QString& pAddress, int pFee, const QString& pPaymentId);
     void store();

@@ -1,10 +1,11 @@
 #include "RPCWallet.h"
 
-#include<QTimer>
+#include <QTimer>
 #include <iostream>
 
-RPCWallet::RPCWallet(WalletModel& pModel, const QString& pHost, unsigned int pPort)
-    : WalletInterface(pModel), rpc(pHost,pPort)
+
+RPCWallet::RPCWallet(WalletModel& pModel, const WalletSettings& pSettings)
+    : WalletInterface(pModel), rpc(pSettings.getWalletUri(), pSettings.getWalletPort())
 {
 
     pModel.setWalletInterface(this);
@@ -16,7 +17,7 @@ RPCWallet::RPCWallet(WalletModel& pModel, const QString& pHost, unsigned int pPo
     QObject::connect(lTimer,SIGNAL(timeout()), this, SLOT(getAddress()));
 
     lTimer->start(5000);
-//    lTimer->start();
+
 
 }
 

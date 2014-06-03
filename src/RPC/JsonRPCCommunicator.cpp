@@ -44,6 +44,7 @@ JsonRPCRequest* JsonRPCCommunicator::sendRequest(const QString& pMethod, const Q
     QNetworkReply* lReply = network_access_mgr.post(lReq, lJsonDoc.toJson());
 
     QObject::connect(lReply, SIGNAL(finished()), lJsonReq, SLOT(onRequestFinished()));
+    QObject::connect(lReply, SIGNAL(error(QNetworkReply::NetworkError)), lJsonReq, SLOT(onRequestError(QNetworkReply::NetworkError)));
 
 
     return lJsonReq;

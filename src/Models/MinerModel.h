@@ -20,10 +20,10 @@ class MinerModel : public AbstractModel
 public:
 
     enum miner_status_e {
-        UNKNOWN = -1,
-        OFF,
-        ON,
-        ERROR
+        STATUS_UNKNOWN = -1,
+        STATUS_OFF,
+        STATUS_ON,
+        STATUS_ERROR
     };
 
     MinerModel();

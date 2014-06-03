@@ -24,7 +24,8 @@ WalletSettings::WalletSettings(const QString& pConfigFile)
     miner_uri = settings.value("miner_uri", "localhost").toString();
     miner_port = settings.value("miner_port", 18081).toInt();
 
-    wallet_program = settings.value("wallet_program","/usr/bin/simplewallet").toString();
+    wallet_program = settings.value("wallet_program", "").toString();
+    daemon_program = settings.value("daemon_program", "").toString();
 
     mining_enabled = settings.value("mining_enabled",false).toBool();;
     mining_address = settings.value("miner_mining_address","").toString();
@@ -35,7 +36,8 @@ WalletSettings::WalletSettings(const QString& pConfigFile)
     wallet_password = settings.value("wallet_password","").toString();
 
 
-    spawn_wallet = settings.value("spawn_wallet", true).toBool() ;
+    spawn_wallet = settings.value("spawn_wallet", true).toBool();
+    spawn_daemon = settings.value("spawn_daemon", true).toBool();
 }
 
 
@@ -46,6 +48,7 @@ bool WalletSettings::saveWalletConfiguration()
         return false;
     }
 
+    /* Option which are settable with the GUI */
     settings.setValue("wallet_program", wallet_program);
     settings.setValue("wallet_file", wallet_file);
     settings.setValue("wallet_password", wallet_password);

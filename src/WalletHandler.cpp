@@ -6,12 +6,57 @@
 #include <QDebug>
 
 #include <QIODevice>
+#include <QDir>
 
+#include "Utils.h"
 
-WalletHandler::WalletHandler(const QString& pProgramPath)
-    : open(false)
+WalletHandler::WalletHandler(const WalletSettings& pWalletSettings)
+    : open(false), default_wallet_location(QDir::homePath() + "/.bitmonero/")
 {
-    main_process.setProgram(pProgramPath);
+
+    QString lWalletProgram = pWalletSettings.getWalletProgram();
+
+    if (lWalletProgram.isEmpty()) {
+
+        QStringList lSearchPaths;
+        lSearchPaths.append( QDir::currentPath() );
+        lSearchPaths.append( QDir::currentPath() + "/bitmonero/");
+        lSearchPaths.append( "/usr/bin" );
+        lSearchPaths.append( "/usr/local/bin" );
+
+
+        QStringList lWalletSearchFilenames;
+        lWalletSearchFilenames.append("simplewallet");
+        lWalletSearchFilenames.append("simplewallet.exe");
+
+
+        QStringList lFoundWalletExecutables = Utils::findExecutables(lSearchPaths, lWalletSearchFilenames);
+
+
+        qDebug() << "Found " << lFoundWalletExecutables.size() << " wallet executables : ";
+        for( const QString& lWalletExec : lFoundWalletExecutables ) {
+            qDebug() << "- " << lWalletExec;
+        }
+
+        if (!lFoundWalletExecutables.empty()) {
+            lWalletProgram = lFoundWalletExecutables.first();
+        }
+
+    }
+
+    if (!lWalletProgram.isEmpty()) {
+
+        main_process.setProgram(lWalletProgram);
+    }
+
+}
+
+WalletHandler::~WalletHandler() {
+
+    if(closeWallet()) {
+        qWarning() << "Ending Wallet process...";
+        main_process.waitForFinished(5000);
+    }
 
 }
 
@@ -153,7 +198,7 @@ bool WalletHandler::tryWalletProgram()
 
     lTryWalletProgramProcess.start();
 
-
+    /* Should finish */
     return lTryWalletProgramProcess.waitForFinished(2000);
 
 }

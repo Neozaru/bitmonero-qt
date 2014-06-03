@@ -4,7 +4,7 @@ TARGET= bitmonero-qt
 TEMPLATE = app
 QT += qml quick
 
-CONFIG += console
+CONFIG += console c++11
 
 SOURCES += main.cpp
 

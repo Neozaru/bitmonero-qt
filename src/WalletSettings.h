@@ -60,6 +60,18 @@ public:
     }
 
 
+    void setWalletProgram(const QString& pWalletProgram) {
+        wallet_program = pWalletProgram;
+    }
+
+    const QString& getDaemonProgram() const {
+        return daemon_program;
+    }
+
+    void setDaemonProgram(const QString& pDaemonProgram) {
+        daemon_program = pDaemonProgram;
+    }
+
     bool isMiningEnabled() {
         return mining_enabled;
     }
@@ -92,6 +104,10 @@ public:
 
     bool shouldSpawnWallet() const {
         return spawn_wallet;
+    }
+
+    bool shouldSpawnDaemon() const {
+        return spawn_daemon;
     }
 
 
@@ -142,6 +158,7 @@ private:
     int miner_port;
 
     QString wallet_program;
+    QString daemon_program;
 
     bool mining_enabled;
     QString mining_address;
@@ -152,6 +169,7 @@ private:
     QString wallet_ip;
 
     bool spawn_wallet;
+    bool spawn_daemon;
 
 };
 

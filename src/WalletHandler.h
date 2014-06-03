@@ -3,8 +3,9 @@
 
 #include <QProcess>
 #include <QObject>
-#include <QDir>
 #include <QDebug>
+
+#include "WalletSettings.h"
 
 /* TODO : Add an abstraction layer */
 class WalletHandler : public QObject
@@ -17,7 +18,13 @@ Q_PROPERTY(QString default_wallet_location READ getDefaultWalletLocation)
 
 public:
 
-    WalletHandler(const QString& pProgramPath = "/usr/bin/simplewallet");
+    WalletHandler(const WalletSettings& pWalletSettings);
+    ~WalletHandler();
+
+    bool isOk() const {
+        return !main_process.program().isEmpty();
+    }
+
 
     const QString& getDefaultWalletLocation() const
     {
@@ -56,9 +63,9 @@ private:
 
     bool walletDirectoryExists(const QString& pFile);
 
-    QString default_wallet_location = QDir::homePath() + "/.bitmonero/";
-    QProcess main_process;
     bool open;
+    QString default_wallet_location;
+    QProcess main_process;
 
 };
 

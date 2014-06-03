@@ -31,6 +31,9 @@
 
 #include "WalletSettings.h"
 #include "WalletHandler.h"
+#include "DaemonHandler.h"
+
+#include "Utils.h"
 
 bool createComponent(QQmlComponent& pComponent) {
 
@@ -45,18 +48,23 @@ bool createComponent(QQmlComponent& pComponent) {
 
 }
 
+
 int main(int argc, char *argv[])
 {
 
     QGuiApplication app(argc, argv);
+
+
 
     /* Loads settings. TODO : Put an interface in the GUI */
     WalletSettings lWalletSettings;
 
 
     std::cout << lWalletSettings << std::endl;
-    WalletHandler lWalletHandler(lWalletSettings.getWalletProgram());
 
+
+
+//    WalletHandler lWalletHandler(lWalletSettings.getWalletProgram());
 
     MoneroModel lMoneroModel;
     WalletModel lWalletModel;
@@ -74,23 +82,38 @@ int main(int argc, char *argv[])
 
     /* Pushing models into views */
     QQmlEngine lEngine;
+
+
+    /* RAII */
+    MoneroInterface* lMonero = new RPCMonero(lWalletSettings);
+    WalletInterface* lWallet = new RPCWallet(lWalletModel, lWalletSettings);
+    MinerInterface* lMiner = new RPCMiner(lMinerModel, lWalletSettings.getMinerUri(), lWalletSettings.getMinerPort());
+
+    WalletHandler lWalletHandler(lWalletSettings);
+
+    /* Check if bitmonerod daemon is ready */
+    if (!lMonero->isReady()) {
+        qCritical() << "Monero daemon error : Not started. Aborting.";
+        return 3;
+    }
+
+    if (!lWalletHandler.isOk()) {
+        qCritical() << "Wallet program error : Not executable. Abording.";
+    }
+
     lEngine.rootContext()->setContextProperty("monero", &lMoneroModel);
     lEngine.rootContext()->setContextProperty("wallet", &lWalletModel);
     lEngine.rootContext()->setContextProperty("miner", &lMinerModel);
 
+
     lEngine.rootContext()->setContextProperty("wallet_handler", &lWalletHandler);
-
     lEngine.rootContext()->setContextProperty("settings", &lWalletSettings);
-
-
-    /* RAII */
-    WalletInterface* lWallet = new RPCWallet(lWalletModel, lWalletSettings.getWalletUri(), lWalletSettings.getWalletPort());
-    MinerInterface* lMiner = new RPCMiner(lMinerModel, lWalletSettings.getMinerUri(), lWalletSettings.getMinerPort());
 
 
     /* Allow to exit the application */
     QObject::connect(&lEngine,SIGNAL(quit()),&app,SLOT(quit()));
 
+    /* Wizard instructions */
     {
         bool lRunMainWindow = lWalletSettings.areSettingsAcceptable();
         if (!lRunMainWindow) {
@@ -108,7 +131,7 @@ int main(int argc, char *argv[])
     std::cout << "[New config]" << std::endl;
     std::cout << lWalletSettings << std::endl;
 
-
+    /* Main Window instructions */
     {
         bool lRunMainWindow = lWalletSettings.areSettingsAcceptable();
 
@@ -151,11 +174,15 @@ int main(int argc, char *argv[])
             qDebug() << "End of processes";
 
             lWalletHandler.closeWallet();
+//            lDaemonHandler.kill();
+            delete lMonero;
 
             return lReturnCode;
         }
 
     }
+
+//    lDaemonHandler.kill();
 
     qDebug() << "Not configured";
     return 0;

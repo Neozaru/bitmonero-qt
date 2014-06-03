@@ -11,9 +11,36 @@
 #include <QJsonObject>
 #include <QJsonValue>
 
+#include <QEventLoop>
 
-RPCMonero::RPCMonero(const QString& pHost, unsigned int pPort) : rpc(pHost,pPort)
+
+RPCMonero::RPCMonero(const WalletSettings& pSettings)
+    : rpc(pSettings.getMoneroUri(),pSettings.getMoneroPort()), daemon_handler(pSettings)
 {
+
+    if (pSettings.shouldSpawnDaemon()) {
+
+//        daemon_handler = DaemonHandler(pSettings);
+
+        if (!daemon_handler.isOk()) {
+            qCritical() << "Configured to spawn 'bitmonerod' daemon but no executable found. Aborting...";
+//            throw std::l;
+//            TODO: throw
+            return;
+        }
+
+        if (!daemon_handler.execDaemon()) {
+            qCritical() << "'bitmonerod' Daemon start failed. Is '" << daemon_handler.getDaemonProgram() << "' the daemon executable ?";
+//            TODO: throw
+            return;
+        }
+        /* Not sure */
+        else {
+            qDebug() << "DAEMON STARTED";
+        }
+
+    }
+
     //TODO
     QTimer *timer = new QTimer();
     QObject::connect(timer, SIGNAL(timeout()), this, SLOT(update()));
@@ -31,6 +58,21 @@ WalletModel& RPCMonero::getWalletModel()
 void RPCMonero::update()
 {
 
+
+}
+
+bool RPCMonero::isReady() {
+
+    JsonRPCRequest* lReq = rpc.sendRequest("getheight",QJsonObject(), true);
+
+    /* Synchronous call */
+    QEventLoop loop;
+    QObject::connect(lReq, SIGNAL(jsonResponseReceived(QJsonObject,QJsonObject)), &loop, SLOT(quit()));
+    QObject::connect(lReq, SIGNAL(errorOccured(QNetworkReply::NetworkError)), &loop, SLOT(quit()));
+
+    loop.exec();
+
+    return lReq->getError() == QNetworkReply::NetworkError::NoError;
 
 }
 

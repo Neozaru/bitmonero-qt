@@ -9,13 +9,17 @@
 
 #include "JsonRPCCommunicator.h"
 
+#include "DaemonHandler.h"
+
 class RPCMonero : public MoneroInterface
 {
     Q_OBJECT
 
 public:
-    RPCMonero(const QString& pHost = "localhost", unsigned int pPort = 18081 );
+    RPCMonero(const WalletSettings& pSettings);
     ~RPCMonero() {}
+
+    bool isReady();
 
     WalletModel& getWalletModel();
 
@@ -26,6 +30,7 @@ public slots:
 private:
     JsonRPCCommunicator rpc;
     WalletModel wallet_model;
+    DaemonHandler daemon_handler;
 
 };
 

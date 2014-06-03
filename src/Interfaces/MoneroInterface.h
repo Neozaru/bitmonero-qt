@@ -5,6 +5,7 @@
 
 class MoneroInterface : public QObject {
 public:
+    virtual bool isReady() = 0;
     virtual WalletModel& getWalletModel() = 0;
 };
 

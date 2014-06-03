@@ -1,7 +1,7 @@
 include(../defaults.pri)
 
 QT += core network
-CONFIG += qt staticlib c++11 console
+CONFIG += qt staticlib c++11
 
 TEMPLATE = lib
 TARGET = bitmonero-qt-static
@@ -13,7 +13,9 @@ SOURCES += \
     Models/TransactionsListModel.cpp \
     Models/AbstractModel.cpp \
     WalletHandler.cpp \
-    WalletSettings.cpp
+    WalletSettings.cpp \
+    DaemonHandler.cpp \
+    Utils.cpp
 
 SOURCES += \
     RPC/JsonRPCCommunicator.cpp \
@@ -33,7 +35,9 @@ HEADERS += \
     Models/MinerModel.h \
     Models/AbstractModel.h \
     WalletHandler.h \
-    WalletSettings.h
+    WalletSettings.h \
+    DaemonHandler.h \
+    Utils.h
 
 HEADERS += \
     RPC/JsonRPCCommunicator.h \

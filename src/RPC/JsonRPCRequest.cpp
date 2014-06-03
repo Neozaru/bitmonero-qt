@@ -31,8 +31,19 @@ void JsonRPCRequest::onRequestFinished() {
             lJsonObj = lResJson.object()["result"].toObject();
         }
 
+        error = QNetworkReply::NetworkError::NoError;
         emit jsonResponseReceived(lJsonObj,original_params);
 
     }
 
 }
+
+
+void JsonRPCRequest::onRequestError(const QNetworkReply::NetworkError& pError) {
+
+    qDebug() << "Error occured with Json Request";
+    error = pError;
+
+    emit errorOccured(pError);
+}
+
