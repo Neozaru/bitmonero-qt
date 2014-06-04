@@ -55,16 +55,12 @@ int main(int argc, char *argv[])
     QGuiApplication app(argc, argv);
 
 
-
     /* Loads settings. TODO : Put an interface in the GUI */
     WalletSettings lWalletSettings;
 
 
     std::cout << lWalletSettings << std::endl;
 
-
-
-//    WalletHandler lWalletHandler(lWalletSettings.getWalletProgram());
 
     MoneroModel lMoneroModel;
     WalletModel lWalletModel;
@@ -89,6 +85,7 @@ int main(int argc, char *argv[])
     WalletInterface* lWallet = new RPCWallet(lWalletModel, lWalletSettings);
     MinerInterface* lMiner = new RPCMiner(lMinerModel, lWalletSettings.getMinerUri(), lWalletSettings.getMinerPort());
 
+    /* TODO : Use builder and/or abstracted interface */
     WalletHandler lWalletHandler(lWalletSettings);
 
     /* Check if bitmonerod daemon is ready */
@@ -140,12 +137,14 @@ int main(int argc, char *argv[])
             /* spawn_wallet defaults to true when password is set in config. Check if user disabled wallet opening */
             if ( lWalletSettings.shouldSpawnWallet() ) {
 
+                qDebug() << "Checking Wallet...";
                 if ( !lWalletHandler.tryWallet(lWalletSettings.getWalletFile(), lWalletSettings.getWalletPassword()) ) {
                     qWarning() << "Wallet opening failed. Aborting.";
                     return 2;
                 }
 
-
+                qDebug() << "[OK]";
+                qDebug() << "Opening Wallet...";
                 if ( !lWalletHandler.openWalletAsync(lWalletSettings.getWalletFile(), lWalletSettings.getWalletPassword(), lWalletSettings.getWalletIP(), lWalletSettings.getWalletPort()) ) {
                     qDebug() << "Failed to start wallet ("<< lWalletSettings.getWalletProgram() << ")";
                     return 2;

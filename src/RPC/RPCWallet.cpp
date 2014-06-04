@@ -80,8 +80,8 @@ void RPCWallet::balanceResponse(const QJsonObject& pObjResponse)
 //        if ( pObjResponse["unlocked_balance"].isDouble()) {
 //            onBalanceUpdated(pObjResponse["unlocked_balance"].toDouble());
 //        }
-    if ( pObjResponse["balance"].isDouble()) {
-        onBalanceUpdated(pObjResponse["balance"].toDouble());
+    if ( pObjResponse["balance"].isDouble() && pObjResponse["unlocked_balance"].isDouble() ) {
+        onBalanceUpdated(pObjResponse["balance"].toDouble(), pObjResponse["unlocked_balance"].toDouble());
     }
     else {
         qWarning() << "'get_balance' failed. Is RPC Wallet reachable ?";
@@ -95,6 +95,26 @@ void RPCWallet::transferResponse(const QJsonObject& pObjResponse, const QJsonObj
     qDebug() << pObjResponse;
     qDebug() << "With original params : ";
     qDebug() << pObjOriginalParams;
+
+    /* Error */
+    if ( pObjResponse["error"].isObject() ) {
+
+        const QJsonObject lError = pObjResponse["error"].toObject();
+        int lErrorCode = -1;
+        QString lErrorMessage;
+
+        if ( lError.contains("message") ) {
+            lErrorMessage = lError["message"].toString();
+        }
+
+        if ( lError.contains("code") ) {
+            lErrorCode = lError["code"].toInt();
+        }
+
+        this->onTransferError(lErrorCode, lErrorMessage);
+        return;
+    }
+
 
     if ( !pObjResponse["tx_hash"].isString() ) {
         qWarning() << "Bad JSON response for transfer : " << pObjResponse;

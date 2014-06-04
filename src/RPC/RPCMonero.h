@@ -24,15 +24,16 @@ public:
 
     bool isReady();
 
-//    WalletModel& getWalletModel();
-
 public slots:
     void getInfo();
-//    void daemonRequestFinished();
+
+//    TODO : Move this in another process
+    void saveBlockchain();
+
 
 private:
     JsonRPCCommunicator rpc;
-//    WalletModel wallet_model;
+
     DaemonHandler daemon_handler;
 
 };

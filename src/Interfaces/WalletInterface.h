@@ -17,9 +17,10 @@ public:
 
 protected:
 
-    void onBalanceUpdated(double pBalance) {
+    void onBalanceUpdated(double pBalance, double pUnlockedBalance) {
         wallet_model.setReady(true);
         wallet_model.setBalance(pBalance);
+        wallet_model.setUnlockedBalance(pUnlockedBalance);
     }
 
     void onAddressUpdated(const QString& pAddress) {
@@ -30,6 +31,15 @@ protected:
     void onTransferSuccessful(const QString& pTxHash, double pAmount, const QString& pAddress, int pFee) {
         emit wallet_model.transferSuccessful(pTxHash,pAmount,pAddress,pFee);
         qDebug() << "Transfer Successful : " << pAmount << " to " << pAddress << " (fee : " << pFee << ")\nHash: " << pTxHash;
+    }
+
+    void onTransferError(int pErrorCode, const QString& pErrorMessage) {
+
+        qWarning() << "Transfer error " << pErrorCode << " : " << pErrorMessage;
+
+        /* Throws to UI */
+        emit wallet_model.transferError(pErrorCode, pErrorMessage);
+
     }
 
 private:

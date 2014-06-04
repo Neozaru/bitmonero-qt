@@ -37,25 +37,24 @@ RPCMonero::RPCMonero(MoneroModel& pMoneroModel, const WalletSettings& pSettings)
 //            TODO: throw
             return;
         }
-        /* Not sure */
         else {
             qDebug() << "DAEMON STARTED";
         }
 
     }
 
-    //TODO
-    QTimer *timer = new QTimer();
-    QObject::connect(timer, SIGNAL(timeout()), this, SLOT(getInfo()));
-    timer->start(5000);
 
+    QTimer* lGetInfoTimer = new QTimer();
+    QObject::connect(lGetInfoTimer, SIGNAL(timeout()), this, SLOT(getInfo()));
+    lGetInfoTimer->start(5000);
+
+
+    /* TODO : Move in another process (daemon itself ?) */
+    QTimer* lSaveBlockchainTimer = new QTimer();
+    QObject::connect(lSaveBlockchainTimer, SIGNAL(timeout()), this, SLOT(saveBlockchain()));
+    lSaveBlockchainTimer->start(90000);
 }
 
-
-//WalletModel& RPCMonero::getWalletModel()
-//{
-//    return wallet_model;
-//}
 
 
 void RPCMonero::getInfo()
@@ -86,6 +85,16 @@ void RPCMonero::getInfo()
 
 }
 
+void RPCMonero::saveBlockchain()
+{
+
+    JsonRPCRequest* lReq = rpc.sendRequest("save_bc",QJsonObject(), true);
+    QObject::connect(lReq,&JsonRPCRequest::jsonResponseReceived,[this](const QJsonObject pJsonResponse) {
+        //NOP
+    });
+
+}
+
 bool RPCMonero::isReady() {
 
     JsonRPCRequest* lReq = rpc.sendRequest("getheight",QJsonObject(), true);
@@ -101,32 +110,3 @@ bool RPCMonero::isReady() {
 
 }
 
-
-//void RPCMonero::daemonRequestFinished()
-//{
-//    QNetworkReply* reply = qobject_cast<QNetworkReply*>(sender());
-
-//    if ( !reply->isReadable() ) {
-//        qDebug() << "Not readable";
-//    }
-//    else if ( reply->error() != QNetworkReply::NoError ) {
-//        qDebug() << "Error : " << reply->error();
-//    }
-//    else {
-//        QByteArray data =     reply->readAll();
-//        qDebug() << QString(data);
-//        QJsonDocument res_json = QJsonDocument::fromJson(data);
-//        qDebug() << res_json.object()["result"];
-//        QJsonObject result = res_json.object()["result"].toObject();
-
-//        int count = result["count"].toInt();
-
-
-////        wallet_model.setBalance( count );
-
-//    }
-
-
-
-    //TODO : Delete reply
-//}

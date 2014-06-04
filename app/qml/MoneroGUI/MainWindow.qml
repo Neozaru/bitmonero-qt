@@ -55,27 +55,27 @@ ApplicationWindow {
                 onTriggered: Qt.quit()
             }
         }
-        Menu {
-            title: "&Edit"
-//            MenuItem { action: cutAction }
-//            MenuItem { action: copyAction }
-//            MenuItem { action: pasteAction }
-            MenuSeparator { }
-            MenuItem {
-                text: "Do Nothing"
-                shortcut: "Ctrl+E,Shift+Ctrl+X"
-                enabled: false
-            }
-            MenuItem {
-                text: "Not Even There"
-                shortcut: "Ctrl+E,Shift+Ctrl+Y"
-                visible: false
-            }
-            Menu {
-                title: "Me Neither"
-                visible: false
-            }
-        }
+//        Menu {
+//            title: "&Edit"
+////            MenuItem { action: cutAction }
+////            MenuItem { action: copyAction }
+////            MenuItem { action: pasteAction }
+//            MenuSeparator { }
+//            MenuItem {
+//                text: "Do Nothing"
+//                shortcut: "Ctrl+E,Shift+Ctrl+X"
+//                enabled: false
+//            }
+//            MenuItem {
+//                text: "Not Even There"
+//                shortcut: "Ctrl+E,Shift+Ctrl+Y"
+//                visible: false
+//            }
+//            Menu {
+//                title: "Me Neither"
+//                visible: false
+//            }
+//        }
         Menu {
             title: "&Help"
             MenuItem { action: aboutAction }
@@ -162,7 +162,7 @@ ApplicationWindow {
                 Label {
 
                     anchors.horizontalCenter: syncStatusProgressBar.horizontalCenter
-                    text: "Syncing : " + syncingStatusLayout.syncing_progress > 0 ? syncingStatusLayout.syncing_progress + "%" : "Unknown"
+                    text: "Syncing : " + (syncingStatusLayout.syncing_progress > 0 ? syncingStatusLayout.syncing_progress + "%" : "Unknown")
                 }
 
                 Label {

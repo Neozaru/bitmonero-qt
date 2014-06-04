@@ -11,6 +11,15 @@ GuardedColumnLayout {
 
     property string lastTransferError: ""
 
+    Connections {
+        target: wallet
+        onTransferError: {
+            console.log("TRANSFER ERROR")
+            transferLayout.lastTransferError = error_message
+        }
+    }
+
+
     anchors.fill: parent
     anchors.margins: 10
 

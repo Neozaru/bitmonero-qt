@@ -28,7 +28,15 @@ void JsonRPCRequest::onRequestFinished() {
             lJsonObj = lResJson.object();
         }
         else {
-            lJsonObj = lResJson.object()["result"].toObject();
+            /* TODO : Handle errors here and not in RPCWallet/Miner */
+            if ( lResJson.object()["result"].isObject() ) {
+                lJsonObj = lResJson.object()["result"].toObject();
+            }
+            /* Hack (sends the whole object) */
+            else if ( lResJson.object()["error"].isObject() ) {
+                qWarning() << "Received RPC error status, forwarding whole object";
+                lJsonObj = lResJson.object();
+            }
         }
 
         error = QNetworkReply::NetworkError::NoError;

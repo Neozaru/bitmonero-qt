@@ -258,11 +258,11 @@ QProcess* WalletHandler::execTryWallet(const QString& pFile, const QString& pPas
         return NULL;
     }
 
-    if ( !walletFileExists(pFile) ) {
-        std::cout << "Dindonneau" << std::endl;
-        qWarning() << "Wallet file " << pFile << "doesn't exists";
-        return NULL;
-    }
+//    if ( !walletFileExists(pFile) ) {
+//        std::cout << "Dindonneau" << std::endl;
+//        qWarning() << "Wallet file " << pFile << "doesn't exists";
+//        return NULL;
+//    }
 
     if ( pPassword.isEmpty() ) {
         qWarning() << "No password defined";

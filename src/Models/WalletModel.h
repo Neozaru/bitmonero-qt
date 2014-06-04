@@ -12,6 +12,7 @@ class WalletModel : public AbstractModel
 {
     Q_OBJECT
     Q_PROPERTY(double balance READ getBalance WRITE setBalance NOTIFY balanceChanged)
+    Q_PROPERTY(double unlocked_balance READ getUnlockedBalance WRITE setUnlockedBalance NOTIFY unlockedBalanceChanged)
     Q_PROPERTY(QString address READ getAddress NOTIFY addressChanged)
 
 public:
@@ -61,14 +62,31 @@ public:
     }
 
 
+    void setUnlockedBalance(double pUnlockedBalance)
+    {
+        if (unlocked_balance != pUnlockedBalance) {
+            unlocked_balance = pUnlockedBalance;
+            emit unlockedBalanceChanged(pUnlockedBalance);
+        }
+    }
+
+
+    double getUnlockedBalance() const
+    {
+        return unlocked_balance;
+    }
+
 signals:
     void balanceChanged();
     void transferSuccessful(const QString& tx_hash, double amount, const QString& address, int fee);
     void addressChanged(const QString& pAddress);
+    void transferError(int error_code, const QString& error_message);
 
+    void unlockedBalanceChanged(double arg);
 
 public slots:
     Q_INVOKABLE bool transfer(double amount, const QString& address, int pFee, const QString& pPaymentId);
+
 
 
 private:
@@ -76,6 +94,7 @@ private:
 
     double balance;
     QString address;
+    double unlocked_balance;
 };
 
 #endif // WALLET_H
