@@ -162,7 +162,7 @@ ApplicationWindow {
                 Label {
 
                     anchors.horizontalCenter: syncStatusProgressBar.horizontalCenter
-                    text: "Syncing : " + syncingStatusLayout.syncing_progress + "%"
+                    text: "Syncing : " + syncingStatusLayout.syncing_progress > 0 ? syncingStatusLayout.syncing_progress + "%" : "Unknown"
                 }
 
                 Label {
