@@ -13,9 +13,12 @@
 
 #include <QEventLoop>
 
+#include <QJsonObject>
 
-RPCMonero::RPCMonero(const WalletSettings& pSettings)
-    : rpc(pSettings.getMoneroUri(),pSettings.getMoneroPort()), daemon_handler(pSettings)
+#include "JsonRPCRequest.h"
+
+RPCMonero::RPCMonero(MoneroModel& pMoneroModel, const WalletSettings& pSettings)
+    : MoneroInterface(pMoneroModel), rpc(pSettings.getMoneroUri(),pSettings.getMoneroPort()), daemon_handler(pSettings)
 {
 
     if (pSettings.shouldSpawnDaemon()) {
@@ -43,21 +46,43 @@ RPCMonero::RPCMonero(const WalletSettings& pSettings)
 
     //TODO
     QTimer *timer = new QTimer();
-    QObject::connect(timer, SIGNAL(timeout()), this, SLOT(update()));
+    QObject::connect(timer, SIGNAL(timeout()), this, SLOT(getInfo()));
     timer->start(5000);
 
 }
 
 
-WalletModel& RPCMonero::getWalletModel()
+//WalletModel& RPCMonero::getWalletModel()
+//{
+//    return wallet_model;
+//}
+
+
+void RPCMonero::getInfo()
 {
-    return wallet_model;
-}
 
+    JsonRPCRequest* lReq = rpc.sendRequest("getinfo",QJsonObject(), true);
+    QObject::connect(lReq,&JsonRPCRequest::jsonResponseReceived,[this](const QJsonObject pJsonResponse) {
 
-void RPCMonero::update()
-{
+        qDebug() << "'getinfo' Response alt : " << pJsonResponse;
+        const QString& lStatus = pJsonResponse["status"].toString();
 
+        if ( lStatus == "OK" ) {
+
+            this->onInfoUpdated(
+                pJsonResponse["height"].toInt(),
+                pJsonResponse["target_height"].toInt(),
+                pJsonResponse["difficulty"].toInt(),
+                pJsonResponse["incoming_connections_count"].toInt(),
+                pJsonResponse["outgoing_connections_count"].toInt()
+            );
+
+        }
+        else {
+            qWarning() << "Bad status for 'getinfo' start : " << lStatus;
+
+        }
+    });
 
 }
 
@@ -77,31 +102,31 @@ bool RPCMonero::isReady() {
 }
 
 
-void RPCMonero::daemonRequestFinished()
-{
-    QNetworkReply* reply = qobject_cast<QNetworkReply*>(sender());
+//void RPCMonero::daemonRequestFinished()
+//{
+//    QNetworkReply* reply = qobject_cast<QNetworkReply*>(sender());
 
-    if ( !reply->isReadable() ) {
-        qDebug() << "Not readable";
-    }
-    else if ( reply->error() != QNetworkReply::NoError ) {
-        qDebug() << "Error : " << reply->error();
-    }
-    else {
-        QByteArray data =     reply->readAll();
-        qDebug() << QString(data);
-        QJsonDocument res_json = QJsonDocument::fromJson(data);
-        qDebug() << res_json.object()["result"];
-        QJsonObject result = res_json.object()["result"].toObject();
+//    if ( !reply->isReadable() ) {
+//        qDebug() << "Not readable";
+//    }
+//    else if ( reply->error() != QNetworkReply::NoError ) {
+//        qDebug() << "Error : " << reply->error();
+//    }
+//    else {
+//        QByteArray data =     reply->readAll();
+//        qDebug() << QString(data);
+//        QJsonDocument res_json = QJsonDocument::fromJson(data);
+//        qDebug() << res_json.object()["result"];
+//        QJsonObject result = res_json.object()["result"].toObject();
 
-        int count = result["count"].toInt();
+//        int count = result["count"].toInt();
 
 
-        wallet_model.setBalance( count );
+////        wallet_model.setBalance( count );
 
-    }
+//    }
 
 
 
     //TODO : Delete reply
-}
+//}

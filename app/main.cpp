@@ -85,7 +85,7 @@ int main(int argc, char *argv[])
 
 
     /* RAII */
-    MoneroInterface* lMonero = new RPCMonero(lWalletSettings);
+    MoneroInterface* lMonero = new RPCMonero(lMoneroModel,lWalletSettings);
     WalletInterface* lWallet = new RPCWallet(lWalletModel, lWalletSettings);
     MinerInterface* lMiner = new RPCMiner(lMinerModel, lWalletSettings.getMinerUri(), lWalletSettings.getMinerPort());
 

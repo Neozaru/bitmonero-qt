@@ -140,19 +140,37 @@ ApplicationWindow {
             }
 
             RowLayout {
+                id: syncingStatusLayout
+
                 visible: true
                 anchors.centerIn: parent
 
-                Label {
-                    text: "Status : "
-                }
-                Label {
-                    text: "0/0"
+                property int syncing_progress: monero.target_blockchain_height > 0 ? monero.blockchain_height / monero.target_blockchain_height * 100 : 0
+
+                ProgressBar {
+                    id: syncStatusProgressBar
+
+                    anchors.centerIn: parent
+
+                    minimumValue: 0
+                    maximumValue: 100
+                    value: syncingStatusLayout.syncing_progress
+                    width: 50
+
                 }
 
-                Button {
-                    onClicked: { appstate = 2 }
+                Label {
+
+                    anchors.horizontalCenter: syncStatusProgressBar.horizontalCenter
+                    text: "Syncing : " + syncingStatusLayout.syncing_progress + "%"
                 }
+
+                Label {
+                    visible: false
+                    text: "(" + monero.blockchain_height + " blks)";
+                }
+
+
             }
 
             RowLayout {
