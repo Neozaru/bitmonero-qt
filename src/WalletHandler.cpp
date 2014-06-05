@@ -102,7 +102,7 @@ bool WalletHandler::closeWallet() {
     open = false;
 
     if ( main_process.state() == QProcess::Running ) {
-        main_process.kill();
+        main_process.terminate();
         return true;
     }
 
@@ -223,6 +223,7 @@ bool WalletHandler::tryWallet(const QString& pFile, const QString& pPassword)
         qWarning() << "tryWallet failed : SubProcess doesn't responded";
 
         qWarning() << "Please ensure a wallet file exists at : " << pFile;
+        lTryWalletProcess->terminate();
 
         return false;
     }

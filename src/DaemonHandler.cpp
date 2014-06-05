@@ -81,6 +81,6 @@ bool DaemonHandler::killDaemon()
         return false;
     }
 
-    main_process.kill();
+    main_process.terminate();
     return true;
 }

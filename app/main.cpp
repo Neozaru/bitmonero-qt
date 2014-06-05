@@ -140,6 +140,8 @@ int main(int argc, char *argv[])
                 qDebug() << "Checking Wallet...";
                 if ( !lWalletHandler.tryWallet(lWalletSettings.getWalletFile(), lWalletSettings.getWalletPassword()) ) {
                     qWarning() << "Wallet opening failed. Aborting.";
+                    delete lMonero;
+
                     return 2;
                 }
 
@@ -147,6 +149,8 @@ int main(int argc, char *argv[])
                 qDebug() << "Opening Wallet...";
                 if ( !lWalletHandler.openWalletAsync(lWalletSettings.getWalletFile(), lWalletSettings.getWalletPassword(), lWalletSettings.getWalletIP(), lWalletSettings.getWalletPort()) ) {
                     qDebug() << "Failed to start wallet ("<< lWalletSettings.getWalletProgram() << ")";
+                    delete lMonero;
+
                     return 2;
                 }
 
@@ -165,6 +169,8 @@ int main(int argc, char *argv[])
 
             if ( !createComponent(lComponent) ) {
                 qDebug() << "Aborting";
+                delete lMonero;
+
                 return 1;
             }
 
@@ -180,6 +186,8 @@ int main(int argc, char *argv[])
         }
 
     }
+
+    delete lMonero;
 
 //    lDaemonHandler.kill();
 
