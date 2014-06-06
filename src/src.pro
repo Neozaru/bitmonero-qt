@@ -15,7 +15,8 @@ SOURCES += \
     WalletHandler.cpp \
     WalletSettings.cpp \
     DaemonHandler.cpp \
-    Utils.cpp
+    Utils.cpp \
+    Models/TransactionModel.cpp
 
 SOURCES += \
     RPC/JsonRPCCommunicator.cpp \
@@ -37,7 +38,8 @@ HEADERS += \
     WalletHandler.h \
     WalletSettings.h \
     DaemonHandler.h \
-    Utils.h
+    Utils.h \
+    Models/TransactionModel.h
 
 HEADERS += \
     RPC/JsonRPCCommunicator.h \

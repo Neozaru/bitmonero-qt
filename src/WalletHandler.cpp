@@ -92,7 +92,6 @@ bool WalletHandler::openWalletAsync(const QString& pWalletFile, const QString& p
 
     qDebug() << "Wallet process started on " + pBindIP + ":" + QString::number(pBindPort) + " (" + main_process.program() + ")";
 
-
     return true;
 
 }
@@ -205,6 +204,7 @@ bool WalletHandler::tryWalletProgram()
 
 void WalletHandler::tryWalletResponse(int pCode) {
 
+    qWarning() << "tryWalletAsync returned status : " << pCode;
     emit tryWalletResult(pCode == 0);
 
 }
@@ -241,6 +241,7 @@ bool WalletHandler::tryWalletAsync(const QString& pFile, const QString& pPasswor
 
     QProcess* lTryWalletProcess = execTryWallet(pFile,pPassword);
     if (!lTryWalletProcess) {
+        emit tryWalletResponse(false);
         return false;
     }
 

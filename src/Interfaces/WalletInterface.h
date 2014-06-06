@@ -2,7 +2,10 @@
 #define WALLETINTERFACE_HH
 
 #include <QDebug>
+#include <QList>
+
 #include "Models/WalletModel.h"
+#include "Models/TransactionModel.h"
 
 class WalletInterface
 {
@@ -17,21 +20,33 @@ public:
 
 protected:
 
-    void onBalanceUpdated(double pBalance, double pUnlockedBalance) {
+    void onBalanceUpdated(double pBalance, double pUnlockedBalance)
+    {
         wallet_model.setReady(true);
         wallet_model.setBalance(pBalance);
         wallet_model.setUnlockedBalance(pUnlockedBalance);
     }
 
-    void onAddressUpdated(const QString& pAddress) {
+
+    void onAddressUpdated(const QString& pAddress)
+    {
         wallet_model.setReady(true);
         wallet_model.setAddress(pAddress);
     }
 
-    void onTransferSuccessful(const QString& pTxHash, double pAmount, const QString& pAddress, int pFee) {
+
+    void onTransferSuccessful(const QString& pTxHash, double pAmount, const QString& pAddress, int pFee)
+    {
         emit wallet_model.transferSuccessful(pTxHash,pAmount,pAddress,pFee);
         qDebug() << "Transfer Successful : " << pAmount << " to " << pAddress << " (fee : " << pFee << ")\nHash: " << pTxHash;
     }
+
+
+    void onIncomingTransfersUpdated(const QList<QObject*>& pTransfers) {
+        wallet_model.setTransactions(pTransfers);
+        qDebug() << "Transactions SET";
+    }
+
 
     void onTransferError(int pErrorCode, const QString& pErrorMessage) {
 
@@ -41,6 +56,13 @@ protected:
         emit wallet_model.transferError(pErrorCode, pErrorMessage);
 
     }
+
+    void onWalletReady() {
+        emit walletReady();
+    }
+
+signals:
+    void walletReady();
 
 private:
     WalletModel& wallet_model;

@@ -20,7 +20,7 @@ void JsonRPCRequest::onRequestFinished() {
     else {
         QByteArray lData =     lReply->readAll();
         qDebug() << "Server response : ";
-        qDebug() << QString(lData);
+        qDebug() << QString(lData).left(1024);
         QJsonDocument lResJson = QJsonDocument::fromJson(lData);
         QJsonObject lJsonObj;
 

@@ -20,5 +20,6 @@
         <file>qml/Wizard/CreateWalletPage.qml</file>
         <file>qml/Wizard/ConfirmCreateWalletPage.qml</file>
         <file>qml/wizard.qml</file>
+        <file>qml/res/MoneroLogo.jpg</file>
     </qresource>
 </RCC>

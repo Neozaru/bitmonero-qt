@@ -2,29 +2,40 @@
 
 #include <QTimer>
 #include <iostream>
+#include <QObject>
 
+#include "Models/TransactionModel.h"
 
 RPCWallet::RPCWallet(WalletModel& pModel, const WalletSettings& pSettings)
-    : WalletInterface(pModel), rpc(pSettings.getWalletUri(), pSettings.getWalletPort())
+    : WalletInterface(pModel), rpc(pSettings.getWalletUri(), pSettings.getWalletPort()), ready(false)
 {
 
     pModel.setWalletInterface(this);
     getAddress();
     getBalance();
 
-    QTimer* lTimer = new QTimer(this);
-    QObject::connect(lTimer,SIGNAL(timeout()), this, SLOT(getBalance()));
-    QObject::connect(lTimer,SIGNAL(timeout()), this, SLOT(getAddress()));
+    QTimer* lBalanceAddressTimer = new QTimer(this);
+    QObject::connect(lBalanceAddressTimer,SIGNAL(timeout()), this, SLOT(getBalance()));
 
-    lTimer->start(5000);
+    /* TODO: Remove this when address is retrieved */
+    QObject::connect(lBalanceAddressTimer,SIGNAL(timeout()), this, SLOT(getAddress()));
 
+    lBalanceAddressTimer->start(5000);
+
+
+    QTimer* lGetIncomingTransfersTimer = new QTimer(this);
+    QObject::connect(lGetIncomingTransfersTimer,SIGNAL(timeout()), this, SLOT(getIncomingTransfers()));
+
+
+    /* TODO : Change interval to 15-30 sec */
+    lGetIncomingTransfersTimer->start(3000);
 
 }
 
 
 
 void RPCWallet::transfer(double pAmount, const QString& pAddress, int pFee, const QString& pPaymentId) {
-    QJsonObject lObj;
+    QJsonObject lParams;
     QJsonArray lDests;
 
     /* Single Dest for the moment */
@@ -32,18 +43,18 @@ void RPCWallet::transfer(double pAmount, const QString& pAddress, int pFee, cons
     lDst["amount"] = pAmount;
     lDst["address"] = pAddress;
     lDests.append(lDst);
-    lObj["destinations"] = lDests;
+    lParams["destinations"] = lDests;
     /**/
 
-    lObj["fee"] = pFee;
-    lObj["payment_id"] = pPaymentId;
+    lParams["fee"] = pFee;
+    lParams["payment_id"] = pPaymentId;
 
     /* TODO */
-    lObj["mixin"] = 0;
-    lObj["unlock_time"] = 0;
+    lParams["mixin"] = 0;
+    lParams["unlock_time"] = 0;
     /**/
 
-    JsonRPCRequest* lReq = rpc.sendRequest("transfer",lObj);
+    JsonRPCRequest* lReq = rpc.sendRequest("transfer",lParams);
     QObject::connect(lReq,SIGNAL(jsonResponseReceived(QJsonObject,QJsonObject)),this,SLOT(transferResponse(QJsonObject,QJsonObject)));
 }
 
@@ -55,9 +66,9 @@ void RPCWallet::store() {
 
 void RPCWallet::getPayments(const QString& pPaymentId) {
 
-    QJsonObject lObj;
-    lObj.insert("payment_id", pPaymentId);
-    rpc.sendRequest("get_payments", lObj);
+    QJsonObject lParams;
+    lParams.insert("payment_id", pPaymentId);
+    rpc.sendRequest("get_payments", lParams);
 
 }
 
@@ -73,20 +84,36 @@ void RPCWallet::getBalance() {
     QObject::connect(lReq,SIGNAL(jsonResponseReceived(QJsonObject,QJsonObject)),this,SLOT(balanceResponse(QJsonObject)));
 }
 
+void RPCWallet::getIncomingTransfers(const QString& pType) {
 
-void RPCWallet::balanceResponse(const QJsonObject& pObjResponse)
-{
+    QJsonObject lParams;
+    lParams["transfer_type"] = pType;
+    JsonRPCRequest* lReq = rpc.sendRequest("incoming_transfers", lParams);
 
-//        if ( pObjResponse["unlocked_balance"].isDouble()) {
-//            onBalanceUpdated(pObjResponse["unlocked_balance"].toDouble());
-//        }
-    if ( pObjResponse["balance"].isDouble() && pObjResponse["unlocked_balance"].isDouble() ) {
-        onBalanceUpdated(pObjResponse["balance"].toDouble(), pObjResponse["unlocked_balance"].toDouble());
-    }
-    else {
-        qWarning() << "'get_balance' failed. Is RPC Wallet reachable ?";
-    }
+    QObject::connect(lReq, &JsonRPCRequest::jsonResponseReceived, [this] (const QJsonObject& pJsonResponse) {
+
+        qWarning() << "HEEEELLLLLLLLLOOOOOOOOOO";
+
+        if ( !pJsonResponse["transfers"].isArray() ) {
+            qWarning() << "'incoming_transfers' returned 'OK' status but no array";
+            return;
+        }
+
+        QList<QObject*> lNewTransactions;
+        QJsonArray lTransfersJson = pJsonResponse["transfers"].toArray();
+        for ( const QJsonValueRef& lTransJsonRef : lTransfersJson ) {
+
+            const QJsonObject lTransJson = lTransJsonRef.toObject();
+            lNewTransactions.append(new TransactionModel(lTransJson["tx_hash"].toString(),lTransJson["amount"].toDouble(),lTransJson["spent"].toBool(), false));
+        }
+
+        this->onIncomingTransfersUpdated(lNewTransactions);
+
+    });
+
 }
+
+
 
 
 void RPCWallet::transferResponse(const QJsonObject& pObjResponse, const QJsonObject& pObjOriginalParams)
@@ -150,6 +177,11 @@ void RPCWallet::transferResponse(const QJsonObject& pObjResponse, const QJsonObj
 void RPCWallet::addressResponse(const QJsonObject& pObjResponse)
 {
 
+//    if ( !ready ) {
+//        ready = true;
+//        emit walletReady();
+//    }
+
     if ( pObjResponse["address"].isString() ) {
        this->onAddressUpdated(pObjResponse["address"].toString());
     }
@@ -157,4 +189,21 @@ void RPCWallet::addressResponse(const QJsonObject& pObjResponse)
         qDebug() << "Bad response received for address : " << pObjResponse;
     }
 
+}
+
+void RPCWallet::balanceResponse(const QJsonObject& pObjResponse)
+{
+
+    if ( !ready ) {
+        ready = true;
+        qWarning() << "WALLET READY !!";
+//        this->onWalletReady();
+    }
+
+    if ( pObjResponse["balance"].isDouble() && pObjResponse["unlocked_balance"].isDouble() ) {
+        onBalanceUpdated(pObjResponse["balance"].toDouble(), pObjResponse["unlocked_balance"].toDouble());
+    }
+    else {
+        qWarning() << "'get_balance' failed. Is RPC Wallet reachable ?";
+    }
 }

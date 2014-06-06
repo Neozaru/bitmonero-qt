@@ -3,8 +3,11 @@
 
 #include <QObject>
 #include <QDebug>
+#include <QList>
 
 #include "AbstractModel.h"
+//#include "TransactionsListModel.h"
+#include "TransactionModel.h"
 
 class WalletInterface;
 
@@ -14,6 +17,7 @@ class WalletModel : public AbstractModel
     Q_PROPERTY(double balance READ getBalance WRITE setBalance NOTIFY balanceChanged)
     Q_PROPERTY(double unlocked_balance READ getUnlockedBalance WRITE setUnlockedBalance NOTIFY unlockedBalanceChanged)
     Q_PROPERTY(QString address READ getAddress NOTIFY addressChanged)
+    Q_PROPERTY(QList<QObject*> transactions READ getTransactions NOTIFY transactionsChanged)
 
 public:
     WalletModel();
@@ -76,13 +80,30 @@ public:
         return unlocked_balance;
     }
 
+    const QList<QObject*>& getTransactions() const
+    {
+        return transactions;
+    }
+
+    /* Not invokable from QML */
+    void setTransactions(const QList<QObject*>& pTransactions) {
+
+        /* Basic comparison : TODO */
+        if ( transactions.size() != pTransactions.size() ) {
+            transactions = pTransactions;
+            emit transactionsChanged(pTransactions);
+        }
+    }
+
 signals:
     void balanceChanged();
     void transferSuccessful(const QString& tx_hash, double amount, const QString& address, int fee);
     void addressChanged(const QString& pAddress);
     void transferError(int error_code, const QString& error_message);
 
-    void unlockedBalanceChanged(double arg);
+    void unlockedBalanceChanged(double unlocked_balance);
+
+    void transactionsChanged(QList<QObject*> transactions);
 
 public slots:
     Q_INVOKABLE bool transfer(double amount, const QString& address, int pFee, const QString& pPaymentId);
@@ -95,6 +116,7 @@ private:
     double balance;
     QString address;
     double unlocked_balance;
+    QList<QObject*> transactions;
 };
 
 #endif // WALLET_H

@@ -11,8 +11,8 @@ ApplicationWindow {
     visible: false
     title: "Monero Wallet"
 
-    width: 750
-    height: 480
+    width: 800
+    height: 600
 
 
 //    Action {
@@ -233,8 +233,8 @@ ApplicationWindow {
         }
 
         Tab {
-            title: "History (Not impl)"
-            enabled: false
+            title: "History (beta)"
+//            enabled: false
             History {}
         }
 

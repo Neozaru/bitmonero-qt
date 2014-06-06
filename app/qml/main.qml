@@ -7,16 +7,6 @@ import QtQuick.Window 2.1
 import "MoneroGUI"
 
 
-//        SplashScreen {
-
-//            anchors.fill: parent
-//            visible: false
-
-//            onSplashScreenCompleted: { mainWindow.visible = true; startupWindow.visible = false }
-//            imageSource: "Baguette.png"
-
-//        }
-
 
 MainWindow {
     id: mainWindow

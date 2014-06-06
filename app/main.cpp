@@ -81,15 +81,18 @@ int main(int argc, char *argv[])
 
 
     /* RAII */
-    MoneroInterface* lMonero = new RPCMonero(lMoneroModel,lWalletSettings);
+//    MoneroInterface* lMonero = new RPCMonero(lMoneroModel,lWalletSettings);
+    RPCMonero lRPCMonero(lMoneroModel,lWalletSettings);
+    MoneroInterface& lMonero = lRPCMonero;
     WalletInterface* lWallet = new RPCWallet(lWalletModel, lWalletSettings);
     MinerInterface* lMiner = new RPCMiner(lMinerModel, lWalletSettings.getMinerUri(), lWalletSettings.getMinerPort());
+
 
     /* TODO : Use builder and/or abstracted interface */
     WalletHandler lWalletHandler(lWalletSettings);
 
     /* Check if bitmonerod daemon is ready */
-    if (!lMonero->isReady()) {
+    if (!lMonero.isReady()) {
         qCritical() << "Monero daemon error : Not started. Aborting.";
         return 3;
     }
@@ -138,18 +141,36 @@ int main(int argc, char *argv[])
             if ( lWalletSettings.shouldSpawnWallet() ) {
 
                 qDebug() << "Checking Wallet...";
-                if ( !lWalletHandler.tryWallet(lWalletSettings.getWalletFile(), lWalletSettings.getWalletPassword()) ) {
+                if ( !lWalletHandler.tryWalletAsync(lWalletSettings.getWalletFile(), lWalletSettings.getWalletPassword()) ) {
                     qWarning() << "Wallet opening failed. Aborting.";
-                    delete lMonero;
 
                     return 2;
+                }
+
+
+                /* Splash screen */
+                {
+                    QQmlComponent lComponent(&lEngine, QUrl("qrc:/qml/SplashScreen.qml"));
+
+
+                    if ( !createComponent(lComponent) ) {
+                        qDebug() << "Aborting";
+
+                        return 1;
+                    }
+
+                    qWarning() << "Start SPLASH";
+                    QObject::connect(&lWalletHandler,SIGNAL(tryWalletResult(bool)), &app, SLOT(quit()));
+                    /* Starts the main app */
+                    int lReturnCode = app.exec();
+                    qWarning() << "/END SPLASH";
+                    app.allWindows().first()->close();
                 }
 
                 qDebug() << "[OK]";
                 qDebug() << "Opening Wallet...";
                 if ( !lWalletHandler.openWalletAsync(lWalletSettings.getWalletFile(), lWalletSettings.getWalletPassword(), lWalletSettings.getWalletIP(), lWalletSettings.getWalletPort()) ) {
                     qDebug() << "Failed to start wallet ("<< lWalletSettings.getWalletProgram() << ")";
-                    delete lMonero;
 
                     return 2;
                 }
@@ -169,7 +190,6 @@ int main(int argc, char *argv[])
 
             if ( !createComponent(lComponent) ) {
                 qDebug() << "Aborting";
-                delete lMonero;
 
                 return 1;
             }
@@ -180,14 +200,12 @@ int main(int argc, char *argv[])
 
             lWalletHandler.closeWallet();
 //            lDaemonHandler.kill();
-            delete lMonero;
 
             return lReturnCode;
         }
 
     }
 
-    delete lMonero;
 
 //    lDaemonHandler.kill();
 
