@@ -12,8 +12,11 @@ MainWindow {
     id: mainWindow
     visible: true
 
+    width: 800
+    height: 600
 
-    width: 640
-    height: 480
+    x: (Screen.width - width) / 2
+    y: (Screen.height - height) / 2
+
 }
 

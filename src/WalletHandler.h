@@ -51,8 +51,8 @@ public slots:
 
     Q_INVOKABLE bool walletFileExists(const QString &pFile);
 
-public slots:
-    void tryWalletResponse(int pCode);
+private slots:
+    void tryWalletResponse(int pCode, QProcess::ExitStatus pExitStatus);
 
 signals:
     void tryWalletResult(bool result);

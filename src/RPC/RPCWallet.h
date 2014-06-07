@@ -13,7 +13,7 @@
 
 #include "Models/WalletModel.h"
 
-class RPCWallet :  public QObject, public WalletInterface
+class RPCWallet : public WalletInterface
 {
     Q_OBJECT
 public:
@@ -23,6 +23,8 @@ public:
     void store();
     void getPayments(const QString& pPaymentId);
 
+
+    void enable();
 
 
 public slots:

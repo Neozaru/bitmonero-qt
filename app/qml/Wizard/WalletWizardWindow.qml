@@ -149,7 +149,7 @@ ApplicationWindow {
                 visible: status == 0
 
                 Label {
-                    text: "Checking configuration...\nThis operation will take less than one minute."
+                    text: "Checking configuration...\nThis operation can take more than one minute."
                 }
 
                 ProgressBar {

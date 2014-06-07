@@ -61,7 +61,7 @@ void RPCMiner::getMiningStatus() {
 
     QObject::connect(lReq,&JsonRPCRequest::jsonResponseReceived,[this](const QJsonObject pJsonResponse) {
 
-        qDebug() << "'mining_status' Response : " << pJsonResponse;
+//        qDebug() << "'mining_status' Response : " << pJsonResponse;
         const QString& lStatus = pJsonResponse["status"].toString();
 
         if ( lStatus == "OK" ) {

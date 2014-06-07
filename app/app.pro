@@ -6,7 +6,10 @@ QT += qml quick
 
 CONFIG += console c++11
 
-SOURCES += main.cpp
+SOURCES += main.cpp \
+    MoneroGUI.cpp
+
+HEADERS += MoneroGUI.h
 
 RESOURCES += qml.qrc
 

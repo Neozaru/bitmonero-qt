@@ -11,9 +11,10 @@ ApplicationWindow {
     visible: false
     title: "Monero Wallet"
 
-    width: 800
-    height: 600
 
+    onClosing: {
+        Qt.quit();
+    }
 
 //    Action {
 //        id: openAction

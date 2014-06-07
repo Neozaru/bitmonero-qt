@@ -98,7 +98,7 @@ public slots:
 
     void setEnabled(bool pEnabled)
     {
-        qDebug() << "Mining enabled toggled : " << pEnabled;
+//        qDebug() << "Mining enabled toggled : " << pEnabled;
 
         if (enabled != pEnabled) {
             enabled = pEnabled;

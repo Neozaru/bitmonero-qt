@@ -21,6 +21,9 @@ DaemonHandler::DaemonHandler(const WalletSettings& pSettings)
         QStringList lSearchPaths;
         lSearchPaths.append( QDir::currentPath() );
         lSearchPaths.append( QDir::currentPath() + "/bitmonero/");
+        lSearchPaths.append( QDir::currentPath() + "/../");
+        lSearchPaths.append( QDir::currentPath() + "/../bitmonero/");
+
         lSearchPaths.append( "/usr/bin" );
         lSearchPaths.append( "/usr/local/bin" );
 
@@ -68,7 +71,7 @@ bool DaemonHandler::execDaemon()
     main_process.start();
 
     /* Should not finish */
-    bool res = !main_process.waitForFinished(5000);
+    bool res = !main_process.waitForFinished(2000);
     qDebug() << "DAEMON STATUS : " << main_process.state();
 
     return res;

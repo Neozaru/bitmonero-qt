@@ -20,39 +20,10 @@
 RPCMonero::RPCMonero(MoneroModel& pMoneroModel, const WalletSettings& pSettings)
     : MoneroInterface(pMoneroModel), rpc(pSettings.getMoneroUri(),pSettings.getMoneroPort()), daemon_handler(pSettings)
 {
-
-    if (pSettings.shouldSpawnDaemon()) {
-
-//        daemon_handler = DaemonHandler(pSettings);
-
-        if (!daemon_handler.isOk()) {
-            qCritical() << "Configured to spawn 'bitmonerod' daemon but no executable found. Aborting...";
-//            throw std::l;
-//            TODO: throw
-            return;
-        }
-
-        if (!daemon_handler.execDaemon()) {
-            qCritical() << "'bitmonerod' Daemon start failed. Is '" << daemon_handler.getDaemonProgram() << "' the daemon executable ?";
-//            TODO: throw
-            return;
-        }
-        else {
-            qDebug() << "DAEMON STARTED";
-        }
-
-    }
+    should_spawn_daemon = pSettings.shouldSpawnDaemon();
 
 
-    QTimer* lGetInfoTimer = new QTimer();
-    QObject::connect(lGetInfoTimer, SIGNAL(timeout()), this, SLOT(getInfo()));
-    lGetInfoTimer->start(5000);
 
-
-    /* TODO : Move in another process (daemon itself ?) */
-    QTimer* lSaveBlockchainTimer = new QTimer();
-    QObject::connect(lSaveBlockchainTimer, SIGNAL(timeout()), this, SLOT(saveBlockchain()));
-    lSaveBlockchainTimer->start(90000);
 }
 
 
@@ -63,10 +34,12 @@ void RPCMonero::getInfo()
     JsonRPCRequest* lReq = rpc.sendRequest("getinfo",QJsonObject(), true);
     QObject::connect(lReq,&JsonRPCRequest::jsonResponseReceived,[this](const QJsonObject pJsonResponse) {
 
-        qDebug() << "'getinfo' Response alt : " << pJsonResponse;
         const QString& lStatus = pJsonResponse["status"].toString();
 
         if ( lStatus == "OK" ) {
+
+            this->onReady();
+
 
             this->onInfoUpdated(
                 pJsonResponse["height"].toInt(),
@@ -110,3 +83,43 @@ bool RPCMonero::isReady() {
 
 }
 
+
+void RPCMonero::enable() {
+
+    QTimer* lGetInfoTimer = new QTimer();
+    QObject::connect(lGetInfoTimer, SIGNAL(timeout()), this, SLOT(getInfo()));
+    lGetInfoTimer->start(5000);
+
+
+    /* TODO : Move in another process (daemon itself ?) */
+    QTimer* lSaveBlockchainTimer = new QTimer();
+    QObject::connect(lSaveBlockchainTimer, SIGNAL(timeout()), this, SLOT(saveBlockchain()));
+    lSaveBlockchainTimer->start(1200000);
+
+
+    if (should_spawn_daemon) {
+
+//        daemon_handler = DaemonHandler(pSettings);
+
+        if (!daemon_handler.isOk()) {
+            qCritical() << "Configured to spawn 'bitmonerod' daemon but no executable found. Aborting...";
+//            throw std::l;
+//            TODO: throw
+            return;
+        }
+
+        if (!daemon_handler.execDaemon()) {
+            qCritical() << "'bitmonerod' Daemon start failed. Is '" << daemon_handler.getDaemonProgram() << "' the daemon executable ?";
+//            TODO: throw
+            return;
+        }
+        else {
+            qDebug() << "DAEMON STARTED";
+        }
+
+    }
+
+
+
+
+}

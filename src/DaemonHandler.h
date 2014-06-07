@@ -21,8 +21,8 @@ public:
         return !main_process.program().isEmpty();
     }
 
-    const QString& getDaemonProgram() const {
-        return daemon_program;
+    const QString getDaemonProgram() const {
+        return main_process.program();
     }
 
     /* */
@@ -30,7 +30,7 @@ public:
     bool killDaemon();
 
 private:
-    QString daemon_program;
+//    QString daemon_program;
     QProcess main_process;
 };
 

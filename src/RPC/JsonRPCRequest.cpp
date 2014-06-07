@@ -14,13 +14,13 @@ void JsonRPCRequest::onRequestFinished() {
 
     QNetworkReply* lReply = qobject_cast<QNetworkReply*>(sender());
     if ( lReply->error() != QNetworkReply::NoError ) {
-        qDebug() << "Error : " << lReply->error();
-        qDebug() << lReply->readAll();
+//        qDebug() << "Error : " << lReply->error();
+//        qDebug() << lReply->readAll();
     }
     else {
         QByteArray lData =     lReply->readAll();
-        qDebug() << "Server response : ";
-        qDebug() << QString(lData).left(1024);
+//        qDebug() << "Server response : ";
+//        qDebug() << QString(lData).left(1024);
         QJsonDocument lResJson = QJsonDocument::fromJson(lData);
         QJsonObject lJsonObj;
 
@@ -34,7 +34,7 @@ void JsonRPCRequest::onRequestFinished() {
             }
             /* Hack (sends the whole object) */
             else if ( lResJson.object()["error"].isObject() ) {
-                qWarning() << "Received RPC error status, forwarding whole object";
+//                qWarning() << "Received RPC error status, forwarding whole object";
                 lJsonObj = lResJson.object();
             }
         }
@@ -49,9 +49,10 @@ void JsonRPCRequest::onRequestFinished() {
 
 void JsonRPCRequest::onRequestError(const QNetworkReply::NetworkError& pError) {
 
-    qDebug() << "Error occured with Json Request";
+//    qDebug() << "Error occured with Json Request";
     error = pError;
 
     emit errorOccured(pError);
 }
+
 

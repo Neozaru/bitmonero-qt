@@ -10,9 +10,12 @@ ApplicationWindow {
     visible: true
 
     title: "Monero Wallet"
+    flags: Qt.FramelessWindowHint
 
     property int fixedWidth: 720;
     property int fixedHeight: 500;
+
+    property bool complete: false;
 
     width: fixedWidth
     height: fixedHeight
@@ -22,10 +25,17 @@ ApplicationWindow {
     minimumHeight : fixedHeight
     minimumWidth : fixedWidth
 
+    x: (Screen.width - fixedWidth) / 2
+    y: (Screen.height - fixedHeight) / 2
 
     Rectangle {
 
         anchors.fill: parent;
+
+        border.width: 2
+        border.color: "black"
+        smooth: true
+
 
         // image source is kept as an property alias, so that it can be set from outside
 //        property alias imageSource: splashImage.source
@@ -55,21 +65,21 @@ ApplicationWindow {
 //        }
 
 //        // simple QML animation to give a good user experience
-//        SequentialAnimation {
-//            id:splashanimation
-//            PauseAnimation { duration: 4200 }
-//            PropertyAnimation {
-//                target: splashImage
-//                duration: 700
-//                properties: "opacity"
-//                to:0
-//            }
+        SequentialAnimation {
+            id:splashanimation
+            PauseAnimation { duration: 10000 }
+            PropertyAnimation {
+                target: splashCanTakeLongLabel
+                duration: 2000
+                properties: "opacity"
+                to:100
+            }
 
-//            onStopped: {
+            onStopped: {
 //                splashScreenContainer.splashScreenCompleted();
-//            }
+            }
 
-//        }
+        }
 
 
         RowLayout {
@@ -98,11 +108,13 @@ ApplicationWindow {
             }
 
             Label {
+                id: splashCanTakeLongLabel
 
                 anchors.top: splashPleaseWait.bottom
                 anchors.horizontalCenter: splashPleaseWait.horizontalCenter
 
                 anchors.margins: 50
+                opacity: 0
 
                 text: "This operation can take minutes if you are importing an old wallet."
 
@@ -118,6 +130,19 @@ ApplicationWindow {
             anchors.right: parent.right
             anchors.bottom: parent.bottom
         }
+
+        Connections {
+            target: wallet;
+            onReadyChanged: {
+                console.log("CCCCCCCCCCCCCCCCCCCCCCC");
+                console.log(ready);
+                if ( ready) {
+                    splashanimation.start()
+                }
+            }
+        }
+
+
 
         //starts the splashScreen
         Component.onCompleted: splashanimation.start()

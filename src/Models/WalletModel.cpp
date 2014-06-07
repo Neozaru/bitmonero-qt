@@ -6,7 +6,7 @@
 #include <QDebug>
 
 WalletModel::WalletModel()
-    : wallet_interface(NULL), balance(-1)
+    : wallet_interface(NULL), balance(-1), ready(false)
 {
 }
 

@@ -17,12 +17,12 @@
 class RPCMonero : public MoneroInterface
 {
     Q_OBJECT
-
 public:
     RPCMonero(MoneroModel& pMoneroModel, const WalletSettings& pSettings);
-    ~RPCMonero() {}
 
     bool isReady();
+
+    virtual void enable();
 
 public slots:
     void getInfo();
@@ -35,6 +35,8 @@ private:
     JsonRPCCommunicator rpc;
 
     DaemonHandler daemon_handler;
+
+    bool should_spawn_daemon;
 
 };
 

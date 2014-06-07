@@ -5,11 +5,16 @@
 #include <ctype.h>
 
 class MoneroInterface : public QObject {
+    Q_OBJECT
 public:
-    MoneroInterface(MoneroModel& pMoneroModel) : monero_model(pMoneroModel) {}
+    MoneroInterface(MoneroModel& pMoneroModel) : monero_model(pMoneroModel), daemon_ready(false) {}
 
-    virtual bool isReady() = 0;
+//    virtual bool isReady() = 0;
+    virtual void enable() = 0;
 //    virtual MoneroModel& getMoneroModel() = 0;
+
+signals:
+    void ready();
 
 protected:
     void onInfoUpdated(unsigned int pBlockchainHeight, unsigned int pTargetBlockchainHeight, unsigned int pDifficulty, unsigned int pIncomingConnections, unsigned int pOutgoingConnections) {
@@ -19,8 +24,19 @@ protected:
 
     }
 
+    void onReady() {
+
+        if ( !daemon_ready ) {
+            daemon_ready = true;
+            emit ready();
+        }
+
+    }
+
 protected:
     MoneroModel& monero_model;
+
+    bool daemon_ready;
 };
 
 #endif // MONEROINTERFACE_HH

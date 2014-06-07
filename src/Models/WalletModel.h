@@ -14,6 +14,8 @@ class WalletInterface;
 class WalletModel : public AbstractModel
 {
     Q_OBJECT
+
+    Q_PROPERTY(bool ready READ isReady WRITE setReady NOTIFY readyChanged)
     Q_PROPERTY(double balance READ getBalance WRITE setBalance NOTIFY balanceChanged)
     Q_PROPERTY(double unlocked_balance READ getUnlockedBalance WRITE setUnlockedBalance NOTIFY unlockedBalanceChanged)
     Q_PROPERTY(QString address READ getAddress NOTIFY addressChanged)
@@ -95,6 +97,11 @@ public:
         }
     }
 
+    bool isReady() const
+    {
+        return ready;
+    }
+
 signals:
     void balanceChanged();
     void transferSuccessful(const QString& tx_hash, double amount, const QString& address, int fee);
@@ -105,10 +112,20 @@ signals:
 
     void transactionsChanged(QList<QObject*> transactions);
 
+    void readyChanged(bool ready);
+
 public slots:
     Q_INVOKABLE bool transfer(double amount, const QString& address, int pFee, const QString& pPaymentId);
 
 
+
+void setReady(bool pReady)
+{
+    if (ready != pReady) {
+        ready = pReady;
+        emit readyChanged(pReady);
+    }
+}
 
 private:
     WalletInterface* wallet_interface;
@@ -117,6 +134,7 @@ private:
     QString address;
     double unlocked_balance;
     QList<QObject*> transactions;
+    bool ready;
 };
 
 #endif // WALLET_H

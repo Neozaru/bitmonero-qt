@@ -77,12 +77,17 @@ bool WalletHandler::openWalletAsync(const QString& pWalletFile, const QString& p
 
     main_process.setArguments(lArguments);
 
+//    main_process.set
+
+    /* TODO : Remove */
+    main_process.setProcessChannelMode(QProcess::MergedChannels);
     main_process.start();
 
     /* Wait 3 seconds to check if program terminates (daemon not running, wrongp password ... */
     bool lFinished = main_process.waitForFinished(3000);
     qDebug() << "Finished ? " << lFinished;
     qDebug() << "State : " << main_process.state();
+    qWarning() << "Wallet process finished too early with code " << main_process.exitCode() << ", " << main_process.exitStatus();
 
     if (lFinished) {
         return false;
@@ -202,9 +207,11 @@ bool WalletHandler::tryWalletProgram()
 
 }
 
-void WalletHandler::tryWalletResponse(int pCode) {
+void WalletHandler::tryWalletResponse(int pCode, QProcess::ExitStatus pExitStatus) {
 
-    qWarning() << "tryWalletAsync returned status : " << pCode;
+    qWarning() << "=======================";
+    qWarning() << "tryWalletAsync returned status : " << pCode << ". " << pExitStatus << ".";
+    qWarning() << "=======================";
     emit tryWalletResult(pCode == 0);
 
 }
@@ -218,7 +225,7 @@ bool WalletHandler::tryWallet(const QString& pFile, const QString& pPassword)
     }
 
     std::cout << "Wait" << std::endl;
-    if ( !lTryWalletProcess->waitForFinished(60000) ) {
+    if ( !lTryWalletProcess->waitForFinished(3000) ) {
         std::cout << "SUBP" << std::endl;
         qWarning() << "tryWallet failed : SubProcess doesn't responded";
 
@@ -231,7 +238,9 @@ bool WalletHandler::tryWallet(const QString& pFile, const QString& pPassword)
 
 
     int lExitCode = lTryWalletProcess->exitCode();
-    qDebug() << "PROCESS finished with : " << QString::number(lExitCode);
+    int lExitStatus = lTryWalletProcess->exitStatus();
+
+    qDebug() << "PROCESS finished with : " << QString::number(lExitCode) << " , " << QString::number(lExitStatus);
 
     return lExitCode == 0;
 
@@ -241,11 +250,11 @@ bool WalletHandler::tryWalletAsync(const QString& pFile, const QString& pPasswor
 
     QProcess* lTryWalletProcess = execTryWallet(pFile,pPassword);
     if (!lTryWalletProcess) {
-        emit tryWalletResponse(false);
+        emit tryWalletResult(false);
         return false;
     }
 
-    QObject::connect(lTryWalletProcess, SIGNAL(finished(int)), this, SLOT(tryWalletResponse(int)));
+    QObject::connect(lTryWalletProcess, SIGNAL(finished(int,QProcess::ExitStatus)), this, SLOT(tryWalletResponse(int,QProcess::ExitStatus)));
     return true;
 
 }
@@ -281,6 +290,10 @@ QProcess* WalletHandler::execTryWallet(const QString& pFile, const QString& pPas
     lArguments.append("--password="+ pPassword);
     lArguments.append("--command=getbalance");
     lTryWalletProcess->setArguments(lArguments);
+
+    /* TODO : Remove */
+//    lTryWalletProcess->setProcessChannelMode(QProcess::MergedChannels);
+    lTryWalletProcess->setStandardOutputFile("/tmp/test.txt");
 
     lTryWalletProcess->start();
 

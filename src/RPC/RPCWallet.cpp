@@ -11,6 +11,12 @@ RPCWallet::RPCWallet(WalletModel& pModel, const WalletSettings& pSettings)
 {
 
     pModel.setWalletInterface(this);
+
+
+}
+
+void RPCWallet::enable() {
+
     getAddress();
     getBalance();
 
@@ -26,12 +32,10 @@ RPCWallet::RPCWallet(WalletModel& pModel, const WalletSettings& pSettings)
     QTimer* lGetIncomingTransfersTimer = new QTimer(this);
     QObject::connect(lGetIncomingTransfersTimer,SIGNAL(timeout()), this, SLOT(getIncomingTransfers()));
 
-
     /* TODO : Change interval to 15-30 sec */
     lGetIncomingTransfersTimer->start(3000);
 
 }
-
 
 
 void RPCWallet::transfer(double pAmount, const QString& pAddress, int pFee, const QString& pPaymentId) {
@@ -92,10 +96,7 @@ void RPCWallet::getIncomingTransfers(const QString& pType) {
 
     QObject::connect(lReq, &JsonRPCRequest::jsonResponseReceived, [this] (const QJsonObject& pJsonResponse) {
 
-        qWarning() << "HEEEELLLLLLLLLOOOOOOOOOO";
-
         if ( !pJsonResponse["transfers"].isArray() ) {
-            qWarning() << "'incoming_transfers' returned 'OK' status but no array";
             return;
         }
 
@@ -194,9 +195,11 @@ void RPCWallet::addressResponse(const QJsonObject& pObjResponse)
 void RPCWallet::balanceResponse(const QJsonObject& pObjResponse)
 {
 
+    qWarning() << "Balance UPDATE";
     if ( !ready ) {
         ready = true;
         qWarning() << "WALLET READY !!";
+        this->onReady();
 //        this->onWalletReady();
     }
 
