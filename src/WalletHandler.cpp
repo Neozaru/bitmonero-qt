@@ -138,7 +138,8 @@ bool WalletHandler::walletDirectoryExists(const QString& pFile) {
 
     QFileInfo lFileInfo(pFile);
 
-    return lFileInfo.dir().exists();
+    /* Attempts to create directory if doesn't exists */
+    return lFileInfo.dir().exists() || QDir::root().mkpath(lFileInfo.absolutePath());
 
 }
 
