@@ -1,16 +1,15 @@
 #include "RPCMiner.h"
 
-#include <QTimer>
-
 RPCMiner::RPCMiner(MinerModel& pMinerModel, const QString& pHost, unsigned int pPort)
     : MinerInterface(pMinerModel), rpc(pHost,pPort)
 {
 
     getMiningStatus();
 
-    QTimer* lTimer = new QTimer(this);
-    QObject::connect(lTimer,SIGNAL(timeout()), this, SLOT(getMiningStatus()));
-    lTimer->start(5000);
+//    QTimer* lTimer = new QTimer(this);
+    QObject::connect(&miningstatus_timer,SIGNAL(timeout()), this, SLOT(getMiningStatus()));
+    miningstatus_timer.start(5000);
+
 }
 
 

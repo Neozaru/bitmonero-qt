@@ -2,6 +2,7 @@
 #define RPCMINER_H
 
 #include <QJsonObject>
+#include <QTimer>
 
 #include "RPC/JsonRPCCommunicator.h"
 #include "RPC/JsonRPCRequest.h"
@@ -23,6 +24,8 @@ public slots:
 
 private:
     JsonRPCCommunicator rpc;
+
+    QTimer miningstatus_timer;
 
 };
 

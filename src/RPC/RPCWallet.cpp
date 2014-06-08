@@ -20,20 +20,20 @@ void RPCWallet::enable() {
     getAddress();
     getBalance();
 
-    QTimer* lBalanceAddressTimer = new QTimer(this);
-    QObject::connect(lBalanceAddressTimer,SIGNAL(timeout()), this, SLOT(getBalance()));
+//    QTimer* lBalanceAddressTimer = new QTimer(this);
+    QObject::connect(&getbalance_timer,SIGNAL(timeout()), this, SLOT(getBalance()));
+    getbalance_timer.start(5000);
 
     /* TODO: Remove this when address is retrieved */
-    QObject::connect(lBalanceAddressTimer,SIGNAL(timeout()), this, SLOT(getAddress()));
+    QObject::connect(&getaddress_timer,SIGNAL(timeout()), this, SLOT(getAddress()));
+    getaddress_timer.start(5000);
 
-    lBalanceAddressTimer->start(5000);
 
-
-    QTimer* lGetIncomingTransfersTimer = new QTimer(this);
-    QObject::connect(lGetIncomingTransfersTimer,SIGNAL(timeout()), this, SLOT(getIncomingTransfers()));
+//    QTimer* lGetIncomingTransfersTimer = new QTimer(this);
+    QObject::connect(&incomingtransfers_timer,SIGNAL(timeout()), this, SLOT(getIncomingTransfers()));
 
     /* TODO : Change interval to 15-30 sec */
-    lGetIncomingTransfersTimer->start(3000);
+    incomingtransfers_timer.start(3000);
 
 }
 
@@ -178,10 +178,7 @@ void RPCWallet::transferResponse(const QJsonObject& pObjResponse, const QJsonObj
 void RPCWallet::addressResponse(const QJsonObject& pObjResponse)
 {
 
-//    if ( !ready ) {
-//        ready = true;
-//        emit walletReady();
-//    }
+    getaddress_timer.setInterval(120000);
 
     if ( pObjResponse["address"].isString() ) {
        this->onAddressUpdated(pObjResponse["address"].toString());
@@ -195,12 +192,12 @@ void RPCWallet::addressResponse(const QJsonObject& pObjResponse)
 void RPCWallet::balanceResponse(const QJsonObject& pObjResponse)
 {
 
-    qWarning() << "Balance UPDATE";
     if ( !ready ) {
         ready = true;
+        qWarning() << "Balance UPDATED";
         qWarning() << "WALLET READY !!";
         this->onReady();
-//        this->onWalletReady();
+
     }
 
     if ( pObjResponse["balance"].isDouble() && pObjResponse["unlocked_balance"].isDouble() ) {

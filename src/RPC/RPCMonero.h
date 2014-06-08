@@ -4,6 +4,7 @@
 
 #include <QUrl>
 #include <QtNetwork/QNetworkAccessManager>
+#include <QTimer>
 
 
 #include "Models/MoneroModel.h"
@@ -19,6 +20,10 @@ class RPCMonero : public MoneroInterface
     Q_OBJECT
 public:
     RPCMonero(MoneroModel& pMoneroModel, const WalletSettings& pSettings);
+
+    bool isOk() {
+        return !should_spawn_daemon || daemon_handler.isOk();
+    }
 
     bool isReady();
 
@@ -37,6 +42,9 @@ private:
     DaemonHandler daemon_handler;
 
     bool should_spawn_daemon;
+
+    QTimer getinfo_timer;
+    QTimer savebc_timer;
 
 };
 

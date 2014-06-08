@@ -16,14 +16,6 @@ ApplicationWindow {
         Qt.quit();
     }
 
-//    Action {
-//        id: openAction
-//        text: "&Open"
-//        shortcut: StandardKey.Open
-////        iconSource: "images/document-open.png"
-//        onTriggered: fileDialog.open()
-//        tooltip: "Open an image"
-//    }
 
     AboutDialog { id: aboutDialog }
 
@@ -35,17 +27,6 @@ ApplicationWindow {
 
 
 
-    Menu {
-        id: editmenu
-//        MenuItem { action: cutAction }
-        MenuSeparator {}
-        Menu {
-            title: "Text &Format"
-//            MenuItem { action: a1 }
-        }
-
-    }
-
     menuBar: MenuBar {
         Menu {
             title: "&File"
@@ -56,27 +37,7 @@ ApplicationWindow {
                 onTriggered: Qt.quit()
             }
         }
-//        Menu {
-//            title: "&Edit"
-////            MenuItem { action: cutAction }
-////            MenuItem { action: copyAction }
-////            MenuItem { action: pasteAction }
-//            MenuSeparator { }
-//            MenuItem {
-//                text: "Do Nothing"
-//                shortcut: "Ctrl+E,Shift+Ctrl+X"
-//                enabled: false
-//            }
-//            MenuItem {
-//                text: "Not Even There"
-//                shortcut: "Ctrl+E,Shift+Ctrl+Y"
-//                visible: false
-//            }
-//            Menu {
-//                title: "Me Neither"
-//                visible: false
-//            }
-//        }
+
         Menu {
             title: "&Help"
             MenuItem { action: aboutAction }
@@ -84,7 +45,7 @@ ApplicationWindow {
     }
     toolBar: ToolBar {
         id: toolbar
-//        height: 30
+
         RowLayout {
             id: toolbarLayout
             spacing: 0
@@ -95,7 +56,7 @@ ApplicationWindow {
                 Accessible.name: "New window"
                 tooltip: "Toggle visibility of the second window"
             }
-//            ToolButton { action: openAction }
+
             ToolButton {
 //                iconSource: "images/document-save-as.png"
                 tooltip: "(Pretend to) Save as..."
@@ -235,7 +196,6 @@ ApplicationWindow {
 
         Tab {
             title: "History (beta)"
-//            enabled: false
             History {}
         }
 
@@ -249,9 +209,6 @@ ApplicationWindow {
             }
         }
 
-//        Tab {
-//            title: "Debug"
-//        }
 
     }
 

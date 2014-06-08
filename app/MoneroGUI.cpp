@@ -104,6 +104,11 @@ int MoneroGUI::start() {
     initModels();
     initInterfaces();
 
+    if( !monero_interface->isOk() ) {
+        qWarning() << "Daemon exec not found ? Aborting";
+        dialogError(1);
+        return 1;
+    }
 
 
     QObject::connect(monero_interface, &MoneroInterface::ready, [=]() {
@@ -218,20 +223,28 @@ int MoneroGUI::start() {
 
     if (exit_status != 0) {
 
-        if ( !app.allWindows().empty() ) {
-            app.allWindows().first()->close();
-        }
-
-        qDebug() << "Opening error Window";
-        initQmlElement(engine, QUrl("qrc:/qml/ErrorWindow.qml"));
-        engine.rootContext()->setContextProperty("error_message", "Error !!");
-        engine.rootContext()->setContextProperty("error_code", exit_status);
-
-        app.exec();
+        dialogError(exit_status);
 
     }
 
 
     return exit_status;
+
+}
+
+void MoneroGUI::dialogError(int pErrorCode) {
+
+    if ( !app.allWindows().empty() ) {
+        app.allWindows().first()->close();
+    }
+
+    qDebug() << "Opening error Window";
+    initQmlElement(engine, QUrl("qrc:/qml/ErrorWindow.qml"));
+    engine.rootContext()->setContextProperty("error_message", "Error !!");
+    engine.rootContext()->setContextProperty("error_code", pErrorCode);
+
+    QObject::connect(&engine, SIGNAL(quit()), &app, SLOT(quit()));
+
+    app.exec();
 
 }

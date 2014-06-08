@@ -1,7 +1,5 @@
 #include "RPCMonero.h"
 
-#include <QTimer>
-
 #include <QString>
 #include <QtNetwork/QNetworkReply>
 
@@ -21,11 +19,7 @@ RPCMonero::RPCMonero(MoneroModel& pMoneroModel, const WalletSettings& pSettings)
     : MoneroInterface(pMoneroModel), rpc(pSettings.getMoneroUri(),pSettings.getMoneroPort()), daemon_handler(pSettings)
 {
     should_spawn_daemon = pSettings.shouldSpawnDaemon();
-
-
-
 }
-
 
 
 void RPCMonero::getInfo()
@@ -86,15 +80,15 @@ bool RPCMonero::isReady() {
 
 void RPCMonero::enable() {
 
-    QTimer* lGetInfoTimer = new QTimer();
-    QObject::connect(lGetInfoTimer, SIGNAL(timeout()), this, SLOT(getInfo()));
-    lGetInfoTimer->start(5000);
+//    QTimer* lGetInfoTimer = new QTimer();
+    QObject::connect(&getinfo_timer, SIGNAL(timeout()), this, SLOT(getInfo()));
+    getinfo_timer.start(5000);
 
 
     /* TODO : Move in another process (daemon itself ?) */
-    QTimer* lSaveBlockchainTimer = new QTimer();
-    QObject::connect(lSaveBlockchainTimer, SIGNAL(timeout()), this, SLOT(saveBlockchain()));
-    lSaveBlockchainTimer->start(1200000);
+//    QTimer* lSaveBlockchainTimer = new QTimer();
+    QObject::connect(&savebc_timer, SIGNAL(timeout()), this, SLOT(saveBlockchain()));
+    savebc_timer.start(1200000);
 
 
     if (should_spawn_daemon) {

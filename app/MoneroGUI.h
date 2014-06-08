@@ -98,6 +98,10 @@ private:
     }
 
 private:
+
+    void dialogError(int pErrorCode);
+
+private:
     QGuiApplication& app;
 
     MoneroInterface* monero_interface;
@@ -116,6 +120,9 @@ private:
 
 
     int exit_status;
+
+
+
 };
 
 #endif // MONEROGUI_H

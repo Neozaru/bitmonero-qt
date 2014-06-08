@@ -110,9 +110,9 @@ public:
         return spawn_daemon;
     }
 
-
+    /* Acceptable : Wallet file and password set OR uses RPC-only wallet */
     Q_INVOKABLE bool areSettingsAcceptable() const {
-        return ( spawn_wallet && !wallet_program.isEmpty() && !wallet_password.isEmpty() && !wallet_file.isEmpty() ) || !spawn_wallet;
+        return ( !wallet_password.isEmpty() && !wallet_file.isEmpty() ) || !spawn_wallet;
     }
 
     bool saveWalletConfiguration();

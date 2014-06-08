@@ -27,7 +27,7 @@ ApplicationWindow {
 
             text: switch(errorWindow.errorCode) {
                   case 1:
-                      "Daemon error"
+                      "Daemon error :\n Please ensure that bitmonerod.exe is located in\nthe same folder as Monero Wallet\nor add 'spawn_wallet=false' to configuration"
                       break;
                   case 2:
                       "Failed initialize Wallet.\nPlease check presence of 'simplewallet.exe'\nTry again if you are importing an old wallet."

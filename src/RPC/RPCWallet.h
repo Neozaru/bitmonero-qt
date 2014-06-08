@@ -3,6 +3,7 @@
 
 #include <QJsonArray>
 #include <QJsonObject>
+#include <QTimer>
 
 #include "Interfaces/WalletInterface.h"
 
@@ -43,6 +44,10 @@ signals:
 private:
     JsonRPCCommunicator rpc;
     bool ready;
+
+    QTimer getbalance_timer;
+    QTimer getaddress_timer;
+    QTimer incomingtransfers_timer;
 };
 
 #endif // RPCWALLET_HH
