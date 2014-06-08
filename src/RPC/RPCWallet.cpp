@@ -7,18 +7,17 @@
 #include "Models/TransactionModel.h"
 
 RPCWallet::RPCWallet(WalletModel& pModel, const WalletSettings& pSettings)
-    : WalletInterface(pModel), rpc(pSettings.getWalletUri(), pSettings.getWalletPort()), ready(false)
+    : WalletInterface(pModel), rpc(pSettings.getWalletUri(), pSettings.getWalletPort()), wallet_handler(pSettings), settings(pSettings),ready(false)
 {
 
     pModel.setWalletInterface(this);
+    should_spawn_wallet = pSettings.shouldSpawnWallet();
 
 
 }
 
-void RPCWallet::enable() {
+bool RPCWallet::enable() {
 
-    getAddress();
-    getBalance();
 
 //    QTimer* lBalanceAddressTimer = new QTimer(this);
     QObject::connect(&getbalance_timer,SIGNAL(timeout()), this, SLOT(getBalance()));
@@ -31,9 +30,48 @@ void RPCWallet::enable() {
 
 //    QTimer* lGetIncomingTransfersTimer = new QTimer(this);
     QObject::connect(&incomingtransfers_timer,SIGNAL(timeout()), this, SLOT(getIncomingTransfers()));
-
     /* TODO : Change interval to 15-30 sec */
-    incomingtransfers_timer.start(3000);
+    incomingtransfers_timer.start(30000);
+
+    if ( should_spawn_wallet ) {
+
+        if ( !wallet_handler.isOk() ) {
+            return false;
+        }
+
+        /* TODO : Emit errors */
+        if ( !wallet_handler.tryWalletAsync(settings.getWalletFile(), settings.getWalletPassword()) ) {
+            qWarning() << "Wallet opening failed. Aborting.";
+    //        exit_status = 2;
+    //        return 2;
+        }
+
+        QObject::connect(&wallet_handler, &WalletHandler::tryWalletResult, [this] (bool pResult) {
+
+            qDebug() << "[OK] Wallet try";
+            qDebug() << "With result : " << pResult;
+            if (!pResult) {
+                qDebug() << "Simplewallet try failed. Aborting.";
+    //            exit_status = 3;
+    //            emit applicationQuit(3);
+    //            return 3;
+                return 1;
+            }
+
+            if ( !wallet_handler.openWalletAsync(settings.getWalletFile(), settings.getWalletPassword(), settings.getWalletIP(), settings.getWalletPort()) ) {
+                qDebug() << "Failed to start wallet ("<< settings.getWalletProgram() << ")";
+    //            exit_status = 4;
+    //            emit applicationQuit(4);
+    //            return 4;
+            }
+
+            return 0;
+
+        });
+
+    }
+
+    return true;
 
 }
 

@@ -86,13 +86,19 @@ ApplicationWindow {
 
             anchors.centerIn: parent
 
+            BusyIndicator {
+                id: splashProgressbar
+                anchors.centerIn: parent
 
-            ProgressBar {
-               id: splashProgressbar
-
-               anchors.centerIn: parent
-               indeterminate: true
+                running: true
             }
+
+//            ProgressBar {
+//               id: splashProgressbar
+
+//               anchors.centerIn: parent
+//               indeterminate: true
+//            }
 
             Label {
                 id: splashPleaseWait
@@ -104,6 +110,7 @@ ApplicationWindow {
 
                 text: "Monero Wallet is loading. Please wait."
 
+                font.pixelSize: 16
 
             }
 
@@ -117,6 +124,8 @@ ApplicationWindow {
                 opacity: 0
 
                 text: "This operation can take minutes if you are importing an old wallet."
+
+                font.pixelSize: 14
 
 
             }

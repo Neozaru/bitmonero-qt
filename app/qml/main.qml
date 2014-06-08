@@ -13,7 +13,7 @@ MainWindow {
     visible: true
 
     width: 800
-    height: 600
+    height: 500
 
     x: (Screen.width - width) / 2
     y: (Screen.height - height) / 2

@@ -19,10 +19,17 @@ public:
     virtual void getPayments(const QString& pPaymentId) = 0;
     virtual void store() = 0;
 
-    virtual void enable() = 0;
+    virtual bool enable() = 0;
+
+//    virtual bool openWalletAsync();
+    virtual bool isOk() = 0;
 
 signals:
+    /* TODO : Check if still useful */
     void ready();
+
+//    void walletOpened();
+
 
 
 protected:

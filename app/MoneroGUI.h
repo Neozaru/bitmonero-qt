@@ -37,7 +37,7 @@ public:
 
     int startWizard();
     int startMainWindow();
-    bool startSplashScreen();
+//    bool startSplashScreen();
 
 
 public slots:
@@ -95,6 +95,17 @@ private:
 
     bool isReady() const {
         return settings.areSettingsAcceptable();
+    }
+
+
+    int startSplashScreen() {
+        if ( initSplashScreen(engine) ) {
+
+            app.exec();
+            return 0;
+        }
+
+        return 1;
     }
 
 private:

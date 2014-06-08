@@ -92,10 +92,6 @@ void MoneroGUI::onMainWindowQuit(int pReturnCode) {
 //    emit this->applicationQuit();
 }
 
-bool MoneroGUI::startSplashScreen()
-{
-    return false;
-}
 
 int MoneroGUI::start() {
 
@@ -120,8 +116,8 @@ int MoneroGUI::start() {
 
     qWarning() << "Start SPLASH";
 
-    initSplashScreen(engine);
-    int lReturnCode = app.exec();
+    /* Blocking */
+    startSplashScreen();
 
 
 
@@ -171,44 +167,6 @@ int MoneroGUI::start() {
         wallet_interface->enable();
 
 
-        /* spawn_wallet defaults to true when password is set in config. Check if user disabled wallet opening */
-        if ( settings.shouldSpawnWallet() ) {
-
-            qDebug() << "Checking Wallet...";
-            if ( !wallet_handler.tryWalletAsync(settings.getWalletFile(), settings.getWalletPassword()) ) {
-                qWarning() << "Wallet opening failed. Aborting.";
-                exit_status = 2;
-                return 2;
-            }
-
-            QObject::connect(&wallet_handler, &WalletHandler::tryWalletResult, [this] (bool pResult) {
-
-                qDebug() << "[OK] Wallet try";
-                qDebug() << "With result : " << pResult;
-                if (!pResult) {
-                    qDebug() << "Simplewallet try failed. Aborting.";
-                    exit_status = 3;
-                    emit applicationQuit(3);
-                    return 3;
-                }
-
-                if ( !wallet_handler.openWalletAsync(settings.getWalletFile(), settings.getWalletPassword(), settings.getWalletIP(), settings.getWalletPort()) ) {
-                    qDebug() << "Failed to start wallet ("<< settings.getWalletProgram() << ")";
-                    exit_status = 4;
-                    emit applicationQuit(4);
-                    return 4;
-                }
-
-                return 0;
-
-            });
-
-        }
-        else {
-            qDebug() << "'spawn_wallet' disabled. Connecting to existing wallet on port" << settings.getWalletPort();
-        }
-
-
         QEventLoop lBlockingLoop;
         QObject::connect(this, SIGNAL(applicationQuit(int)), &lBlockingLoop, SLOT(quit()));
         lBlockingLoop.exec();
@@ -217,6 +175,9 @@ int MoneroGUI::start() {
 
         wallet_handler.closeWallet();
 
+    }
+    else {
+        exit_status = 6;
     }
 
     qDebug() << "exit_status : " << exit_status;

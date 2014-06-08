@@ -1,5 +1,6 @@
 import QtQuick 2.2
 import QtQuick.Controls 1.1
+import QtQuick.Controls.Styles 1.1
 import QtQuick.Layouts 1.0
 import QtQuick.Dialogs 1.0
 
@@ -54,7 +55,7 @@ GuardedColumnLayout {
         id: definePaymentIdCheckbox
 
         anchors.top: inputAddress.bottom
-        anchors.topMargin: 5
+        anchors.topMargin: 10
 
         text: "Define a payment ID for this transfer (useful for services/exchanges)"
         checked: false
@@ -71,7 +72,7 @@ GuardedColumnLayout {
         Button {
             id: pastePaymentIDButton
 
-            anchors.top: definePaymentIdCheckbox
+//            anchors.top: definePaymentIdCheckbox.bottom
 
 
             text: "Paste"
@@ -102,6 +103,8 @@ GuardedColumnLayout {
         onTextChanged: lastTransferError = ""
 
         validator: DoubleValidator { bottom: 0.0; top: 100000000 }
+
+        font.pixelSize: 20
     }
 
 
@@ -112,7 +115,7 @@ GuardedColumnLayout {
         anchors.top: inputAmount.top
         anchors.leftMargin: 3
 
-        text: "Send"
+//        text: "Send"
         enabled: inputAmount.acceptableInput && inputAddress.acceptableInput
 
         onClicked:  if (!inputAmount.acceptableInput) {
@@ -128,6 +131,15 @@ GuardedColumnLayout {
                         var res = wallet.transfer(Math.pow(10,12) * parseFloat(inputAmount.text), inputAddress.text, 1000000, definePaymentIdCheckbox ? inputPaymentId.text : "");
                         lastTransactionLayout.visible = false;
                     }
+
+        style: ButtonStyle {
+
+            label: Label {
+                font.pixelSize: 19
+                text: "Send"
+            }
+
+        }
 
     }
 

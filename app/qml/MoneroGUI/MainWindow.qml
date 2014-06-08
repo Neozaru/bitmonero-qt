@@ -1,5 +1,6 @@
 import QtQuick 2.2
 import QtQuick.Controls 1.1
+import QtQuick.Controls.Styles 1.1
 import QtQuick.Layouts 1.0
 import QtQuick.Dialogs 1.0
 
@@ -166,8 +167,8 @@ ApplicationWindow {
     TabView {
         id:frame
 
-        property string unavailableWalletErrorMessage: wallet.ready ? "" : "Error : Your Wallet is unreachable. Please check 'simplewallet' is running and bound to correct RPC port"
-        property string unavailableMinerErrorMessage: miner.ready ? "" : "Error : Your Miner is unreachable. Please check 'bitmonerod' is running and bound to correct RPC port"
+        property string unavailableWalletErrorMessage: wallet.ready ? "" : "Your Wallet is unreachable. Wait a few seconds or restart Monero Wallet"
+        property string unavailableMinerErrorMessage: miner.ready ? "" : "Error : Your Miner is unreachable. Wait a few seconds or restart Monero Wallet"
 
         anchors.fill: parent
 
@@ -175,6 +176,7 @@ ApplicationWindow {
 
         Tab {
             id: controlPage
+
 
 
             title: "Overview"
@@ -209,6 +211,29 @@ ApplicationWindow {
             }
         }
 
+        style: TabViewStyle {
+            frameOverlap: 1
+            tab: Rectangle {
+                color: styleData.selected ? "steelblue" :"lightsteelblue"
+//                color: "#E3E4FA"
+                border.color:  "steelblue"
+                implicitWidth: Math.max(text.width + 4, 80)*2
+                implicitHeight: 50
+                radius: 2
+                Text {
+                    id: text
+                    anchors.centerIn: parent
+                    text: styleData.title
+                    color: styleData.selected ? "white" : "black"
+                    font.pixelSize: 18
+                }
+            }
+            frame: Rectangle {
+
+                /*color: "steelblue"*/ /* color: "#EDEEFA" */ /* color: "white" */
+                color: "#F5F5FC";
+            }
+        }
 
     }
 

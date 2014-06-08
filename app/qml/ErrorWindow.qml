@@ -38,6 +38,9 @@ ApplicationWindow {
                   case 4:
                       "Failed to open your Wallet.\nThis error can happen when importing/syncing an old wallet.\nTrying twice can resolve the problem.\nThis will be fixed in next version"
                       break;
+                  case 5:
+                      "Wallet configuration has failed.\nPlease try again or check bitmonero-qt.conf"
+                      break;
                   default:
                       "Unknown error (" + parseInt(errorWindow.errorCode) + ")"
                   }

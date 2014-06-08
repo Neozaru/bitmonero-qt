@@ -13,6 +13,7 @@
 #include "WalletSettings.h"
 
 #include "Models/WalletModel.h"
+#include "WalletHandler.h"
 
 class RPCWallet : public WalletInterface
 {
@@ -25,7 +26,11 @@ public:
     void getPayments(const QString& pPaymentId);
 
 
-    void enable();
+    bool isOk() {
+        return !should_spawn_wallet || wallet_handler.isOk();
+    }
+
+    bool enable();
 
 
 public slots:
@@ -43,7 +48,12 @@ signals:
 
 private:
     JsonRPCCommunicator rpc;
+    WalletHandler wallet_handler;
+    const WalletSettings& settings;
     bool ready;
+
+    bool should_spawn_wallet;
+
 
     QTimer getbalance_timer;
     QTimer getaddress_timer;
