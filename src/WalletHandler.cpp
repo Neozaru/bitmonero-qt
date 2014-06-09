@@ -36,7 +36,7 @@ WalletHandler::WalletHandler(const WalletSettings& pWalletSettings)
         lWalletSearchFilenames.append("simplewallet.exe");
 
 
-        QStringList lFoundWalletExecutables = Utils::findExecutables(lSearchPaths, lWalletSearchFilenames);
+        QStringList lFoundWalletExecutables = Utils::findExecutables(lSearchPaths, lWalletSearchFilenames, true);
 
 
         qDebug() << "Found " << lFoundWalletExecutables.size() << " wallet executables : ";

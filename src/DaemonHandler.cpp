@@ -30,7 +30,7 @@ DaemonHandler::DaemonHandler(const WalletSettings& pSettings)
 
 
 
-        QStringList lFoundMoneroExecutables = Utils::findExecutables(lSearchPaths, lMoneroSearchFilenames);
+        QStringList lFoundMoneroExecutables = Utils::findExecutables(lSearchPaths, lMoneroSearchFilenames, true);
         qDebug() << "Found " << lFoundMoneroExecutables.size() << " monero daemon executables : ";
         for( const QString& lMoneroExec : lFoundMoneroExecutables ) {
             qDebug() << "- " << lMoneroExec;

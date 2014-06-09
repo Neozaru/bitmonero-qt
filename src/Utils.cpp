@@ -7,7 +7,7 @@ Utils::Utils()
 
 
 /* Returns first executable pFilenames found in pPaths */
-const QStringList Utils::findExecutables(const QStringList& pPaths, const QStringList& pFilenames) {
+const QStringList Utils::findExecutables(const QStringList& pPaths, const QStringList& pFilenames, bool pFindOne) {
 
     QStringList lFoundExecutables;
 
@@ -18,7 +18,9 @@ const QStringList Utils::findExecutables(const QStringList& pPaths, const QStrin
 
             if ( lFile.exists() && lFile.isFile() ) {
                 lFoundExecutables.append(lFile.filePath());
-
+                if (pFindOne) {
+                    return lFoundExecutables;
+                }
             }
 
         }
@@ -27,3 +29,5 @@ const QStringList Utils::findExecutables(const QStringList& pPaths, const QStrin
     return lFoundExecutables;
 
 }
+
+

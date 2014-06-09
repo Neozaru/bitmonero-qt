@@ -12,7 +12,7 @@ public:
 
 
     /* Returns first executable pFilenames found in pPaths */
-    static const QStringList findExecutables(const QStringList& pPaths, const QStringList& pFilenames);
+    static const QStringList findExecutables(const QStringList& pPaths, const QStringList& pFilenames, bool pFindOne = false);
 };
 
 #endif // UTILS_H

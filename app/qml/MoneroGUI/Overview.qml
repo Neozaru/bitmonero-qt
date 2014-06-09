@@ -27,11 +27,26 @@ GuardedColumnLayout {
             font.pixelSize: 24
         }
 
+        RowLayout {
+            visible: wallet.balance != wallet.unlocked_balance
+
+            Label {
+                text: "Usable right now : "
+            }
+
+            Balance {
+                balance: wallet.unlocked_balance
+            }
+
+        }
+
         Button {
             text: "Copy balance"
             /* Hack copy */
             onClicked: { balanceValue.selectAll(); balanceValue.copy(); balanceValue.select(0,0)}
         }
+
+
 
         /* hack */
         TextEdit {
