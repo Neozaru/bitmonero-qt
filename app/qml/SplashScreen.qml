@@ -37,10 +37,6 @@ ApplicationWindow {
         smooth: true
 
 
-        // image source is kept as an property alias, so that it can be set from outside
-//        property alias imageSource: splashImage.source
-//        imageSource: "Baguette.png"
-
         // signal emits when splashscreen animation completes
         signal splashScreenCompleted()
         Image {
@@ -51,23 +47,13 @@ ApplicationWindow {
             anchors.left: parent.left
 
             source: "res/MoneroLogo.jpg"
-//            anchors.centerIn: parent
 
-//            anchors.fill: splashScreenContainer // do specify the size and position
         }
 
-//        MouseArea {
 
-//            onClicked: { splashScreenContainer.splashScreenCompleted()  }
-//            anchors.centerIn: parent
-
-
-//        }
-
-//        // simple QML animation to give a good user experience
         SequentialAnimation {
             id:splashanimation
-            PauseAnimation { duration: 10000 }
+            PauseAnimation { duration: 13000 }
             PropertyAnimation {
                 target: splashCanTakeLongLabel
                 duration: 2000
@@ -76,7 +62,7 @@ ApplicationWindow {
             }
 
             onStopped: {
-//                splashScreenContainer.splashScreenCompleted();
+
             }
 
         }
@@ -132,19 +118,19 @@ ApplicationWindow {
         }
 
 
-
         Label {
             text: "Refreshing wallet..."
 
             anchors.right: parent.right
             anchors.bottom: parent.bottom
+            anchors.rightMargin: 3
+            anchors.bottomMargin: 3
         }
 
         Connections {
             target: wallet;
             onReadyChanged: {
-                console.log("CCCCCCCCCCCCCCCCCCCCCCC");
-                console.log(ready);
+                console.log("READY : " + ready);
                 if ( ready) {
                     splashanimation.start()
                 }

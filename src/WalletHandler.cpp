@@ -20,7 +20,10 @@ WalletHandler::WalletHandler(const WalletSettings& pWalletSettings)
 
         QStringList lSearchPaths;
         lSearchPaths.append( QDir::currentPath() );
+        lSearchPaths.append( QDir::homePath() + "/.bitmonero-qt/");
         lSearchPaths.append( QDir::currentPath() + "/bitmonero/");
+        lSearchPaths.append( QDir::currentPath() + "/../");
+        lSearchPaths.append( QDir::currentPath() + "/../bitmonero/");
         lSearchPaths.append( "/usr/bin" );
         lSearchPaths.append( "/usr/local/bin" );
 
@@ -270,11 +273,6 @@ QProcess* WalletHandler::execTryWallet(const QString& pFile, const QString& pPas
         return NULL;
     }
 
-//    if ( !walletFileExists(pFile) ) {
-//        std::cout << "Dindonneau" << std::endl;
-//        qWarning() << "Wallet file " << pFile << "doesn't exists";
-//        return NULL;
-//    }
 
     if ( pPassword.isEmpty() ) {
         qWarning() << "No password defined";

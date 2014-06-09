@@ -28,7 +28,7 @@ public:
 
     bool isReady();
 
-    virtual void enable();
+    virtual int enable();
 
 public slots:
     void getInfo();

@@ -33,7 +33,7 @@ AbstractPage {
 
                 placeholderText: "Name of your Wallet"
                 textColor: if (acceptableInput) { "green" } else { "red" }
-                validator: RegExpValidator { regExp: /[a-zA-Z0-9]+/ }
+                validator: RegExpValidator { regExp: /[a-zA-Z0-9\.]+/ }
             }
         }
 

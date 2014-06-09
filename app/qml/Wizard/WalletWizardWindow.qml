@@ -149,7 +149,7 @@ ApplicationWindow {
                 visible: status == 0
 
                 Label {
-                    text: "Checking configuration...\nThis one-time operation can take more several minutes."
+                    text: "Checking configuration...\nThis one-time operation can take several minutes."
                 }
 
                 ProgressBar {
@@ -176,7 +176,7 @@ ApplicationWindow {
                 visible: status == -1
 
                 Label {
-                    text: "An error has occured during configuration :("
+                    text: "An error has occured while opening your Wallet.\nHave you set the right password ?"
                 }
 
                 Button {
@@ -207,6 +207,9 @@ ApplicationWindow {
                     }
                     else {
                         status = -1
+                        /* Rollback configuration */
+                        settings.wallet_file = "";
+                        settings.wallet_password = "";
                     }
                 }
 
@@ -219,6 +222,7 @@ ApplicationWindow {
 
     onWizardSuccess: {
         visible = false; Qt.quit()
+
     }
 
 

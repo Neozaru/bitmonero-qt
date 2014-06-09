@@ -11,7 +11,7 @@ ApplicationWindow {
 
     width: 400
     height: 400
-    property int errorCode: error_code
+    property int errorCode: error_code ? error_code : 10
 
     ColumnLayout {
 
@@ -40,6 +40,18 @@ ApplicationWindow {
                       break;
                   case 5:
                       "Wallet configuration has failed.\nPlease try again or check bitmonero-qt.conf"
+                      break;
+                  case 11:
+                      "Daemon error : Unable to find 'bitmonerod'"
+                      break;
+                  case 12:
+                      "Daemon error : Unable to start 'bitmonerod'\nIs your Wallet already running ?\nPlease restart Monero Wallet"
+                      break;
+                  case 21:
+                      "Wallet error : Unable to find 'simplewallet'"
+                      break;
+                  case 22:
+                      "Wallet error : Unable to start 'simplewallet'.\nPlease check your version or update 'simplewallet'"
                       break;
                   default:
                       "Unknown error (" + parseInt(errorWindow.errorCode) + ")"

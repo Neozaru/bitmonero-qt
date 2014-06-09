@@ -11,7 +11,7 @@ public:
     virtual ~MoneroInterface() {}
 
 //    virtual bool isReady() = 0;
-    virtual void enable() = 0;
+    virtual int enable() = 0;
 
     virtual bool isOk() = 0;
 //    virtual MoneroModel& getMoneroModel() = 0;

@@ -104,26 +104,26 @@ int MoneroGUI::start() {
     initModels();
     initInterfaces();
 
-    if( !monero_interface->isOk() ) {
-        qWarning() << "Daemon exec not found ? Aborting";
-        dialogError(1);
-        return 1;
-    }
-
 
     QObject::connect(monero_interface, &MoneroInterface::ready, [=]() {
         qWarning() << "MONERO READY";
-        app.quit();
-//        stopSplashScreen();
 
+        /* Unlocks main loop */
+        app.quit();
     });
-    monero_interface->enable();
+
+    int lDaemonReturnCode = monero_interface->enable();
+    if ( lDaemonReturnCode != 0 ) {
+
+        /* Starnge error codes :D */
+        dialogError(10 + lDaemonReturnCode);
+        return 10 + lDaemonReturnCode;
+    }
 
     qWarning() << "Start SPLASH";
 
     /* Blocking */
     startSplashScreen();
-
 
 
     qWarning() << "[OK] Monero";
@@ -132,20 +132,21 @@ int MoneroGUI::start() {
     engine.rootContext()->setContextProperty("wallet_handler", &wallet_handler);
 
 
-    /* Blocks until daemon is ready */
-
+    /* Yet another hack. To refactor */
     if (!wallet_handler.isOk()) {
         qCritical() << "Wallet program error : Not executable. Abording.";
+        dialogError(21);
+        return 21;
     }
 
     /* Allow to exit the application */
     QObject::connect(&engine,SIGNAL(quit()),&app,SLOT(quit()));
 
-//    bool lResplash = false;
     if( !isReady() )  {
         qWarning() << "Not configured. Starting wizard";
-        int lReturnCode = startWizard();
-        qWarning() << "WIzard returned " << lReturnCode;
+        startWizard();
+        /* Blocks */
+        qWarning() << "WIzard exited ";
     }
 
 
@@ -156,12 +157,12 @@ int MoneroGUI::start() {
     if (isReady()) {
 
         /* Will start the application when wallet ready */
-
         QObject::connect(wallet_interface, &WalletInterface::ready, [this]() {
+
             /* At this stage, we can consider that the program configuration is sane. Let's save it */
             settings.saveWalletConfiguration();
 
-            qWarning() << "WALLET READY";
+            qWarning() << "[OK] Wallet";
 
             int lReturnCode = startMainWindow();
             /* Will block until main window is closed */
@@ -169,7 +170,12 @@ int MoneroGUI::start() {
             emit onMainWindowQuit(lReturnCode);
 
         });
-        wallet_interface->enable();
+        int lWalletReturnCode = wallet_interface->enable();
+
+        if ( lWalletReturnCode != 0 ) {
+            dialogError(20+lWalletReturnCode);
+            return 20+lWalletReturnCode;
+        }
 
 
         QEventLoop lBlockingLoop;
@@ -177,12 +183,11 @@ int MoneroGUI::start() {
         lBlockingLoop.exec();
         /* Will block until onMainWindowQuit is triggered */
 
-
         wallet_handler.closeWallet();
 
     }
     else {
-        exit_status = 6;
+        exit_status = 5;
     }
 
     qDebug() << "exit_status : " << exit_status;
@@ -205,9 +210,9 @@ void MoneroGUI::dialogError(int pErrorCode) {
     }
 
     qDebug() << "Opening error Window";
-    initQmlElement(engine, QUrl("qrc:/qml/ErrorWindow.qml"));
     engine.rootContext()->setContextProperty("error_message", "Error !!");
     engine.rootContext()->setContextProperty("error_code", pErrorCode);
+    initQmlElement(engine, QUrl("qrc:/qml/ErrorWindow.qml"));
 
     QObject::connect(&engine, SIGNAL(quit()), &app, SLOT(quit()));
 

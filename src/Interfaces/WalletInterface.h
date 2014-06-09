@@ -19,7 +19,7 @@ public:
     virtual void getPayments(const QString& pPaymentId) = 0;
     virtual void store() = 0;
 
-    virtual bool enable() = 0;
+    virtual int enable() = 0;
 
 //    virtual bool openWalletAsync();
     virtual bool isOk() = 0;
@@ -70,11 +70,6 @@ protected:
         emit wallet_model.transferError(pErrorCode, pErrorMessage);
 
     }
-
-//    void onWalletReady() {
-////        emit walletReady();
-//        wallet_model.setReady(true);
-//    }
 
     void onReady() {
 

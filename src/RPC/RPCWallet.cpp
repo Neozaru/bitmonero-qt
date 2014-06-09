@@ -16,7 +16,7 @@ RPCWallet::RPCWallet(WalletModel& pModel, const WalletSettings& pSettings)
 
 }
 
-bool RPCWallet::enable() {
+int RPCWallet::enable() {
 
 
 //    QTimer* lBalanceAddressTimer = new QTimer(this);
@@ -36,14 +36,14 @@ bool RPCWallet::enable() {
     if ( should_spawn_wallet ) {
 
         if ( !wallet_handler.isOk() ) {
-            return false;
+            return 1;
         }
 
         /* TODO : Emit errors */
         if ( !wallet_handler.tryWalletAsync(settings.getWalletFile(), settings.getWalletPassword()) ) {
             qWarning() << "Wallet opening failed. Aborting.";
     //        exit_status = 2;
-    //        return 2;
+            return 2;
         }
 
         QObject::connect(&wallet_handler, &WalletHandler::tryWalletResult, [this] (bool pResult) {
@@ -71,7 +71,7 @@ bool RPCWallet::enable() {
 
     }
 
-    return true;
+    return 0;
 
 }
 

@@ -4,10 +4,6 @@
 
 #include "Utils.h"
 
-//DaemonHandler::DaemonHandler(const QString& pProgramPath)
-//{
-//    main_process.setProgram(pProgramPath);
-//}
 
 DaemonHandler::DaemonHandler(const WalletSettings& pSettings)
 {
@@ -20,6 +16,7 @@ DaemonHandler::DaemonHandler(const WalletSettings& pSettings)
 
         QStringList lSearchPaths;
         lSearchPaths.append( QDir::currentPath() );
+        lSearchPaths.append( QDir::homePath() + "/.bitmonero-qt/");
         lSearchPaths.append( QDir::currentPath() + "/bitmonero/");
         lSearchPaths.append( QDir::currentPath() + "/../");
         lSearchPaths.append( QDir::currentPath() + "/../bitmonero/");
@@ -77,7 +74,7 @@ bool DaemonHandler::execDaemon()
     main_process.start();
 
     /* Should not finish */
-    bool res = !main_process.waitForFinished(2000);
+    bool res = !main_process.waitForFinished(1000);
     qDebug() << "DAEMON STATUS : " << main_process.state();
 
     return res;

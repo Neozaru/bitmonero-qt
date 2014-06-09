@@ -149,7 +149,7 @@ ApplicationWindow {
 //                                                 "100")
 //                                             + "%") :
 //                                            "Unknown"
-                    text: "Syncing : " + (syncingStatusLayout.syncing_progress_user == -1 ? "unknown" : syncingStatusLayout.syncing_progress_user) + "%"
+                    text: "Syncing : " + (syncingStatusLayout.syncing_progress_user == -1 ? "unknown" : (syncingStatusLayout.syncing_progress_user) + "%")
                 }
 
                 Label {

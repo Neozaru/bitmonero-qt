@@ -166,6 +166,8 @@ GuardedColumnLayout {
             id: customFeesInput
             anchors.left: customFeesCheckbox.right
 
+            text: (Math.pow(10,-12) * transferLayout.defaultFee).toFixed(12)
+
             visible: customFeesCheckbox.checked
             placeholderText: (Math.pow(10,-12) * transferLayout.defaultFee).toFixed(12)
 

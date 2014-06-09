@@ -78,34 +78,27 @@ bool RPCMonero::isReady() {
 }
 
 
-void RPCMonero::enable() {
+int RPCMonero::enable()
+{
 
-//    QTimer* lGetInfoTimer = new QTimer();
     QObject::connect(&getinfo_timer, SIGNAL(timeout()), this, SLOT(getInfo()));
     getinfo_timer.start(5000);
 
-
     /* TODO : Move in another process (daemon itself ?) */
-//    QTimer* lSaveBlockchainTimer = new QTimer();
     QObject::connect(&savebc_timer, SIGNAL(timeout()), this, SLOT(saveBlockchain()));
     savebc_timer.start(1200000);
 
 
     if (should_spawn_daemon) {
 
-//        daemon_handler = DaemonHandler(pSettings);
-
         if (!daemon_handler.isOk()) {
             qCritical() << "Configured to spawn 'bitmonerod' daemon but no executable found. Aborting...";
-//            throw std::l;
-//            TODO: throw
-            return;
+            return 1;
         }
 
         if (!daemon_handler.execDaemon()) {
             qCritical() << "'bitmonerod' Daemon start failed. Is '" << daemon_handler.getDaemonProgram() << "' the daemon executable ?";
-//            TODO: throw
-            return;
+            return 2;
         }
         else {
             qDebug() << "DAEMON STARTED";
@@ -113,7 +106,7 @@ void RPCMonero::enable() {
 
     }
 
-
+    return 0;
 
 
 }

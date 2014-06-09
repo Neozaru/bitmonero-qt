@@ -30,7 +30,7 @@ public:
         return !should_spawn_wallet || wallet_handler.isOk();
     }
 
-    bool enable();
+    int enable();
 
 
 public slots:
