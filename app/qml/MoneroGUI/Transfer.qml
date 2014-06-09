@@ -13,6 +13,10 @@ GuardedColumnLayout {
     property string lastTransferError: ""
     property int defaultFee: 1000000
 
+//    anchors.fill: parent
+//    anchors.margins: 10
+//    anchors.top: parent.top
+
     Connections {
         target: wallet
         onTransferError: {
@@ -25,13 +29,17 @@ GuardedColumnLayout {
             transferLayout.lastTransferError = "["+error_message+"] " + additional_info;
         }
     }
+//    ColumnLayout {
+
+//    }
 
 
-    anchors.fill: parent
-    anchors.margins: 10
 
     Button {
         id: pasteInputAddress
+
+        anchors.top: parent.top
+        anchors.topMargin: 20
 
         text: "Paste recipient address"
         onClicked: { inputAddress.text = ""; inputAddress.paste() }
@@ -152,26 +160,35 @@ GuardedColumnLayout {
 
     }
 
-    RowLayout {
+    ColumnLayout {
         anchors.top: buttonSend.bottom
         anchors.topMargin: 5
 
         CheckBox {
             id: customFeesCheckbox
 
-            text: "Custom network fee : "
+            text: "Custom network fee"
         }
 
-        TextField {
-            id: customFeesInput
-            anchors.left: customFeesCheckbox.right
-
-            text: (Math.pow(10,-12) * transferLayout.defaultFee).toFixed(12)
-
+        RowLayout {
             visible: customFeesCheckbox.checked
-            placeholderText: (Math.pow(10,-12) * transferLayout.defaultFee).toFixed(12)
 
-            validator: DoubleValidator { bottom: 0.0; top: 1 }
+            Label {
+                text: "Fee :"
+            }
+
+            TextField {
+                id: customFeesInput
+                anchors.left: customFeesCheckbox.right
+                anchors.right: inputAmount.right
+
+                text: (Math.pow(10,-12) * transferLayout.defaultFee).toFixed(12)
+
+                placeholderText: (Math.pow(10,-12) * transferLayout.defaultFee).toFixed(12)
+
+                validator: DoubleValidator { bottom: 0.0; top: 1 }
+            }
+
 
         }
     }

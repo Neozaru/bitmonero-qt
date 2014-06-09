@@ -11,7 +11,7 @@ import "Common"
 GuardedColumnLayout {
 
     anchors.fill: parent
-    anchors.margins: 10
+//    anchors.margins: 10
 
     ColumnLayout {
         id: balanceLayout

@@ -12,18 +12,21 @@ GuardedColumnLayout {
     id: miningLayout
 
     anchors.fill: parent;
-    anchors.margins: 10
+//    anchors.margins: 10
 
 
     RowLayout {
         id: toggleMiningLayout
 
-        anchors.topMargin: 15;
+//        anchors.topMargin: 15;
+        anchors.top: parent.top
+        anchors.topMargin: 20
 
         anchors.bottomMargin: 15;
 
         Switch {
             id: toggleMiningSwitch
+
 //            text: "Enable Mining"
 
 //            enabled: miningAddressInput.acceptableInput && miningNbThreadsInput.acceptableInput
