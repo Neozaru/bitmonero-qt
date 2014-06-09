@@ -1,7 +1,7 @@
 import QtQuick 2.0
 
 TextEdit {
-    id: balanceValue
+//    id: balanceValue
 
     property double balance: undefined
 

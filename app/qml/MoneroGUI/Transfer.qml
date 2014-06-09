@@ -13,7 +13,7 @@ GuardedColumnLayout {
     property string lastTransferError: ""
     property int defaultFee: 1000000
 
-//    anchors.fill: parent
+    anchors.fill: parent
 //    anchors.margins: 10
 //    anchors.top: parent.top
 

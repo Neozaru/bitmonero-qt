@@ -30,16 +30,15 @@ GuardedColumnLayout {
         Button {
             text: "Copy balance"
             /* Hack copy */
-            onClicked: { balanceValue.selectAll(); balanceValue.copy(); balanceValue.select(0,-3)}
+            onClicked: { balanceValue.selectAll(); balanceValue.copy(); balanceValue.select(0,0)}
         }
 
         /* hack */
-
         TextEdit {
             id: balanceValue
             visible: false
 
-            text: wallet.balance
+            text: Math.pow(10,-12)*wallet.balance
         }
 
 
