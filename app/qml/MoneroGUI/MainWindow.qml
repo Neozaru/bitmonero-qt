@@ -123,10 +123,20 @@ ApplicationWindow {
 
                     anchors.centerIn: parent
 
+
+
                     minimumValue: 0
                     maximumValue: 100
                     value: syncingStatusLayout.syncing_progress_user == -1 ? 0 : syncingStatusLayout.syncing_progress_user
                     width: 50
+
+//                    style: ProgressBarStyle {
+
+//                        progress: Rectangle {
+//                            color: "orange"
+//                            border.color: "orange"
+//                        }
+//                    }
 
                 }
 
@@ -182,7 +192,7 @@ ApplicationWindow {
         id:frame
 
         property string unavailableWalletErrorMessage: wallet.ready ? "" : "Your Wallet is unreachable. Wait a few seconds or restart Monero Wallet"
-        property string unavailableMinerErrorMessage: miner.ready ? "" : "Error : Your Miner is unreachable. Wait a few seconds or restart Monero Wallet"
+        property string unavailableMinerErrorMessage: miner.ready ? "" : "Error : Your Miner is unreachable. Wait for sync or restart Monero Wallet"
 
         anchors.fill: parent
 

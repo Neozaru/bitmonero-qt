@@ -37,8 +37,6 @@ public:
 
     int startWizard();
     int startMainWindow();
-//    bool startSplashScreen();
-
 
 public slots:
     void onMainWindowQuit(int pReturnCode);
@@ -101,12 +99,15 @@ private:
     int startSplashScreen() {
         if ( initSplashScreen(engine) ) {
 
+            splashscreen_running = true;
             app.exec();
             return 0;
         }
 
         return 1;
     }
+
+    void stopSplashScreen();
 
 private:
 
@@ -129,6 +130,7 @@ private:
 
     QQmlEngine engine;
 
+    bool splashscreen_running;
 
     int exit_status;
 

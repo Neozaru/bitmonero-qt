@@ -9,7 +9,7 @@
 
 
 MoneroGUI::MoneroGUI(QGuiApplication& pApp)
-    : app(pApp), monero_interface(NULL), miner_interface(NULL), wallet_interface(NULL), wallet_handler(settings), exit_status(0)
+    : app(pApp), monero_interface(NULL), miner_interface(NULL), wallet_interface(NULL), wallet_handler(settings), exit_status(0), splashscreen_running(false)
 {
 
 }
@@ -58,9 +58,7 @@ void MoneroGUI::initInterfaces() {
 int MoneroGUI::startWizard()
 {
 
-    if ( !app.allWindows().empty() ) {
-        app.allWindows().first()->close();
-    }
+    stopSplashScreen();
 
     initWizard(engine);
     /* Starts the wizard */
@@ -71,9 +69,7 @@ int MoneroGUI::startWizard()
 int MoneroGUI::startMainWindow()
 {
 
-    if ( !app.allWindows().empty() ) {
-        app.allWindows().first()->close();
-    }
+    stopSplashScreen();
 
     if (!initMainWindow(engine)) {
         qCritical() << "MainWindow init failed. Aborting...";
@@ -92,6 +88,14 @@ void MoneroGUI::onMainWindowQuit(int pReturnCode) {
 //    emit this->applicationQuit();
 }
 
+void MoneroGUI::stopSplashScreen() {
+
+    if ( splashscreen_running && !app.allWindows().empty() ) {
+        app.allWindows().first()->close();
+        splashscreen_running = false;
+    }
+
+}
 
 int MoneroGUI::start() {
 
@@ -110,6 +114,7 @@ int MoneroGUI::start() {
     QObject::connect(monero_interface, &MoneroInterface::ready, [=]() {
         qWarning() << "MONERO READY";
         app.quit();
+//        stopSplashScreen();
 
     });
     monero_interface->enable();

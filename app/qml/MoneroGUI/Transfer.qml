@@ -11,6 +11,7 @@ GuardedColumnLayout {
     id: transferLayout
 
     property string lastTransferError: ""
+    property int defaultFee: 1000000
 
     Connections {
         target: wallet
@@ -129,7 +130,14 @@ GuardedColumnLayout {
                         lastTransferError = "Please enter a valid payment ID (64 chars) or disable it";
                     }
                     else {
-                        var res = wallet.transfer(Math.pow(10,12) * parseFloat(inputAmount.text), inputAddress.text, 1000000, definePaymentIdCheckbox ? inputPaymentId.text : "");
+
+                        var amount = Math.pow(10,12) * parseFloat(inputAmount.text)
+                        var fees = customFeesCheckbox.checked && customFeesInput.acceptableInput ? Math.pow(10,12) * parseFloat(customFeesInput.text) : transferLayout.defaultFee
+
+                        console.log("Transfer")
+                        console.log("Amount :" + amount)
+                        console.log("Fees : " + fees)
+                        var res = wallet.transfer(amount, inputAddress.text, fees, definePaymentIdCheckbox ? inputPaymentId.text : "");
                         lastTransactionLayout.visible = false;
                     }
 
@@ -143,6 +151,29 @@ GuardedColumnLayout {
         }
 
     }
+
+    RowLayout {
+        anchors.top: buttonSend.bottom
+        anchors.topMargin: 5
+
+        CheckBox {
+            id: customFeesCheckbox
+
+            text: "Custom network fee : "
+        }
+
+        TextField {
+            id: customFeesInput
+            anchors.left: customFeesCheckbox.right
+
+            visible: customFeesCheckbox.checked
+            placeholderText: (Math.pow(10,-12) * transferLayout.defaultFee).toFixed(12)
+
+            validator: DoubleValidator { bottom: 0.0; top: 1 }
+
+        }
+    }
+
 
     ColumnLayout {
         id: lastTransactionLayout
