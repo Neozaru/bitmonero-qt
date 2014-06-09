@@ -8,6 +8,7 @@ class MoneroInterface : public QObject {
     Q_OBJECT
 public:
     MoneroInterface(MoneroModel& pMoneroModel) : monero_model(pMoneroModel), daemon_ready(false) {}
+    virtual ~MoneroInterface() {}
 
 //    virtual bool isReady() = 0;
     virtual void enable() = 0;

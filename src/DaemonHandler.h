@@ -27,7 +27,7 @@ public:
 
     /* */
     bool execDaemon();
-    bool killDaemon();
+    bool terminateDaemon();
 
 private:
 //    QString daemon_program;

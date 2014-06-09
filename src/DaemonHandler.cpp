@@ -56,9 +56,15 @@ DaemonHandler::DaemonHandler(const WalletSettings& pSettings)
 
 DaemonHandler::~DaemonHandler() {
 
-    if (killDaemon()) {
+    if (terminateDaemon()) {
         qWarning() << "Ending DAEMON process...";
-        main_process.waitForFinished(10000);
+        if (!main_process.waitForFinished(10000)) {
+
+            qWarning() << "DAEMON took too long to close. KILL";
+            main_process.kill();
+        }
+
+
     }
 
 }
@@ -78,7 +84,7 @@ bool DaemonHandler::execDaemon()
 
 }
 
-bool DaemonHandler::killDaemon()
+bool DaemonHandler::terminateDaemon()
 {
     if (main_process.state() == QProcess::ProcessState::NotRunning) {
         return false;

@@ -65,6 +65,7 @@ GuardedColumnLayout {
         id: paymentIDLayout
 
         anchors.top: definePaymentIdCheckbox.bottom
+        anchors.topMargin: 3
         anchors.left: parent.left
         anchors.right: parent.right
         visible: definePaymentIdCheckbox.checked
@@ -135,8 +136,8 @@ GuardedColumnLayout {
         style: ButtonStyle {
 
             label: Label {
-                font.pixelSize: 19
-                text: "Send"
+                font.pixelSize: 18
+                text: "SEND"
             }
 
         }

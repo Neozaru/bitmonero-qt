@@ -15,48 +15,9 @@ GuardedColumnLayout {
     anchors.margins: 10
 
 
-//    RowLayout {
-//        id: statusLayout;
-//        anchors.top: parent.top
-//        anchors.left: parent.left
-//        anchors.right: parent.right
-
-//        Label {
-//            id: statusTitle
-
-
-//            anchors.right: statusLabel.left
-
-//            text: "Current status : "
-//        }
-
-//        Label {
-//            id: statusLabel
-
-//            anchors.right: parent.right
-
-//            text: switch(miner.status) {
-//                  case 0:
-//                      "Disabled"
-//                      break;
-//                  case 1:
-//                      "Mining"
-//                  }
-
-//            color: switch(miner.status) {
-//                   case 0:
-//                       "red"
-//                       break;
-//                   case 1:
-//                       "green"
-//                }
-//        }
-//    }
-
     RowLayout {
         id: toggleMiningLayout
 
-        anchors.top: statusLayout.bottom
         anchors.topMargin: 15;
 
         anchors.bottomMargin: 15;
@@ -125,11 +86,11 @@ GuardedColumnLayout {
         }
 
         onThreads_countChanged: {
-            console.log("TC : " + miningControlLayout.threads_count)
             miner.nbThreads = miningControlLayout.threads_count;
         }
 
         RowLayout {
+            id: threadsSliderLayout
 
             anchors.left: parent.left
             anchors.right: parent.right
@@ -178,7 +139,8 @@ GuardedColumnLayout {
 
                 text: parseInt(miningControlLayout.threads_count)
 
-                color: miningControlLayout.threads_count > 4 ? "purple" : "black"
+                color: miningControlLayout.threads_count > 8 ? "red" : (miningControlLayout.threads_count > 4 ? "purple" : "black")
+                font.bold: miningControlLayout.threads_count > 8
 
                 font.pixelSize: 16
             }
@@ -206,7 +168,9 @@ GuardedColumnLayout {
         CheckBox {
             id: useAnotherAddressCheckbox
 
-            anchors.topMargin: 5
+            anchors.top: threadsSliderLayout.bottom
+            anchors.topMargin: 20
+
             text: "Enter mining address manually"
             checked: miner.address.length == 0
         }
@@ -215,6 +179,8 @@ GuardedColumnLayout {
 
             anchors.left: parent.left
             anchors.right: parent.right
+            anchors.top: useAnotherAddressCheckbox.bottom
+            anchors.topMargin: 5
 
             visible: useAnotherAddressCheckbox.checked
             Button {

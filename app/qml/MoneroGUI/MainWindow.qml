@@ -47,25 +47,32 @@ ApplicationWindow {
     toolBar: ToolBar {
         id: toolbar
 
+        height: 50
         RowLayout {
             id: toolbarLayout
+            anchors.verticalCenter: parent.verticalCenter
+
+
             spacing: 0
             width: parent.width
-            ToolButton {
-//                iconSource: "images/window-new.png"
-                onClicked: window1.visible = !window1.visible
-                Accessible.name: "New window"
-                tooltip: "Toggle visibility of the second window"
-            }
+//            ToolButton {
+////                iconSource: "images/window-new.png"
+//                onClicked: window1.visible = !window1.visible
+//                Accessible.name: "New window"
+//                tooltip: "Toggle visibility of the second window"
+//            }
 
-            ToolButton {
-//                iconSource: "images/document-save-as.png"
-                tooltip: "(Pretend to) Save as..."
-            }
+//            ToolButton {
+////                iconSource: "images/document-save-as.png"
+//                tooltip: "(Pretend to) Save as..."
+//            }
             Item { Layout.fillWidth: true }
             CheckBox {
                 id: advancedInterfaceCheckbox
+//                anchors.verticalCenter: parent.verticalCenter
+
                 text: "Advanced Interface"
+
                 checked: false
                 enabled: false
             }
@@ -108,8 +115,9 @@ ApplicationWindow {
                 visible: true
                 anchors.centerIn: parent
 
-                property int syncing_progress: monero.target_blockchain_height > 0 ? monero.blockchain_height / monero.target_blockchain_height * 100 : 0
+                property int syncing_progress: monero.target_blockchain_height > 0 ? (monero.blockchain_height / monero.target_blockchain_height) * 100 : -1
 
+                property int syncing_progress_user: syncing_progress < 0 ? -1 : (syncing_progress > 100 ? 100 : syncing_progress)
                 ProgressBar {
                     id: syncStatusProgressBar
 
@@ -117,7 +125,7 @@ ApplicationWindow {
 
                     minimumValue: 0
                     maximumValue: 100
-                    value: syncingStatusLayout.syncing_progress
+                    value: syncingStatusLayout.syncing_progress_user == -1 ? 0 : syncingStatusLayout.syncing_progress_user
                     width: 50
 
                 }
@@ -125,7 +133,13 @@ ApplicationWindow {
                 Label {
 
                     anchors.horizontalCenter: syncStatusProgressBar.horizontalCenter
-                    text: "Syncing : " + (syncingStatusLayout.syncing_progress > 0 ? syncingStatusLayout.syncing_progress + "%" : "Unknown")
+//                    text: "Syncing : " + syncingStatusLayout.syncing_progress >= 0 ?
+//                                            ( (syncingStatusLayout.syncing_progress <= 100 ?
+//                                                 syncingStatusLayout.syncing_progress :
+//                                                 "100")
+//                                             + "%") :
+//                                            "Unknown"
+                    text: "Syncing : " + (syncingStatusLayout.syncing_progress_user == -1 ? "unknown" : syncingStatusLayout.syncing_progress_user) + "%"
                 }
 
                 Label {
@@ -214,9 +228,13 @@ ApplicationWindow {
         style: TabViewStyle {
             frameOverlap: 1
             tab: Rectangle {
-                color: styleData.selected ? "steelblue" :"lightsteelblue"
+//                color: styleData.selected ? "steelblue" :"lightsteelblue"
+                    color: styleData.selected ? "#FAFAFA" :"#EBEBEB"
 //                color: "#E3E4FA"
-                border.color:  "steelblue"
+//                border.color:  "steelblue"
+//                border.color: "#EBEBEB"
+                    border.color: "#FAFAFA"
+
                 implicitWidth: Math.max(text.width + 4, 80)*2
                 implicitHeight: 50
                 radius: 2
@@ -224,14 +242,18 @@ ApplicationWindow {
                     id: text
                     anchors.centerIn: parent
                     text: styleData.title
-                    color: styleData.selected ? "white" : "black"
+//                    color: styleData.selected ? "white" : "black"
+                    color: "black"
                     font.pixelSize: 18
                 }
             }
             frame: Rectangle {
 
-                /*color: "steelblue"*/ /* color: "#EDEEFA" */ /* color: "white" */
-                color: "#F5F5FC";
+                /*color: "steelblue"*/ /* color: "#EDEEFA" */
+                color: "#FAFAFA"
+//                color: "#F5F5FC";
+//                color: "#FCFDFF"
+//                color: "#FCFCFC"
             }
         }
 

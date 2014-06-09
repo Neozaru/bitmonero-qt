@@ -33,6 +33,15 @@ GuardedColumnLayout {
             onClicked: { balanceValue.selectAll(); balanceValue.copy(); balanceValue.select(0,-3)}
         }
 
+        /* hack */
+
+        TextEdit {
+            id: balanceValue
+            visible: false
+
+            text: wallet.balance
+        }
+
    }
 
    ColumnLayout {
@@ -53,7 +62,8 @@ GuardedColumnLayout {
            readOnly: true
            text: wallet.address
 
-           color: "green"
+//           color: "green"
+           color: "#0A6300"
 
        }
 
