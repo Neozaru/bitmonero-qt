@@ -3,7 +3,7 @@
 #include <QDebug>
 
 #include "Utils.h"
-
+#include <QCoreApplication>
 
 DaemonHandler::DaemonHandler(const WalletSettings& pSettings)
 {
@@ -16,6 +16,7 @@ DaemonHandler::DaemonHandler(const WalletSettings& pSettings)
 
         QStringList lSearchPaths;
         lSearchPaths.append( QDir::currentPath() );
+        lSearchPaths.append(QCoreApplication::applicationDirPath());
         lSearchPaths.append( QDir::homePath() + "/.bitmonero-qt/");
         lSearchPaths.append( QDir::currentPath() + "/bitmonero/");
         lSearchPaths.append( QDir::currentPath() + "/../");

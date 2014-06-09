@@ -111,17 +111,43 @@ AbstractPage {
         }
 
         Button {
+            id: importWalletButton
             text: "Import Wallet"
 
-            enabled: ((
-                          useDefaultImportLocationCheckbox.checked && walletNameInput.acceptableInput ||
-                          walletLocationInput.length > 0
-                      )
-                      && walletPasswordInput.acceptableInput)
+//            enabled: ((
+//                          useDefaultImportLocationCheckbox.checked && walletNameInput.acceptableInput ||
+//                          walletLocationInput.length > 0
+//                      )
+//                      && walletPasswordInput.acceptableInput)
 
-            onClicked: {
 
-                if (true) {
+            action: importWalletAction
+//            onClicked: {
+
+//                if (true) {
+
+//                    var default_location = wallet_handler.default_wallet_location;
+
+//                    var location = useDefaultImportLocationCheckbox.checked ? default_location + walletNameInput.text : walletLocationInput.text.replace('file://','');
+
+//                    settings.setWalletFile(location);
+//                    settings.setWalletPassword(walletPasswordInput.text)
+
+//                    goToNext();
+
+//                }
+
+//            }
+        }
+
+        Action {
+            id: importWalletAction
+            shortcut: "Ctrl+I"
+            enabled: (useDefaultImportLocationCheckbox.checked || walletNameInput.acceptableInput ) && walletPasswordInput.acceptableInput
+
+            onTriggered: {
+
+                if (importWalletButton.enabled) {
 
                     var default_location = wallet_handler.default_wallet_location;
 
@@ -133,7 +159,6 @@ AbstractPage {
                     goToNext();
 
                 }
-
             }
         }
 

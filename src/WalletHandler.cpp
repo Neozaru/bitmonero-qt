@@ -8,6 +8,7 @@
 #include <QIODevice>
 #include <QDir>
 
+#include <QCoreApplication>
 #include "Utils.h"
 
 WalletHandler::WalletHandler(const WalletSettings& pWalletSettings)
@@ -20,6 +21,7 @@ WalletHandler::WalletHandler(const WalletSettings& pWalletSettings)
 
         QStringList lSearchPaths;
         lSearchPaths.append( QDir::currentPath() );
+        lSearchPaths.append(QCoreApplication::applicationDirPath());
         lSearchPaths.append( QDir::homePath() + "/.bitmonero-qt/");
         lSearchPaths.append( QDir::currentPath() + "/bitmonero/");
         lSearchPaths.append( QDir::currentPath() + "/../");

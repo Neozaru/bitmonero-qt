@@ -52,7 +52,6 @@ ApplicationWindow {
             id: toolbarLayout
             anchors.verticalCenter: parent.verticalCenter
 
-
             spacing: 0
             width: parent.width
 //            ToolButton {
@@ -62,10 +61,7 @@ ApplicationWindow {
 //                tooltip: "Toggle visibility of the second window"
 //            }
 
-//            ToolButton {
-////                iconSource: "images/document-save-as.png"
-//                tooltip: "(Pretend to) Save as..."
-//            }
+
             Item { Layout.fillWidth: true }
             CheckBox {
                 id: advancedInterfaceCheckbox
@@ -78,19 +74,6 @@ ApplicationWindow {
             }
         }
     }
-
-
-
-    SystemPalette {id: syspal}
-    color: syspal.window
-    ListModel {
-        id: choices
-        ListElement { text: "Banana" }
-        ListElement { text: "Orange" }
-        ListElement { text: "Apple" }
-        ListElement { text: "Coconut" }
-    }
-
 
     statusBar: StatusBar {
 
@@ -123,32 +106,17 @@ ApplicationWindow {
 
                     anchors.centerIn: parent
 
-
-
                     minimumValue: 0
                     maximumValue: 100
                     value: syncingStatusLayout.syncing_progress_user == -1 ? 0 : syncingStatusLayout.syncing_progress_user
                     width: 50
-
-//                    style: ProgressBarStyle {
-
-//                        progress: Rectangle {
-//                            color: "orange"
-//                            border.color: "orange"
-//                        }
-//                    }
 
                 }
 
                 Label {
 
                     anchors.horizontalCenter: syncStatusProgressBar.horizontalCenter
-//                    text: "Syncing : " + syncingStatusLayout.syncing_progress >= 0 ?
-//                                            ( (syncingStatusLayout.syncing_progress <= 100 ?
-//                                                 syncingStatusLayout.syncing_progress :
-//                                                 "100")
-//                                             + "%") :
-//                                            "Unknown"
+
                     text: "Syncing : " + (syncingStatusLayout.syncing_progress_user == -1 ? "unknown" : (syncingStatusLayout.syncing_progress_user) + "%")
                 }
 
