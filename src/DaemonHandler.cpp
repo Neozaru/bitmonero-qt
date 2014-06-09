@@ -14,13 +14,12 @@ DaemonHandler::DaemonHandler(const WalletSettings& pSettings)
     /* If no program defined, scan some folders */
     if (lDaemonProgram.isEmpty()) {
 
+        const QString& lAppPath = QCoreApplication::applicationDirPath();
         QStringList lSearchPaths;
         lSearchPaths.append( QDir::currentPath() );
-        lSearchPaths.append(QCoreApplication::applicationDirPath());
         lSearchPaths.append( QDir::homePath() + "/.bitmonero-qt/");
-        lSearchPaths.append( QDir::currentPath() + "/bitmonero/");
-        lSearchPaths.append( QDir::currentPath() + "/../");
-        lSearchPaths.append( QDir::currentPath() + "/../bitmonero/");
+        lSearchPaths.append( lAppPath );
+        lSearchPaths.append( lAppPath + "/bitmonero/");
 
         lSearchPaths.append( "/usr/bin" );
         lSearchPaths.append( "/usr/local/bin" );
