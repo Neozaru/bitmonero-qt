@@ -33,7 +33,7 @@ AbstractPage {
 
                 placeholderText: "Name of your Wallet"
                 textColor: if (acceptableInput) { "green" } else { "red" }
-                validator: RegExpValidator { regExp: /[a-zA-Z0-9\.]+/ }
+                validator: RegExpValidator { regExp: /[a-zA-Z0-9\.\-]+/ }
             }
         }
 
@@ -75,6 +75,8 @@ AbstractPage {
                     id: walletLocationInput
 
                     placeholderText: "Wallet location"
+
+                    validator:  RegExpValidator { regExp: /.{2,}/ }
 
                 }
 
@@ -121,7 +123,11 @@ AbstractPage {
         Action {
             id: importWalletAction
             shortcut: "Ctrl+I"
-            enabled: (useDefaultImportLocationCheckbox.checked || walletNameInput.acceptableInput ) && walletPasswordInput.acceptableInput
+            enabled: (
+                         (!useDefaultImportLocationCheckbox.checked && walletLocationInput.acceptableInput)
+                         || (useDefaultImportLocationCheckbox.checked && walletNameInput.acceptableInput)
+                     )
+                     && walletPasswordInput.acceptableInput
 
             onTriggered: {
 

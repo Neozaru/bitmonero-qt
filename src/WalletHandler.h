@@ -44,7 +44,6 @@ public slots:
 
     bool openWalletAsync(const QString& pWalletFile, const QString& pWalletPassword, const QString& pBindIP, int pBindPort);
 
-    bool closeWallet();
 
     Q_INVOKABLE bool walletFileExists(const QString &pFile);
 
@@ -61,6 +60,8 @@ signals:
     void tryWalletResult(bool result);
 
 private:
+
+    bool closeWallet();
 
     QProcess* execTryWallet(const QString& pFile, const QString& pPassword);
 

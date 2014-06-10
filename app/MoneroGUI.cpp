@@ -205,7 +205,7 @@ int MoneroGUI::start() {
         /* Will block until onMainWindowQuit is triggered */
         qWarning() << "EXITING LOOP";
 
-        wallet_handler.closeWallet();
+//        wallet_handler.closeWallet();
 
     }
     else {
