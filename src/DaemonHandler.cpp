@@ -29,7 +29,6 @@ DaemonHandler::DaemonHandler(const WalletSettings& pSettings)
         lMoneroSearchFilenames.append("bitmonerod.exe");
 
 
-
         QStringList lFoundMoneroExecutables = Utils::findExecutables(lSearchPaths, lMoneroSearchFilenames, true);
         qDebug() << "Found " << lFoundMoneroExecutables.size() << " monero daemon executables : ";
         for( const QString& lMoneroExec : lFoundMoneroExecutables ) {

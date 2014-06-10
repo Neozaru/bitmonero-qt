@@ -1,6 +1,16 @@
 include(../defaults.pri)
 
-TARGET= bitmonero-qt
+CONFIG += 64bit
+
+CONFIG(32bit) {
+    TARGET = bitmonero-qt-32bit
+    QMAKE_CXXFLAGS += -m32
+    LIBS +=
+}
+CONFIG(64bit) {
+    TARGET = bitmonero-qt
+}
+
 TEMPLATE = app
 QT += qml quick
 

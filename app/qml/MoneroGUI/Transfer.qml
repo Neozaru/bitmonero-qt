@@ -164,6 +164,9 @@ GuardedColumnLayout {
         anchors.top: buttonSend.bottom
         anchors.topMargin: 5
 
+        anchors.left: parent.left
+        anchors.right: parent.right
+
         CheckBox {
             id: customFeesCheckbox
 
@@ -173,14 +176,20 @@ GuardedColumnLayout {
         RowLayout {
             visible: customFeesCheckbox.checked
 
+            anchors.left: parent.left
+            anchors.right: parent.horizontalCenter
+
             Label {
+                id: customFeesLabel
+
                 text: "Fee :"
             }
 
             TextField {
                 id: customFeesInput
-                anchors.left: customFeesCheckbox.right
-                anchors.right: inputAmount.right
+
+                anchors.left: customFeesLabel.right
+                anchors.right: parent.horizontalCenter
 
                 text: (Math.pow(10,-12) * transferLayout.defaultFee).toFixed(12)
 

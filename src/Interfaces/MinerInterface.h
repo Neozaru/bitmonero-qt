@@ -12,6 +12,8 @@ public:
     virtual void stopMining() = 0;
     virtual void getMiningStatus() = 0;
 
+    virtual int enable() = 0;
+
 protected:
 
     void onStartMiningSucceeded() {

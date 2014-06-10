@@ -59,22 +59,6 @@ GuardedColumnLayout {
 
    }
 
-//    Image {
-////        anchors.top: balanceLayout.top
-////        anchors.left: balanceLayout.right
-////        anchors.right: parent.right
-
-//        anchors.right: parent.right
-//        anchors.bottom: parent.bottom
-
-//        source: 'qrc:/qml/res/MoneroLogoSmall.png'
-
-//        fillMode: Image.PreserveAspectFit
-//        smooth: true
-
-////        height: 90
-////        width: 90
-//    }
 
    ColumnLayout {
 
@@ -104,13 +88,6 @@ GuardedColumnLayout {
            /* Hack copy */
            onClicked: { addressValue.selectAll(); addressValue.copy(); addressValue.select(0,0)}
 
-            ButtonStyle {
-                label: Label {
-                    text: parent.text
-                    color: "green"
-
-                }
-            }
 
        }
    }

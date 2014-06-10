@@ -4,14 +4,17 @@ RPCMiner::RPCMiner(MinerModel& pMinerModel, const QString& pHost, unsigned int p
     : MinerInterface(pMinerModel), rpc(pHost,pPort)
 {
 
+}
+
+int RPCMiner::enable() {
+
     getMiningStatus();
 
-//    QTimer* lTimer = new QTimer(this);
     QObject::connect(&miningstatus_timer,SIGNAL(timeout()), this, SLOT(getMiningStatus()));
     miningstatus_timer.start(5000);
 
+    return 0;
 }
-
 
 void RPCMiner::startMining(const QString& pMoneroAddress, unsigned int pNbThreads) {
 

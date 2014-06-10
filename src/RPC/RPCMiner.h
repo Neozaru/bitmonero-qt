@@ -16,8 +16,11 @@ class RPCMiner : public QObject, public MinerInterface
 public:
     RPCMiner(MinerModel& pMinerModel, const QString& pHost, unsigned int pPort);
 
+    int enable();
+
     void startMining(const QString& pMoneroAddress, unsigned int pNbThreads);
     void stopMining();
+
 
 public slots:
     void getMiningStatus();

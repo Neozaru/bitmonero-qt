@@ -38,9 +38,6 @@ public:
     int startWizard();
     int startMainWindow();
 
-public slots:
-    void onMainWindowQuit(int pReturnCode);
-
 signals:
     void applicationQuit(int pReturnCode);
 
@@ -67,8 +64,6 @@ private:
         QQmlComponent* lComponent = new QQmlComponent(&pEngine, pQmlFile);
 
         if ( !createComponent(*lComponent) ) {
-    //        qDebug() << "Aborting";
-
             return false;
         }
 

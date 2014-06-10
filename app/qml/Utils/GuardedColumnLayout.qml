@@ -14,7 +14,9 @@ ColumnLayout {
     Label {
         id: errorMessageLabel
 
-//        anchors.top: parent.top
+        anchors.top: parent.top
+        anchors.topMargin: 2
+
         visible: parent.errorMessage.length > 0
         text: parent.errorMessage
         color: "red"

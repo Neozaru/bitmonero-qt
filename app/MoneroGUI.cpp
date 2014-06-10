@@ -60,9 +60,17 @@ int MoneroGUI::startWizard()
 
     stopSplashScreen();
 
-    initWizard(engine);
+    if ( !initWizard(engine) ) {
+        qCritical() << "Wizard init failed. Aborting...";
+        return -1;
+    }
     /* Starts the wizard */
-    return app.exec();
+    qDebug() << "State wizard" << app.applicationState();
+    if ( app.applicationState() == Qt::ApplicationActive ) {
+        return app.exec();
+    }
+
+    return 0;
 
 }
 
@@ -80,13 +88,15 @@ int MoneroGUI::startMainWindow()
     QObject::connect(&engine, SIGNAL(destroyed()), &app, SLOT(quit()));
 
     /* Starts the main app */
-    return app.exec();
+    qDebug() << "State main" << app.applicationState();
+
+    if ( app.applicationState() != Qt::ApplicationActive && app.applicationState() != Qt::ApplicationInactive ) {
+        return app.exec();
+    }
+
+    return 0;
 }
 
-void MoneroGUI::onMainWindowQuit(int pReturnCode) {
-    qWarning() << ":::onMainWindowQuit : " << pReturnCode;
-//    emit this->applicationQuit();
-}
 
 void MoneroGUI::stopSplashScreen() {
 
@@ -159,15 +169,19 @@ int MoneroGUI::start() {
         /* Will start the application when wallet ready */
         QObject::connect(wallet_interface, &WalletInterface::ready, [this]() {
 
+            qWarning() << "[OK] Wallet";
+
             /* At this stage, we can consider that the program configuration is sane. Let's save it */
             settings.saveWalletConfiguration();
 
-            qWarning() << "[OK] Wallet";
+            if ( miner_interface->enable() != 0 ) {
+                qWarning() << "Error occured while initializing 'miner_interface'";
+            }
 
             int lReturnCode = startMainWindow();
             /* Will block until main window is closed */
 
-            emit onMainWindowQuit(lReturnCode);
+//            emit onMainWindowQuit(lReturnCode);
 
         });
         int lWalletReturnCode = wallet_interface->enable();
@@ -177,11 +191,12 @@ int MoneroGUI::start() {
             return 20+lWalletReturnCode;
         }
 
-
+        qWarning() << "ENTERING LOOP";
         QEventLoop lBlockingLoop;
         QObject::connect(this, SIGNAL(applicationQuit(int)), &lBlockingLoop, SLOT(quit()));
         lBlockingLoop.exec();
         /* Will block until onMainWindowQuit is triggered */
+        qWarning() << "EXITING LOOP";
 
         wallet_handler.closeWallet();
 
