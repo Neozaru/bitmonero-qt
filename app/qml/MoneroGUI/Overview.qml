@@ -11,7 +11,6 @@ import "Common"
 GuardedColumnLayout {
 
     anchors.fill: parent
-//    anchors.margins: 10
 
     ColumnLayout {
         id: balanceLayout
@@ -78,7 +77,6 @@ GuardedColumnLayout {
            readOnly: true
            text: wallet.address
 
-//           color: "green"
            color: "#0A6300"
 
        }

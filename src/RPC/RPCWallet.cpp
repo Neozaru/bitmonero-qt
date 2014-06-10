@@ -16,22 +16,15 @@ RPCWallet::RPCWallet(WalletModel& pModel, const WalletSettings& pSettings)
 
 }
 
+RPCWallet::~RPCWallet() {
+
+    getbalance_timer.stop();
+    getaddress_timer.stop();
+    incomingtransfers_timer.stop();
+
+}
+
 int RPCWallet::enable() {
-
-
-//    QTimer* lBalanceAddressTimer = new QTimer(this);
-    QObject::connect(&getbalance_timer,SIGNAL(timeout()), this, SLOT(getBalance()));
-    getbalance_timer.start(5000);
-
-    /* TODO: Remove this when address is retrieved */
-    QObject::connect(&getaddress_timer,SIGNAL(timeout()), this, SLOT(getAddress()));
-    getaddress_timer.start(5000);
-
-
-//    QTimer* lGetIncomingTransfersTimer = new QTimer(this);
-    QObject::connect(&incomingtransfers_timer,SIGNAL(timeout()), this, SLOT(getIncomingTransfers()));
-    /* TODO : Change interval to 15-30 sec */
-    incomingtransfers_timer.start(30000);
 
     if ( should_spawn_wallet ) {
 
@@ -70,6 +63,17 @@ int RPCWallet::enable() {
         });
 
     }
+
+    QObject::connect(&getbalance_timer,SIGNAL(timeout()), this, SLOT(getBalance()));
+    getbalance_timer.start(5000);
+
+    QObject::connect(&getaddress_timer,SIGNAL(timeout()), this, SLOT(getAddress()));
+    getaddress_timer.start(5000);
+
+
+    QObject::connect(&incomingtransfers_timer,SIGNAL(timeout()), this, SLOT(getIncomingTransfers()));
+    incomingtransfers_timer.start(30000);
+
 
     return 0;
 

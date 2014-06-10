@@ -1,14 +1,10 @@
 #include "WalletHandler.h"
 
-#include <iostream>
-
 #include <QStringList>
 #include <QDebug>
 
-#include <QIODevice>
 #include <QDir>
 
-#include <QCoreApplication>
 #include "Utils.h"
 
 WalletHandler::WalletHandler(const WalletSettings& pWalletSettings)
@@ -19,17 +15,7 @@ WalletHandler::WalletHandler(const WalletSettings& pWalletSettings)
 
     if (lWalletProgram.isEmpty()) {
 
-        const QString& lAppPath = QCoreApplication::applicationDirPath();
-
-        QStringList lSearchPaths;
-        lSearchPaths.append( QDir::currentPath() );
-        lSearchPaths.append( QDir::homePath() + "/.bitmonero-qt/");
-        lSearchPaths.append( lAppPath );
-        lSearchPaths.append( lAppPath + "/bitmonero/");
-
-        lSearchPaths.append( "/usr/bin" );
-        lSearchPaths.append( "/usr/local/bin" );
-
+        const QStringList& lSearchPaths = Utils::getStandardSearchPaths();
 
         QStringList lWalletSearchFilenames;
         lWalletSearchFilenames.append("simplewallet");
@@ -60,8 +46,13 @@ WalletHandler::WalletHandler(const WalletSettings& pWalletSettings)
 WalletHandler::~WalletHandler() {
 
     if(closeWallet()) {
+
         qWarning() << "Ending Wallet process...";
-        main_process.waitForFinished(5000);
+        if(!main_process.waitForFinished(5000)){
+            main_process.kill();
+            main_process.waitForFinished(1000);
+        }
+
     }
 
 }
@@ -73,7 +64,6 @@ bool WalletHandler::openWalletAsync(const QString& pWalletFile, const QString& p
         return false;
     }
 
-
     QStringList lArguments;
 
     lArguments.append("--wallet=" + pWalletFile);
@@ -83,7 +73,6 @@ bool WalletHandler::openWalletAsync(const QString& pWalletFile, const QString& p
 
     main_process.setArguments(lArguments);
 
-//    main_process.set
 
     /* TODO : Remove */
     main_process.setProcessChannelMode(QProcess::MergedChannels);
@@ -197,22 +186,6 @@ bool WalletHandler::createWallet(const QString& pFile, const QString& pPassword)
     return lExitCode == 0;
 }
 
-bool WalletHandler::tryWalletProgram()
-{
-    QProcess lTryWalletProgramProcess;
-    lTryWalletProgramProcess.setProgram(main_process.program());
-
-    QStringList lArguments;
-    lArguments.append("--help");
-
-    lTryWalletProgramProcess.setArguments(lArguments);
-
-    lTryWalletProgramProcess.start();
-
-    /* Should finish */
-    return lTryWalletProgramProcess.waitForFinished(2000);
-
-}
 
 void WalletHandler::tryWalletResponse(int pCode, QProcess::ExitStatus pExitStatus) {
 
@@ -223,35 +196,6 @@ void WalletHandler::tryWalletResponse(int pCode, QProcess::ExitStatus pExitStatu
 
 }
 
-bool WalletHandler::tryWallet(const QString& pFile, const QString& pPassword)
-{
-
-    QProcess* lTryWalletProcess = execTryWallet(pFile,pPassword);
-    if (!lTryWalletProcess) {
-        return false;
-    }
-
-    std::cout << "Wait" << std::endl;
-    if ( !lTryWalletProcess->waitForFinished(3000) ) {
-        std::cout << "SUBP" << std::endl;
-        qWarning() << "tryWallet failed : SubProcess doesn't responded";
-
-        qWarning() << "Please ensure a wallet file exists at : " << pFile;
-        lTryWalletProcess->terminate();
-
-        return false;
-    }
-    std::cout << "Responded !" << std::endl;
-
-
-    int lExitCode = lTryWalletProcess->exitCode();
-    int lExitStatus = lTryWalletProcess->exitStatus();
-
-    qDebug() << "PROCESS finished with : " << QString::number(lExitCode) << " , " << QString::number(lExitStatus);
-
-    return lExitCode == 0;
-
-}
 
 bool WalletHandler::tryWalletAsync(const QString& pFile, const QString& pPassword) {
 
@@ -267,14 +211,6 @@ bool WalletHandler::tryWalletAsync(const QString& pFile, const QString& pPasswor
 }
 
 QProcess* WalletHandler::execTryWallet(const QString& pFile, const QString& pPassword) {
-
-        std::cout << "TRY wallet : " << pFile.toStdString() << std::endl;
-
-    if ( !tryWalletProgram() ) {
-        qWarning() << "Wallet program not responding";
-        qWarning() << "Please ensure that your executable is located at : " << main_process.program();
-        return NULL;
-    }
 
 
     if ( pPassword.isEmpty() ) {
@@ -294,7 +230,6 @@ QProcess* WalletHandler::execTryWallet(const QString& pFile, const QString& pPas
     lTryWalletProcess->setArguments(lArguments);
 
     /* TODO : Remove */
-//    lTryWalletProcess->setProcessChannelMode(QProcess::MergedChannels);
     lTryWalletProcess->setStandardOutputFile("/tmp/test.txt");
 
     lTryWalletProcess->start();

@@ -9,7 +9,7 @@
 
 
 MoneroGUI::MoneroGUI(QGuiApplication& pApp)
-    : app(pApp), monero_interface(NULL), miner_interface(NULL), wallet_interface(NULL), wallet_handler(settings), exit_status(0), splashscreen_running(false)
+    : app(pApp), monero_interface(NULL), miner_interface(NULL), wallet_interface(NULL), wallet_handler(settings), splashscreen_running(false), exit_status(0)
 {
 
 }
@@ -142,7 +142,7 @@ int MoneroGUI::start() {
     engine.rootContext()->setContextProperty("wallet_handler", &wallet_handler);
 
 
-    /* Yet another hack. To refactor */
+    /* Hack. To refactor  (wallet handler shouldn't be accessible from here, bad design) */
     if (!wallet_handler.isOk()) {
         qCritical() << "Wallet program error : Not executable. Abording.";
         dialogError(21);
@@ -156,7 +156,7 @@ int MoneroGUI::start() {
         qWarning() << "Not configured. Starting wizard";
         startWizard();
         /* Blocks */
-        qWarning() << "WIzard exited ";
+        qWarning() << "Wizard exited ";
     }
 
 
@@ -178,12 +178,12 @@ int MoneroGUI::start() {
                 qWarning() << "Error occured while initializing 'miner_interface'";
             }
 
-            int lReturnCode = startMainWindow();
+            startMainWindow();
             /* Will block until main window is closed */
 
-//            emit onMainWindowQuit(lReturnCode);
 
         });
+
         int lWalletReturnCode = wallet_interface->enable();
 
         if ( lWalletReturnCode != 0 ) {
@@ -213,10 +213,10 @@ int MoneroGUI::start() {
 
     }
 
-
     return exit_status;
 
 }
+
 
 void MoneroGUI::dialogError(int pErrorCode) {
 

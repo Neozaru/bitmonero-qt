@@ -114,30 +114,8 @@ AbstractPage {
             id: importWalletButton
             text: "Import Wallet"
 
-//            enabled: ((
-//                          useDefaultImportLocationCheckbox.checked && walletNameInput.acceptableInput ||
-//                          walletLocationInput.length > 0
-//                      )
-//                      && walletPasswordInput.acceptableInput)
-
-
             action: importWalletAction
-//            onClicked: {
 
-//                if (true) {
-
-//                    var default_location = wallet_handler.default_wallet_location;
-
-//                    var location = useDefaultImportLocationCheckbox.checked ? default_location + walletNameInput.text : walletLocationInput.text.replace('file://','');
-
-//                    settings.setWalletFile(location);
-//                    settings.setWalletPassword(walletPasswordInput.text)
-
-//                    goToNext();
-
-//                }
-
-//            }
         }
 
         Action {

@@ -6,6 +6,12 @@ RPCMiner::RPCMiner(MinerModel& pMinerModel, const QString& pHost, unsigned int p
 
 }
 
+RPCMiner::~RPCMiner() {
+
+    miningstatus_timer.stop();
+
+}
+
 int RPCMiner::enable() {
 
     getMiningStatus();
@@ -24,7 +30,7 @@ void RPCMiner::startMining(const QString& pMoneroAddress, unsigned int pNbThread
 
     JsonRPCRequest* lReq = rpc.sendRequest("start_mining",lObj, true);
     QObject::connect(lReq,&JsonRPCRequest::jsonResponseReceived,[this](const QJsonObject pJsonResponse) {
-        qDebug() << "'start_mining' Response alt : " << pJsonResponse;
+
         const QString& lStatus = pJsonResponse["status"].toString();
 
         if ( lStatus == "OK" ) {
@@ -43,7 +49,6 @@ void RPCMiner::stopMining() {
     JsonRPCRequest* lReq = rpc.sendRequest("stop_mining", QJsonObject(), true);
     QObject::connect(lReq,&JsonRPCRequest::jsonResponseReceived,[this](const QJsonObject pJsonResponse) {
 
-        qDebug() << "'stop_mining' Response : " << pJsonResponse;
         const QString& lStatus = pJsonResponse["status"].toString();
 
         if ( lStatus == "OK" ) {

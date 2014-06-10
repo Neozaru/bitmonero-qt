@@ -20,7 +20,7 @@ class RPCMonero : public MoneroInterface
     Q_OBJECT
 public:
     RPCMonero(MoneroModel& pMoneroModel, const WalletSettings& pSettings);
-    ~RPCMonero() {}
+    ~RPCMonero();
 
     bool isOk() {
         return !should_spawn_daemon || daemon_handler.isOk();

@@ -36,20 +36,23 @@ public slots:
 
     Q_INVOKABLE bool createWallet(const QString& pFile, const QString& pPassword);
 
-    bool tryWalletProgram();
+//    bool tryWalletProgram();
 
 
-    bool tryWallet(const QString& pFile, const QString& pPassword);
+//    bool tryWallet(const QString& pFile, const QString& pPassword);
     Q_INVOKABLE bool tryWalletAsync(const QString& pFile, const QString& pPassword);
 
-    bool closeWallet();
     bool openWalletAsync(const QString& pWalletFile, const QString& pWalletPassword, const QString& pBindIP, int pBindPort);
+
+    bool closeWallet();
+
+    Q_INVOKABLE bool walletFileExists(const QString &pFile);
+
 
     bool isOpen() const {
         return open;
     }
 
-    Q_INVOKABLE bool walletFileExists(const QString &pFile);
 
 private slots:
     void tryWalletResponse(int pCode, QProcess::ExitStatus pExitStatus);

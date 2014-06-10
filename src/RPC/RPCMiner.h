@@ -15,6 +15,7 @@ class RPCMiner : public QObject, public MinerInterface
     Q_OBJECT
 public:
     RPCMiner(MinerModel& pMinerModel, const QString& pHost, unsigned int pPort);
+    ~RPCMiner();
 
     int enable();
 

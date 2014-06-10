@@ -12,13 +12,10 @@ GuardedColumnLayout {
     id: miningLayout
 
     anchors.fill: parent;
-//    anchors.margins: 10
-
 
     RowLayout {
         id: toggleMiningLayout
 
-//        anchors.topMargin: 15;
         anchors.top: parent.top
         anchors.topMargin: 20
 
@@ -27,9 +24,6 @@ GuardedColumnLayout {
         Switch {
             id: toggleMiningSwitch
 
-//            text: "Enable Mining"
-
-//            enabled: miningAddressInput.acceptableInput && miningNbThreadsInput.acceptableInput
             enabled: miningAddressInput.acceptableInput && miningControlLayout.threads_count > 0 && miningControlLayout.threads_count <= miningControlLayout.max_threads
             checked: miner.enabled
 
@@ -40,7 +34,6 @@ GuardedColumnLayout {
                 groove: Rectangle {
                          implicitWidth: 80
                          implicitHeight: 20
-//                         radius: 9
                          border.color: control.activeFocus ? "darkblue" : "gray"
                          border.width: 1
                  }
@@ -54,12 +47,10 @@ GuardedColumnLayout {
         }
 
 
-
         /* Two-ways binding not available in Qt Quick ? oO */
         Connections {
             target: miner;
             onEnabledChanged: {
-                console.log("View received miner enabled : " + miner.enabled)
                 toggleMiningSwitch.checked = miner.enabled
             }
         }
@@ -158,16 +149,6 @@ GuardedColumnLayout {
 
         }
 
-
-//        TextField {
-//            id: miningNbThreadsInput;
-//            text: miningControlLayout.threads_count
-//            validator: IntValidator { bottom: 1; top: miningControlLayout.max_threads; }
-//            onTextChanged: if ( miningNbThreadsInput.acceptableInput ) {
-//                              miningControlLayout.threads_count = parseInt(text)
-//                           }
-//        }
-
         CheckBox {
             id: useAnotherAddressCheckbox
 
@@ -235,12 +216,6 @@ GuardedColumnLayout {
         }
 
 
-//        TextArea {
-
-//            readOnly: true;
-//            text: "Hello\nmultiline"
-
-//        }
 
     }
 

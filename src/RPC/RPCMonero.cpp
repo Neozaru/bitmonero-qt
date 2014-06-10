@@ -21,6 +21,12 @@ RPCMonero::RPCMonero(MoneroModel& pMoneroModel, const WalletSettings& pSettings)
     should_spawn_daemon = pSettings.shouldSpawnDaemon();
 }
 
+RPCMonero::~RPCMonero() {
+
+    getinfo_timer.stop();
+    savebc_timer.stop();
+
+}
 
 void RPCMonero::getInfo()
 {

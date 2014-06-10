@@ -31,7 +31,6 @@ ApplicationWindow {
     menuBar: MenuBar {
         Menu {
             title: "&File"
-//            MenuItem { action: openAction }
             MenuItem {
                 text: "Close"
                 shortcut: StandardKey.Quit
@@ -203,6 +202,7 @@ ApplicationWindow {
             }
         }
 
+        /* OMG I'm a so bad designer. Tried some colors ... :/ */
         style: TabViewStyle {
             frameOverlap: 1
             tab: Rectangle {

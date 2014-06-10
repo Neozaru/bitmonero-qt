@@ -1,10 +1,6 @@
 #include "WalletSettings.h"
 
-//WalletSettings::WalletSettings()
-//    : WalletSettings(QDir::homePath() + "/.bitmonero-qt/bitmonero-qt.conf")
-//{
 
-//}
 
 WalletSettings::WalletSettings(const QString& pConfigFile)
     : settings(pConfigFile, QSettings::IniFormat)

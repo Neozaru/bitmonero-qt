@@ -60,7 +60,7 @@ ColumnLayout {
                 text: styleData.value ? styleData.value : " ?"
             }
         }
-//        TableViewColumn{ role: "time"  ; title: "Time" ; width: 150 }
+
         TableViewColumn{
 
             role: "amount" ;
@@ -87,11 +87,7 @@ ColumnLayout {
             width: 750;
         }
 
-//        section.property: "id"
-//        section.delegate: sectionHeading
 
-
-//        onDoubleClicked: console.log(row)
 
     }
 

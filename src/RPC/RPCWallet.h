@@ -20,6 +20,7 @@ class RPCWallet : public WalletInterface
     Q_OBJECT
 public:
     RPCWallet(WalletModel& pModel, const WalletSettings& pSettings);
+    ~RPCWallet();
 
     void transfer(double pAmount, const QString& pAddress, int pFee, const QString& pPaymentId);
     void store();
