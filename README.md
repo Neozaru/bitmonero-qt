@@ -1,3 +1,5 @@
+DEPRECATED README
+
 bitmonero-qt
 ============
 
