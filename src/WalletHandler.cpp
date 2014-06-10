@@ -80,11 +80,10 @@ bool WalletHandler::openWalletAsync(const QString& pWalletFile, const QString& p
 
     /* Wait 3 seconds to check if program terminates (daemon not running, wrongp password ... */
     bool lFinished = main_process.waitForFinished(3000);
-    qDebug() << "Finished ? " << lFinished;
-    qDebug() << "State : " << main_process.state();
-    qWarning() << "Wallet process finished too early with code " << main_process.exitCode() << ", " << main_process.exitStatus();
+    qDebug() << "Wallet State : " << main_process.state();
 
     if (lFinished) {
+        qWarning() << "Wallet process finished too early with code " << main_process.exitCode() << ", " << main_process.exitStatus();
         return false;
     }
 

@@ -16,11 +16,18 @@ MoneroGUI::MoneroGUI(QGuiApplication& pApp)
 
 MoneroGUI::~MoneroGUI() {
 
+    if (miner_interface) {
+        qWarning() << "Deleting miner interface ...";
+        delete miner_interface;
+    }
+
     if (wallet_interface) {
+        qWarning() << "Deleting wallet interface ...";
         delete wallet_interface;
     }
 
     if (monero_interface) {
+        qWarning() << "Deleting monero interface ...";
         delete monero_interface;
     }
 

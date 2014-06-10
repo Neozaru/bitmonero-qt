@@ -189,6 +189,8 @@ GuardedColumnLayout {
                 id: customFeesInput
 
                 anchors.left: customFeesLabel.right
+                anchors.leftMargin: 3
+
                 anchors.right: parent.horizontalCenter
 
                 text: (Math.pow(10,-12) * transferLayout.defaultFee).toFixed(12)

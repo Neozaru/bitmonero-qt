@@ -6,7 +6,8 @@
 class MinerInterface {
 
 public:
-    MinerInterface(MinerModel& pMinerModel) : miner_model(pMinerModel) { pMinerModel.setMinerInterface(this);}
+    MinerInterface(MinerModel& pMinerModel) : miner_model(pMinerModel) { pMinerModel.setMinerInterface(this); }
+    virtual ~MinerInterface() {}
 
     virtual void startMining(const QString& pMoneroAddress, unsigned int pNbThreads = 1) = 0;
     virtual void stopMining() = 0;

@@ -12,6 +12,7 @@ class WalletInterface : public QObject
     Q_OBJECT
 public:
     WalletInterface(WalletModel& pWalletModel) : wallet_model(pWalletModel), wallet_ready(false) {}
+    virtual ~WalletInterface() {}
 
     virtual void getBalance() = 0;
     virtual void getAddress() = 0;
@@ -21,15 +22,11 @@ public:
 
     virtual int enable() = 0;
 
-//    virtual bool openWalletAsync();
     virtual bool isOk() = 0;
 
 signals:
     /* TODO : Check if still useful */
     void ready();
-
-//    void walletOpened();
-
 
 
 protected:
