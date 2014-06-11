@@ -9,13 +9,8 @@ Monero GUI Wallet
 **DISCLAIMER : This is not an official Wallet for Monero. Use this software at your own risk.**
 
 
-Current status : Experimental / First draft
+Current status : Testing
 
-Screenshots :
-
-* [https://imgur.com/4WA7VCH,Hq15yUW,SBAPxSW#2]
-* [https://imgur.com/4WA7VCH,Hq15yUW,SBAPxSW#1]
-* [https://imgur.com/4WA7VCH,Hq15yUW,SBAPxSW#0]
 
 Dependencies
 ------------
@@ -42,50 +37,13 @@ The app will be installed in `./app/bitmonero-qt`
 Usage
 -----
 
-**Monero Wallet** depends on core **bitmonerod** and **simplewallet**. These two programs should be installed and at least **bitmonerod** running before running **bitmonero-qt**.
+**Monero Wallet** depends on core **bitmonerod** and **simplewallet**. These two programs should be installed in same folder as bitmonero-qt or in $HOME/.bitmonero-qt/
 
-### Classical mode
 
-**Monero Wallet** will create or import a new wallet for you, using a wizard.
-There is two prerequisites :
+#### Running *bitmonero-qt*
 
-#### Run *bitmonerod*
+Ensure that NO *bitmonerod* or *simplewallet* processes are already running, and do :
 
-    bitmonerod
-
-#### Edit ~/.bitmonero-qt/bitmonero-qt.conf
-
-The minimal configuration is the *wallet_program* location (defaults to */usr/bin/simpelwallet*)
-
-Example in *bitmonero-qt.conf* :
-
-    wallet_program=/home/myself/bitmonero/build/release/src/simplewallet
-
-NOTE : bitmonero will be embedded in the project soon, thus it will be more convenient and will not require configuration.
-
-#### Run *bitmonero-qt*
-    ./app/bitmonero-qt
-
-And follow the instructions of the Wizard. You can use an existing Wallet file or create a new Wallet.
-
-### Pure RPC mode
-
-**Monero Wallet** will connect to an already-running *simplewallet* using RPC feature.
-
-#### Edit ~/.bitmonero-qt/bitmonero-qt.conf
-
-You have to configure *bitmonero-qt* to not attempting to open a Wallet itself.
-
-    spawn_wallet=false
-
-#### Run *bitmonerod* and *simplewallet*
-
-    bitmonerod
-    simplewallet --wallet=<your_wallet_location> --pass=<your_pass> --rpc-bind-port=19091
-
-(in two different terminals)
-
-#### Run *bitmonero-qt*
     ./app/bitmonero-qt
 
 
@@ -136,8 +94,6 @@ Known Issues
 
 Roadmap
 -------
-* Improve user messages.
-* Blockchain syncing status.
 * Bitmonero C++ integration (all-in-one)
 * Advanced interface
 
