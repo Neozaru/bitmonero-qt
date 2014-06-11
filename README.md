@@ -12,6 +12,12 @@ Monero GUI Wallet
 Current status : Testing
 
 
+
+Using a Monero GUI wallet should be reserved to experienced users at this stage.
+The Monero core itself is in perpetual improvement but not yet ready of end users.
+Please use with caution.
+
+
 Dependencies
 ------------
 
@@ -53,33 +59,24 @@ By default, **bitmonero-qt** will connect to daemons ports 18081 (*bitmonerod*) 
 Your can change the configuration with the file `$HOME/.bitmonero-qt/bitmonero-qt.conf`
 
 
-Configuration file example
---------------------------
-
+Configuration file example for using existing bitmonerod process
+----------------------------------------------------------------
     
     [General]
-    
+
     # These values are defaults
     daemon_uri=http://localhost/json_rpc
     daemon_port=18081
-    
-    # Simple wallet RPC port/uri. These values are defaults
-    wallet_uri=http://localhost
-    wallet_port=19091
 
     # Wallet auto-spawn. Settings will depend on your own system.
-    wallet_program=/home/myself/gitcode/bitmonero/simplewallet
+    daemon_program=/home/myself/gitcode/bitmonero/bitmonerod
     
-    # Same as the daemon (bitmonerod), these values are defaults
-    miner_uri=http://localhost/json_rpc
-    miner_port=18081
-
 
 Available features
 ------------------
 * Create/Import Wallet wizard
 * Overview (balance, address)
-* Transfer (choose an amount and a recipient)
+* Transfer (choose an amount and a recipient. Optional payment ID and custom fee)
 * Mining (choose number of threads and your address, and start mining)
 
 
@@ -88,9 +85,6 @@ Limitations
 * Transactions history is not (yet) available.
 * Mining interface can get confused if mining is started from somewhere else
 
-Known Issues
------------
-* Window is not repainting correctly when it is not the active window (ArchLinux)
 
 Roadmap
 -------
