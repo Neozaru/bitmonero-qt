@@ -94,7 +94,6 @@ private:
     int startSplashScreen() {
         if ( initSplashScreen(engine) ) {
 
-            splashscreen_running = true;
             app.exec();
             return 0;
         }
@@ -102,7 +101,14 @@ private:
         return 1;
     }
 
-    void stopSplashScreen();
+    void closeAllWindows();
+
+
+public slots:
+    void stepStartDaemon();
+    void stepOpenWallet();
+    void stepConfigure();
+    void stepStartMainGUI();
 
 private:
 
@@ -124,8 +130,6 @@ private:
     WalletHandler wallet_handler;
 
     QQmlEngine engine;
-
-    bool splashscreen_running;
 
     int exit_status;
 

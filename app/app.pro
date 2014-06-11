@@ -14,7 +14,7 @@ CONFIG(64bit) {
 TEMPLATE = app
 QT += qml quick
 
-CONFIG += console c++11
+CONFIG += c++11
 
 SOURCES += main.cpp \
     MoneroGUI.cpp

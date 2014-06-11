@@ -140,6 +140,10 @@ AbstractPage {
                     settings.setWalletFile(location);
                     settings.setWalletPassword(walletPasswordInput.text)
 
+                    console.log("Set wallet configuration : ")
+                    console.log("File : " + location )
+                    console.log("Password : xxx (" + walletPasswordInput.text.length + "chars)")
+
                     goToNext();
 
                 }
