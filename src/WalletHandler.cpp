@@ -45,14 +45,20 @@ WalletHandler::WalletHandler(const WalletSettings& pWalletSettings)
 
 WalletHandler::~WalletHandler() {
 
-    if(closeWallet()) {
+    try {
 
-        qWarning() << "Ending Wallet process...";
-        if(!main_process.waitForFinished(5000)){
-            main_process.kill();
-            main_process.waitForFinished(1000);
+        if(closeWallet()) {
+
+            qWarning() << "Ending Wallet process...";
+            if(!main_process.waitForFinished(5000)){
+                main_process.kill();
+                main_process.waitForFinished(1000);
+            }
+
         }
-
+    }
+    catch(std::exception e) {
+        qDebug() << "Exception during Wallet closing : " << e.what();
     }
 
 }
@@ -211,6 +217,7 @@ bool WalletHandler::tryWalletAsync(const QString& pFile, const QString& pPasswor
 
 QProcess* WalletHandler::execTryWallet(const QString& pFile, const QString& pPassword) {
 
+    qDebug() << "Trying wallet : " << pFile;
 
     if ( pPassword.isEmpty() ) {
         qWarning() << "No password defined";
