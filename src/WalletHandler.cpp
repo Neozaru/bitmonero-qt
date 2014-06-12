@@ -206,6 +206,7 @@ bool WalletHandler::tryWalletAsync(const QString& pFile, const QString& pPasswor
 
     QProcess* lTryWalletProcess = execTryWallet(pFile,pPassword);
     if (!lTryWalletProcess) {
+        qWarning() << "TryWalletProcess CANNOT START";
         emit tryWalletResult(false);
         return false;
     }
@@ -235,8 +236,6 @@ QProcess* WalletHandler::execTryWallet(const QString& pFile, const QString& pPas
     lArguments.append("--command=getbalance");
     lTryWalletProcess->setArguments(lArguments);
 
-    /* TODO : Remove */
-    lTryWalletProcess->setStandardOutputFile("/tmp/test.txt");
 
     lTryWalletProcess->start();
 

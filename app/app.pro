@@ -26,7 +26,7 @@ RESOURCES += qml.qrc
 unix:CONFIG(release):LIBS += -L$$PWD/../src -lbitmonero-qt-static
 unix:CONFIG(debug):LIBS += -L$$PWD/../src -lbitmonero-qt-static
 
-win32:CONFIG(release):LIBS += -l$$PWD\..\src\release -lbitmonero-qt-static
-win32:CONFIG(debug):LIBS += -l$$PWD\..\src\debug -lbitmonero-qt-static
+win32:CONFIG(release):LIBS += -L$$PWD\..\src\release -lbitmonero-qt-static
+win32:CONFIG(debug):LIBS += -L$$PWD\..\src\debug -lbitmonero-qt-static
 
 OTHER_FILES +=

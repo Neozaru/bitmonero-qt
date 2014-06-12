@@ -200,13 +200,15 @@ ApplicationWindow {
             Connections {
                 target: wallet_handler
                 onTryWalletResult: {
-                    console.log(result);
+                    console.log("Try Wallet Result " + result);
 
                     if ( result ) {
                         status = 1
+                        console.log("Try Wallet returned good status")
                     }
                     else {
                         status = -1
+                        console.log("Try Wallet returned BAD status")
                         /* Rollback configuration */
                         settings.wallet_file = "";
                         settings.wallet_password = "";
