@@ -112,11 +112,18 @@ GuardedColumnLayout {
         placeholderText: "0.00"
         onTextChanged: lastTransferError = ""
 
-        validator: DoubleValidator { bottom: 0.0; top: 100000000 }
+        validator: DoubleValidator {
+            bottom: 0.0;
+            top: 100000000;
+            notation:DoubleValidator.StandardNotation;
+            locale: locale("en_US")
+        }
+
 
         font.pixelSize: 20
     }
 
+    property bool amountUsesComma: inputAmount.text.indexOf(",") != -1
 
     Button {
         id: buttonSend
@@ -126,9 +133,9 @@ GuardedColumnLayout {
         anchors.leftMargin: 3
 
 //        text: "Send"
-        enabled: inputAmount.acceptableInput && inputAddress.acceptableInput
+        enabled: inputAmount.acceptableInput && inputAddress.acceptableInput && !amountUsesComma
 
-        onClicked:  if (!inputAmount.acceptableInput) {
+        onClicked:  if (!inputAmount.acceptableInput && parseFloat(inputAmount) !== 0 && !amountUsesComma) {
                         lastTransferError = "Please enter an amount to send";
                     }
                     else if (!inputAddress.acceptableInput) {
@@ -158,6 +165,15 @@ GuardedColumnLayout {
 
         }
 
+    }
+
+    Label {
+        anchors.left: buttonSend.right
+        anchors.leftMargin: 10
+        anchors.verticalCenter: buttonSend.verticalCenter
+
+        text: ( inputAmount.text.length > 0 ? parseFloat(inputAmount.text) + " XMR" : "" ) + ( amountUsesComma ? " PLEASE USE '.' (dot) instead of ',' (comma) for decimals" : "")
+        color: amountUsesComma ? "red" : "green"
     }
 
     ColumnLayout {
