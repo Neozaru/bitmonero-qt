@@ -135,7 +135,7 @@ AbstractPage {
 
                     var default_location = wallet_handler.default_wallet_location;
 
-                    var location = useDefaultImportLocationCheckbox.checked ? default_location + walletNameInput.text : walletLocationInput.text.replace('file://','');
+                    var location = useDefaultImportLocationCheckbox.checked ? default_location + walletNameInput.text : walletLocationInput.text.replace('file:///','').replace('file://','');
 
                     settings.setWalletFile(location);
                     settings.setWalletPassword(walletPasswordInput.text)
