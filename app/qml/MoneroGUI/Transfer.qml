@@ -29,10 +29,6 @@ GuardedColumnLayout {
             transferLayout.lastTransferError = "["+error_message+"] " + additional_info;
         }
     }
-//    ColumnLayout {
-
-//    }
-
 
 
     Button {
@@ -82,9 +78,6 @@ GuardedColumnLayout {
         Button {
             id: pastePaymentIDButton
 
-//            anchors.top: definePaymentIdCheckbox.bottom
-
-
             text: "Paste"
             onClicked: { inputPaymentId.text = ""; inputPaymentId.paste() }
         }
@@ -116,7 +109,7 @@ GuardedColumnLayout {
             bottom: 0.0;
             top: 100000000;
             notation:DoubleValidator.StandardNotation;
-            locale: locale("en_US")
+            locale: "en_US"
         }
 
 
