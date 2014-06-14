@@ -10,4 +10,5 @@ WalletWizardWindow {
     y: (Screen.height - height) / 2
 
     visible: true
+
 }

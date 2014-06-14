@@ -63,7 +63,7 @@ ApplicationWindow {
 
                 source: "../res/MoneroLogo.png"
                 fillMode: Image.PreserveAspectFit
-
+                smooth: true
             }
 
             Label {
@@ -161,6 +161,8 @@ ApplicationWindow {
         ColumnLayout {
 
             property int status: 0;
+
+            anchors.centerIn: parent
 
 
             ColumnLayout {

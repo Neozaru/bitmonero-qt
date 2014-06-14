@@ -45,6 +45,9 @@ ApplicationWindow {
             anchors.margins: 10
             anchors.top: parent.top
             anchors.left: parent.left
+            anchors.right: parent.right
+            fillMode: Image.PreserveAspectFit
+            smooth: true
 
             source: "res/MoneroLogo.png"
 

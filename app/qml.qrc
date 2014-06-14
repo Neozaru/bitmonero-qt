@@ -19,9 +19,9 @@
         <file>qml/Wizard/CreateWalletPage.qml</file>
         <file>qml/Wizard/ConfirmCreateWalletPage.qml</file>
         <file>qml/wizard.qml</file>
-        <file>qml/res/MoneroLogo.jpg</file>
         <file>qml/ErrorWindow.qml</file>
-        <file>qml/res/MoneroLogoSmall.png</file>
         <file>qml/res/MoneroLogo.png</file>
+        <file>qml/res/MoneroLogoSquare.png</file>
+        <file>qml/res/MoneroWhite.ico</file>
     </qresource>
 </RCC>

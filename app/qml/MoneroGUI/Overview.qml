@@ -12,8 +12,28 @@ GuardedColumnLayout {
 
     anchors.fill: parent
 
+    Image {
+        id: overviewImage
+
+        anchors.margins: 10
+
+//        anchors.left: parent.left
+        anchors.top: parent.top
+        anchors.right: parent.right
+
+        source: "../res/MoneroLogoSquare.png"
+        fillMode: Image.PreserveAspectFit
+        smooth: true
+
+        width: 100
+        height: 100
+    }
+
     ColumnLayout {
         id: balanceLayout
+
+        anchors.top: parent.top
+        anchors.topMargin: overviewImage.height / 2
 
         Label {
             text: "You have : "
