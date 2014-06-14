@@ -4,6 +4,8 @@
 #include <QDebug>
 
 #include <QDir>
+#include <QUrl>
+#include "Models/InfoWalletModel.h"
 
 #include "Utils.h"
 
@@ -41,6 +43,8 @@ WalletHandler::WalletHandler(const WalletSettings& pWalletSettings)
         main_process.setProgram(lWalletProgram);
     }
 
+//    findWallets(default_wallet_location);
+
 }
 
 WalletHandler::~WalletHandler() {
@@ -62,6 +66,33 @@ WalletHandler::~WalletHandler() {
     }
 
 }
+
+bool WalletHandler::findWallets(const QString& pPath) {
+
+    const QString& lSearchPath = pPath.isEmpty() ? default_wallet_location : pPath;
+    const QUrl& lUrl = QUrl::fromUserInput(lSearchPath);
+
+
+    QStringList lWalletsFilesList =  Utils::findWalletsKeysFiles(lUrl);
+
+    last_found_wallets.clear();
+
+    qDebug() << "Found Wallets : ";
+    for ( const QString& lWalletName : lWalletsFilesList ) {
+        qDebug() << "- " << lWalletName;
+        InfoWalletModel* ptrWalletInfo = new InfoWalletModel(lWalletName, lUrl.toLocalFile() + QDir::separator() + lWalletName, "", 0);
+
+        last_found_wallets.append(ptrWalletInfo);
+    }
+
+
+    emit lastFoundWalletsChanged(last_found_wallets);
+
+    return !last_found_wallets.empty();
+
+}
+
+
 
 bool WalletHandler::openWalletAsync(const QString& pWalletFile, const QString& pWalletPassword, const QString& pBindIP, int pBindPort) {
 
@@ -233,7 +264,7 @@ QProcess* WalletHandler::execTryWallet(const QString& pFile, const QString& pPas
 
     lArguments.append("--wallet=" + pFile);
     lArguments.append("--password="+ pPassword);
-    lArguments.append("--command=getbalance");
+    lArguments.append("--command=balance");
     lTryWalletProcess->setArguments(lArguments);
 
 

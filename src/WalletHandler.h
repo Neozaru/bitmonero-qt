@@ -4,6 +4,7 @@
 #include <QProcess>
 #include <QObject>
 #include <QDebug>
+#include <QStringListModel>
 
 #include "WalletSettings.h"
 
@@ -14,7 +15,7 @@ class WalletHandler : public QObject
 Q_OBJECT
 
 Q_PROPERTY(QString default_wallet_location READ getDefaultWalletLocation)
-
+Q_PROPERTY(const QList<QObject*> last_found_wallets READ getLastFoundWallets NOTIFY lastFoundWalletsChanged)
 
 public:
 
@@ -32,15 +33,19 @@ public:
         return default_wallet_location;
     }
 
+    const QList<QObject*>& getLastFoundWallets() const
+    {
+        return last_found_wallets;
+    }
+
 public slots:
 
     Q_INVOKABLE bool createWallet(const QString& pFile, const QString& pPassword);
 
-//    bool tryWalletProgram();
-
-
-//    bool tryWallet(const QString& pFile, const QString& pPassword);
     Q_INVOKABLE bool tryWalletAsync(const QString& pFile, const QString& pPassword);
+
+    Q_INVOKABLE bool findWallets(const QString& pPath = "");
+
 
     bool openWalletAsync(const QString& pWalletFile, const QString& pWalletPassword, const QString& pBindIP, int pBindPort);
 
@@ -59,6 +64,8 @@ private slots:
 signals:
     void tryWalletResult(bool result);
 
+    void lastFoundWalletsChanged(const QList<QObject*> found_wallets);
+
 private:
 
     bool closeWallet();
@@ -71,6 +78,7 @@ private:
     QString default_wallet_location;
     QProcess main_process;
 
+    QList<QObject*> last_found_wallets;
 };
 
 #endif // WALLETHANDLER_H

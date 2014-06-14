@@ -15,6 +15,9 @@ public:
 
     static const QStringList getStandardSearchPaths();
 
+    static const QStringList findWalletsKeysFiles(const QUrl &pUrl, const QString& pFileSuffix = ".keys");
+
+
 };
 
 #endif // UTILS_H

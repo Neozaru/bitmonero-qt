@@ -10,13 +10,13 @@ SOURCES += \
     Models/WalletModel.cpp \
     Models/MoneroModel.cpp \
     Models/MinerModel.cpp \
-    Models/TransactionsListModel.cpp \
     Models/AbstractModel.cpp \
     WalletHandler.cpp \
     WalletSettings.cpp \
     DaemonHandler.cpp \
     Utils.cpp \
-    Models/TransactionModel.cpp
+    Models/TransactionModel.cpp \
+    Models/InfoWalletModel.cpp
 
 SOURCES += \
     RPC/JsonRPCCommunicator.cpp \
@@ -32,14 +32,14 @@ HEADERS += \
     Interfaces/MoneroInterface.h \
     Interfaces/WalletInterface.h \
     Interfaces/MinerInterface.h \
-    Models/TransactionsListModel.h \
     Models/MinerModel.h \
     Models/AbstractModel.h \
     WalletHandler.h \
     WalletSettings.h \
     DaemonHandler.h \
     Utils.h \
-    Models/TransactionModel.h
+    Models/TransactionModel.h \
+    Models/InfoWalletModel.h
 
 HEADERS += \
     RPC/JsonRPCCommunicator.h \

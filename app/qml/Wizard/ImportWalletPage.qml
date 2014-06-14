@@ -8,91 +8,152 @@ import "qrc:/qml/Utils"
 AbstractPage {
 
     property string importWalletError;
+
+
     ColumnLayout {
         id: importWalletLayout
 
+        property string walletLocation;
 
-        CheckBox {
-            id: useDefaultImportLocationCheckbox
-
-            text: "Use default Wallet location"
-            checked: true
-        }
+        anchors.left: parent.left
+        anchors.right: parent.right
 
         ColumnLayout {
-            visible: useDefaultImportLocationCheckbox.checked
+            id: walletNameLayout
+            CheckBox {
+                id: useDefaultImportLocationCheckbox
+                anchors.bottomMargin: 5
 
-            Label {
-                id: walletNameLabel
-
-                text: "Name of your wallet"
+                text: "Use default Wallet location"
+                checked: true
             }
 
-            TextField {
-                id: walletNameInput
 
-                placeholderText: "Name of your Wallet"
-                textColor: if (acceptableInput) { "green" } else { "red" }
-                validator: RegExpValidator { regExp: /[a-zA-Z0-9\.\-]+/ }
-            }
-        }
+            FileDialog {
+                id: fileDialog
+                title: "Please choose a file"
+                selectFolder: true
+                selectExisting: true
 
+                onAccepted: {
+                    console.log("You chose: " + fileDialog.fileUrls)
+//                    walletLocationInput.text = fileDialog.folder
+                    importWalletLayout.walletLocation = fileDialog.folder.toLocaleString()
 
+                    wallet_handler.findWallets(importWalletLayout.walletLocation)
+                    walletsTable.selection.select(0)
 
+                }
+                onRejected: {
+                    console.log("Canceled")
+                }
 
-        FileDialog {
-            id: fileDialog
-            title: "Please choose a file"
-            onAccepted: {
-                console.log("You chose: " + fileDialog.fileUrls)
-                walletLocationInput.text = fileDialog.fileUrl
-            }
-            onRejected: {
-                console.log("Canceled")
-            }
-
-            visible: false
-        }
-
-
-        ColumnLayout {
-
-            visible: !useDefaultImportLocationCheckbox.checked
-
-            Label {
-                id: walletFromFileLabel
-
-                text: "Choose your wallet file (can be located in .bitmonero/)"
+                visible: false
             }
 
-            RowLayout {
 
-                anchors.left: parent.left
-                anchors.right: parent.right
+            ColumnLayout {
 
+                visible: !useDefaultImportLocationCheckbox.checked
 
-                TextField {
-                    id: walletLocationInput
+                Label {
+                    id: walletFromFileLabel
 
-                    placeholderText: "Wallet location"
+                    text: "Choose your wallet file (can be located in .bitmonero/)"
+                }
 
-                    validator:  RegExpValidator { regExp: /.{2,}/ }
+                RowLayout {
+
+                    anchors.left: parent.left
+                    anchors.right: parent.right
+
+                    Button {
+                        id: browserFolderButton
+
+                        text: "Browse"
+
+                        onClicked: fileDialog.visible = true
+                    }
+
+                    Label {
+                        id: walletLocationInput
+
+                        anchors.left: browserFolderButton.right
+                        anchors.leftMargin: 5
+                        anchors.right: parent.right
+                        text: importWalletLayout.walletLocation
+
+                    }
 
                 }
 
-                Button {
-                    text: "Browse"
+            }
+        }
 
-                    onClicked: fileDialog.visible = true
+
+        ListModel {
+           id: libraryModel
+           ListElement{ name: "A Masterpiece" ; author: "Gabriel" }
+           ListElement{ name: "Brilliance"    ; author: "Jens" }
+           ListElement{ name: "Outstanding"   ; author: "Frederik" }
+        }
+
+        TableView {
+            id: walletsTable
+
+            anchors.top: walletNameLayout.bottom
+            anchors.left: parent.left
+            anchors.right: parent.right
+
+            alternatingRowColors: true
+
+            model: wallet_handler.last_found_wallets
+
+            TableViewColumn {
+
+                role: "name";
+                title: "Name";
+                width: 120
+
+            }
+
+            TableViewColumn{
+
+                role: "status" ;
+                title: "Status" ;
+                width: 80;
+
+                delegate: Text {
+                    property bool sane: parseInt(styleData.value) === 0;
+
+                    text: sane ? "OK" : "To recover"
+                    color: sane ? "green" : "orange"
                 }
             }
+
+            TableViewColumn{
+
+                role: "address" ;
+                title: "Address" ;
+                width: 240;
+
+            }
+
+
+            Component.onCompleted: {
+
+                wallet_handler.findWallets()
+                selection.select(0)
+            }
+
 
         }
 
 
-
         ColumnLayout {
+            id: walletPasswordLayout
 
+            anchors.top: walletsTable.bottom
             Label {
                 id: walletPasswordLabel
 
@@ -112,6 +173,7 @@ AbstractPage {
             return ;
         }
 
+
         Button {
             id: importWalletButton
             text: "Import Wallet"
@@ -123,19 +185,22 @@ AbstractPage {
         Action {
             id: importWalletAction
             shortcut: "Ctrl+I"
-            enabled: (
-                         (!useDefaultImportLocationCheckbox.checked && walletLocationInput.acceptableInput)
-                         || (useDefaultImportLocationCheckbox.checked && walletNameInput.acceptableInput)
-                     )
-                     && walletPasswordInput.acceptableInput
+
+            enabled: walletsTable.currentRow != -1 && walletPasswordInput.acceptableInput
 
             onTriggered: {
 
                 if (importWalletButton.enabled) {
 
-                    var default_location = wallet_handler.default_wallet_location;
+                    console.log("Row : " + walletsTable.currentRow)
 
-                    var location = useDefaultImportLocationCheckbox.checked ? default_location + walletNameInput.text : walletLocationInput.text.replace('file:///','').replace('file://','');
+                    if (walletsTable.currentRow < 0) {
+                        importWalletError = "No wallet selected"
+                        return;
+                    }
+
+                    var location = wallet_handler.last_found_wallets[walletsTable.currentRow].file_path;
+
 
                     settings.setWalletFile(location);
                     settings.setWalletPassword(walletPasswordInput.text)

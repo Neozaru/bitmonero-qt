@@ -2,6 +2,8 @@
 
 #include <QCoreApplication>
 #include <QDir>
+#include <QUrl>
+#include <QString>
 
 Utils::Utils()
 {
@@ -49,4 +51,25 @@ const QStringList Utils::getStandardSearchPaths() {
 
 
     return lSearchPaths;
+}
+
+
+const QStringList Utils::findWalletsKeysFiles(const QUrl& pUrl, const QString& pFileSuffix) {
+
+    QDir lDir(pUrl.toLocalFile());
+
+    qDebug() << "Dir : " << lDir.path();
+
+    QStringList lFoundWalletKeysFiles;
+
+    QStringList lNameFilters;
+    lNameFilters.append("*"+pFileSuffix);
+    for( const QString& lFileName : lDir.entryList( lNameFilters, QDir::Files) ) {
+
+        lFoundWalletKeysFiles.append(lFileName.mid(0, lFileName.size() - pFileSuffix.size()));
+
+    }
+
+    return lFoundWalletKeysFiles;
+
 }
