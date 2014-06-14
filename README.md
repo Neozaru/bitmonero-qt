@@ -1,4 +1,6 @@
-DEPRECATED README
+Windows 64 bits binaries (testing only) : http://toh.neozaru.info/toh/public/MoneroWallet-qt-windows8-x64.zip
+
+DON'T run if 'bitmonerod' is already running.
 
 bitmonero-qt
 ============
