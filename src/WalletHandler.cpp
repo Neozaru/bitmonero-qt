@@ -49,21 +49,21 @@ WalletHandler::WalletHandler(const WalletSettings& pWalletSettings)
 
 WalletHandler::~WalletHandler() {
 
-    try {
+//    try {
 
         if(closeWallet()) {
 
             qWarning() << "Ending Wallet process...";
-            if(!main_process.waitForFinished(5000)){
+            if(!main_process.waitForFinished(10000)){
                 main_process.kill();
                 main_process.waitForFinished(1000);
             }
 
         }
-    }
-    catch(std::exception e) {
-        qDebug() << "Exception during Wallet closing : " << e.what();
-    }
+//    }
+//    catch(std::exception e) {
+//        qDebug() << "Exception during Wallet closing : " << e.what();
+//    }
 
 }
 
@@ -80,7 +80,9 @@ bool WalletHandler::findWallets(const QString& pPath) {
     qDebug() << "Found Wallets : ";
     for ( const QString& lWalletName : lWalletsFilesList ) {
         qDebug() << "- " << lWalletName;
-        InfoWalletModel* ptrWalletInfo = new InfoWalletModel(lWalletName, lUrl.toLocalFile() + QDir::separator() + lWalletName, "", 0);
+        const QString& lWalletPath = lUrl.toLocalFile() + QDir::separator() + lWalletName;
+        const QString& lAddress = Utils::extractWalletAddress(lWalletPath);
+        InfoWalletModel* ptrWalletInfo = new InfoWalletModel(lWalletName, lWalletPath, lAddress, 0);
 
         last_found_wallets.append(ptrWalletInfo);
     }

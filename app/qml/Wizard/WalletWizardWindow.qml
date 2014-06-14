@@ -51,22 +51,40 @@ ApplicationWindow {
         ColumnLayout {
 
             anchors.centerIn: parent;
-            anchors.horizontalCenter: parent.horizontalCenter
+//            anchors.horizontalCenter: parent.horizontalCenter
 
+            Image {
+                id: wizardImage
+
+                anchors.margins: 10
+//                anchors.top: parent.top
+                anchors.left: parent.left
+                anchors.right: parent.right
+
+                source: "../res/MoneroLogo.png"
+                fillMode: Image.PreserveAspectFit
+
+            }
 
             Label {
                 id: welcomeLabel
+
+                anchors.horizontalCenter: parent.horizontalCenter
 
                 text: "Welcome to Monero Wallet." + "\n" +
                        "Your Wallet is not configured yet or it is " + "\n" +
                        "the first time you launch the application." + "\n" +
                        "Choose an option below to get started"
+
+                font.pixelSize: 14
             }
 
 
             RowLayout {
 
                 anchors.top: welcomeLabel.bottom;
+                anchors.topMargin: 10
+
                 anchors.horizontalCenter: parent.horizontalCenter
 
                 Button {

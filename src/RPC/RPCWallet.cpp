@@ -7,7 +7,7 @@
 #include "Models/TransactionModel.h"
 
 RPCWallet::RPCWallet(WalletModel& pModel, const WalletSettings& pSettings)
-    : WalletInterface(pModel), rpc(pSettings.getWalletUri(), pSettings.getWalletPort()), wallet_handler(pSettings), settings(pSettings),ready(false)
+    : WalletInterface(pModel), wallet_handler(pSettings), settings(pSettings),ready(false), rpc(pSettings.getWalletUri(), pSettings.getWalletPort())
 {
 
     pModel.setWalletInterface(this);
@@ -142,7 +142,7 @@ void RPCWallet::getIncomingTransfers(const QString& pType) {
             return;
         }
 
-        QList<QObject*> lNewTransactions;
+        QList<TransactionModel*> lNewTransactions;
         QJsonArray lTransfersJson = pJsonResponse["transfers"].toArray();
         for ( const QJsonValueRef& lTransJsonRef : lTransfersJson ) {
 

@@ -16,21 +16,32 @@ MoneroGUI::MoneroGUI(QGuiApplication& pApp)
 
 MoneroGUI::~MoneroGUI() {
 
-    if (miner_interface) {
-        qWarning() << "Deleting miner interface ...";
-        delete miner_interface;
-    }
+    try {
+        if (miner_interface) {
+            qWarning() << "Deleting miner interface ...";
+            delete miner_interface;
+        }
 
-    if (wallet_interface) {
-        qWarning() << "Deleting wallet interface ...";
-        delete wallet_interface;
-    }
+        if (wallet_interface) {
+            qWarning() << "Deleting wallet interface ...";
+            delete wallet_interface;
+        }
 
-    if (monero_interface) {
-        qWarning() << "Deleting monero interface ...";
-        delete monero_interface;
-    }
+        if (monero_interface) {
+            qWarning() << "Deleting monero interface ...";
+            delete monero_interface;
+        }
 
+    }
+    catch (const std::exception& ex) {
+        qDebug() << "Catched std::exception : " << ex.what();
+    }
+    catch (const std::string& ex) {
+        qDebug() << "Catched std::string : " << QString::fromStdString(ex);
+    }
+    catch (...) {
+        qDebug() << "Catched unknown exception";
+    }
 }
 
 void MoneroGUI::initModels() {

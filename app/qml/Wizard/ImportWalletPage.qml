@@ -17,9 +17,14 @@ AbstractPage {
 
         anchors.left: parent.left
         anchors.right: parent.right
+        anchors.top: parent.top
+//        anchors.fill: parent
+        anchors.topMargin: 45
+//        anchors.bottom: parent.bottom
 
         ColumnLayout {
             id: walletNameLayout
+
             CheckBox {
                 id: useDefaultImportLocationCheckbox
                 anchors.bottomMargin: 5
@@ -90,14 +95,6 @@ AbstractPage {
             }
         }
 
-
-        ListModel {
-           id: libraryModel
-           ListElement{ name: "A Masterpiece" ; author: "Gabriel" }
-           ListElement{ name: "Brilliance"    ; author: "Jens" }
-           ListElement{ name: "Outstanding"   ; author: "Frederik" }
-        }
-
         TableView {
             id: walletsTable
 
@@ -117,11 +114,11 @@ AbstractPage {
 
             }
 
-            TableViewColumn{
+            TableViewColumn {
 
                 role: "status" ;
                 title: "Status" ;
-                width: 80;
+                width: 60;
 
                 delegate: Text {
                     property bool sane: parseInt(styleData.value) === 0;
@@ -133,9 +130,9 @@ AbstractPage {
 
             TableViewColumn{
 
-                role: "address" ;
+                role: "address";
                 title: "Address" ;
-                width: 240;
+                width: 400;
 
             }
 
@@ -154,6 +151,9 @@ AbstractPage {
             id: walletPasswordLayout
 
             anchors.top: walletsTable.bottom
+            anchors.topMargin: 3
+            anchors.right: parent.verticalCenter
+
             Label {
                 id: walletPasswordLabel
 
@@ -176,8 +176,13 @@ AbstractPage {
 
         Button {
             id: importWalletButton
-            text: "Import Wallet"
 
+            anchors.top: walletPasswordLayout.bottom
+            anchors.topMargin: 10
+//            anchors.bottom: parent.bottom
+//            anchors.bottomMargin: 5
+
+            text: "Import Wallet"
             action: importWalletAction
 
         }

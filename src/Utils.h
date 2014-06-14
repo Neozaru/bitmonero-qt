@@ -17,7 +17,7 @@ public:
 
     static const QStringList findWalletsKeysFiles(const QUrl &pUrl, const QString& pFileSuffix = ".keys");
 
-
+    static const QString extractWalletAddress(const QString& pWalletPath);
 };
 
 #endif // UTILS_H

@@ -16,7 +16,7 @@
 #include "JsonRPCRequest.h"
 
 RPCMonero::RPCMonero(MoneroModel& pMoneroModel, const WalletSettings& pSettings)
-    : MoneroInterface(pMoneroModel), rpc(pSettings.getMoneroUri(),pSettings.getMoneroPort()), daemon_handler(pSettings)
+    : MoneroInterface(pMoneroModel), daemon_handler(pSettings), rpc(pSettings.getMoneroUri(),pSettings.getMoneroPort())
 {
     should_spawn_daemon = pSettings.shouldSpawnDaemon();
 }
@@ -68,20 +68,20 @@ void RPCMonero::saveBlockchain()
 
 }
 
-bool RPCMonero::isReady() {
+//bool RPCMonero::isReady() {
 
-    JsonRPCRequest* lReq = rpc.sendRequest("getheight",QJsonObject(), true);
+//    JsonRPCRequest* lReq = rpc.sendRequest("getheight",QJsonObject(), true);
 
-    /* Synchronous call */
-    QEventLoop loop;
-    QObject::connect(lReq, SIGNAL(jsonResponseReceived(QJsonObject,QJsonObject)), &loop, SLOT(quit()));
-    QObject::connect(lReq, SIGNAL(errorOccured(QNetworkReply::NetworkError)), &loop, SLOT(quit()));
+//    /* Synchronous call */
+//    QEventLoop loop;
+//    QObject::connect(lReq, SIGNAL(jsonResponseReceived(QJsonObject,QJsonObject)), &loop, SLOT(quit()));
+//    QObject::connect(lReq, SIGNAL(errorOccured(QNetworkReply::NetworkError)), &loop, SLOT(quit()));
 
-    loop.exec();
+//    loop.exec();
 
-    return lReq->getError() == QNetworkReply::NetworkError::NoError;
+//    return lReq->getError() == QNetworkReply::NetworkError::NoError;
 
-}
+//}
 
 
 int RPCMonero::enable()

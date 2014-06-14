@@ -46,7 +46,7 @@ ApplicationWindow {
             anchors.top: parent.top
             anchors.left: parent.left
 
-            source: "res/MoneroLogo.jpg"
+            source: "res/MoneroLogo.png"
 
         }
 

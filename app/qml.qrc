@@ -22,5 +22,6 @@
         <file>qml/res/MoneroLogo.jpg</file>
         <file>qml/ErrorWindow.qml</file>
         <file>qml/res/MoneroLogoSmall.png</file>
+        <file>qml/res/MoneroLogo.png</file>
     </qresource>
 </RCC>

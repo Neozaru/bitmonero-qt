@@ -20,6 +20,7 @@ class WalletModel : public AbstractModel
     Q_PROPERTY(double unlocked_balance READ getUnlockedBalance WRITE setUnlockedBalance NOTIFY unlockedBalanceChanged)
     Q_PROPERTY(QString address READ getAddress NOTIFY addressChanged)
     Q_PROPERTY(QList<QObject*> transactions READ getTransactions NOTIFY transactionsChanged)
+    Q_PROPERTY(QList<QObject*> aggregated_transactions READ getAggregatedTransactions NOTIFY aggregatedTransactionsChanged)
 
 public:
     WalletModel();
@@ -97,9 +98,25 @@ public:
         }
     }
 
+    /* Not invokable from QML */
+    void setAggregatedTransactions(const QList<QObject*>& pAggregatedTransactions) {
+
+        /* Basic comparison : TODO */
+        if ( aggregated_transactions.size() != pAggregatedTransactions.size() ) {
+            aggregated_transactions = pAggregatedTransactions;
+            emit aggregatedTransactionsChanged(pAggregatedTransactions);
+        }
+    }
+
+
     bool isReady() const
     {
         return ready;
+    }
+
+    QList<QObject*> getAggregatedTransactions() const
+    {
+        return aggregated_transactions;
     }
 
 signals:
@@ -111,8 +128,10 @@ signals:
     void unlockedBalanceChanged(double unlocked_balance);
 
     void transactionsChanged(QList<QObject*> transactions);
+    void aggregatedTransactionsChanged(QList<QObject*> aggregated_transactions);
 
     void readyChanged(bool ready);
+
 
 public slots:
     Q_INVOKABLE bool transfer(double amount, const QString& address, int pFee, const QString& pPaymentId);
@@ -134,6 +153,7 @@ private:
     QString address;
     double unlocked_balance;
     QList<QObject*> transactions;
+    QList<QObject*> aggregated_transactions;
     bool ready;
 };
 

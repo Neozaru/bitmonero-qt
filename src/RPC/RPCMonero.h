@@ -26,7 +26,7 @@ public:
         return !should_spawn_daemon || daemon_handler.isOk();
     }
 
-    bool isReady();
+//    bool isReady();
 
     virtual int enable();
 
@@ -38,11 +38,12 @@ public slots:
 
 
 private:
-    JsonRPCCommunicator rpc;
 
     DaemonHandler daemon_handler;
 
     bool should_spawn_daemon;
+
+    JsonRPCCommunicator rpc;
 
     QTimer getinfo_timer;
     QTimer savebc_timer;

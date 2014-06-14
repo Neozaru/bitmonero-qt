@@ -9,6 +9,10 @@ import QtQuick.Dialogs 1.0
     property var stack;
     property var nextPage;
 
+      anchors.fill: parent
+//      anchors.top: parent.top;
+//      anchors.bottom: parent.bottom;
+
     function goToNext() {
         if (nextPage) {
             stack.push(nextPage)

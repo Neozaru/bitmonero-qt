@@ -18,20 +18,35 @@ ColumnLayout {
 
     property bool iamVisible: transactionsTable.currentRow == 0
 
-    Button {
-        id: copyTxHashButton
-        visible: false
-        text: "Copy Tx Hash"
-        enabled: transactionsTable.currentRow >= 0
-        onClicked: {
-            var origin = transactionsTable.model.get(transactionsTable.currentRow)["id"];
-            console.log(origin)
-            /* TODO : Make a C++ interface for clipboard in order to remove this UGLY hack */
-            stubCopyPasteTextEdit.text = origin;
-            stubCopyPasteTextEdit.selectAll();
-            stubCopyPasteTextEdit.copy();
-            stubCopyPasteTextEdit.text = "";
+    RowLayout {
+        id: controlsLayout
+
+        Button {
+            id: copyTxHashButton
+
+            text: "Copy Tx Hash"
+            enabled: transactionsTable.currentRow >= 0
+            onClicked: {
+
+
+                var hash = transactionsTable.model[transactionsTable.currentRow].id
+                console.log(hash)
+                /* TODO : Make a C++ interface for clipboard in order to remove this UGLY hack */
+                stubCopyPasteTextEdit.text = hash;
+                stubCopyPasteTextEdit.selectAll();
+                stubCopyPasteTextEdit.copy();
+                stubCopyPasteTextEdit.text = "";
+            }
         }
+
+        CheckBox {
+            id: advancedViewCheckbox
+
+//            anchors.cop
+
+            text: "Detailled transfers"
+        }
+
     }
 
 
@@ -39,7 +54,7 @@ ColumnLayout {
 
         id: transactionsTable
 
-        anchors.top: copyTxHashButton.bottom
+        anchors.top: controlsLayout.bottom
         anchors.topMargin: 5
 
         anchors.bottom: parent.bottom
@@ -49,7 +64,8 @@ ColumnLayout {
         alternatingRowColors: true
 
 
-        model: wallet.transactions
+//        model: wallet.transactions
+        model: advancedViewCheckbox.checked ? wallet.transactions : wallet.aggregated_transactions
         TableViewColumn {
 
             role: "type";

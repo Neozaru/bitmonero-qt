@@ -48,13 +48,13 @@ signals:
     void walletReady();
 
 private:
-    JsonRPCCommunicator rpc;
     WalletHandler wallet_handler;
     const WalletSettings& settings;
     bool ready;
 
     bool should_spawn_wallet;
 
+    JsonRPCCommunicator rpc;
 
     QTimer getbalance_timer;
     QTimer getaddress_timer;

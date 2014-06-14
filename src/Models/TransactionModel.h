@@ -48,6 +48,14 @@ public:
         return type;
     }
 
+    void setAmount(double pAmount) {
+        amount = pAmount;
+    }
+
+    void setSpendable(bool pSpendable) {
+        spendable = pSpendable;
+    }
+
 signals:
 
     void idChanged(QString arg);
@@ -70,10 +78,6 @@ private:
 
     bool type;
 
-    QString m_id;
-    double m_amount;
-    bool m_spendable;
-    bool m_type;
 };
 
 #endif // TRANSACTIONMODEL_H

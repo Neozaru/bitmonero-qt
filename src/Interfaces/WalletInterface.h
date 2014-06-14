@@ -4,6 +4,8 @@
 #include <QDebug>
 #include <QList>
 
+#include <map>
+
 #include "Models/WalletModel.h"
 #include "Models/TransactionModel.h"
 
@@ -53,9 +55,37 @@ protected:
     }
 
 
-    void onIncomingTransfersUpdated(const QList<QObject*>& pTransfers) {
-        wallet_model.setTransactions(pTransfers);
+    void onIncomingTransfersUpdated(const QList<TransactionModel*>& pTransfers) {
+
+        QList<QObject*> lAbstractTransfersList;
+        for( TransactionModel* lTransaction : pTransfers ) {
+            lAbstractTransfersList.append(lTransaction);
+        }
+
+        wallet_model.setTransactions(lAbstractTransfersList);
         qDebug() << "Transactions SET";
+
+        /* Aggregates transactions */
+        std::map<QString,TransactionModel*> lTransactionsMap;
+        for( TransactionModel* lTransaction : pTransfers ) {
+
+            if (lTransactionsMap.count(lTransaction->getId()) == 0) {
+                lTransactionsMap[lTransaction->getId()] = new TransactionModel(lTransaction->getId(), 0, true, false);
+            }
+
+            TransactionModel* lAggregatedTransaction = lTransactionsMap[lTransaction->getId()];
+            lAggregatedTransaction->setAmount( lAggregatedTransaction->getAmount() + lTransaction->getAmount() );
+            lAggregatedTransaction->setSpendable( lAggregatedTransaction->isSpendable() && lTransaction->isSpendable() );
+//            lAbstractTransfersList.append(lTransaction);
+        }
+
+        QList<QObject*> lAbstractAggregatedTransfersList;
+        for ( std::pair<QString,TransactionModel*> lAggregatedTransaction : lTransactionsMap) {
+            lAbstractAggregatedTransfersList.append(lAggregatedTransaction.second);
+        }
+
+        wallet_model.setAggregatedTransactions(lAbstractAggregatedTransfersList);
+
     }
 
 

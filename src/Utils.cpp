@@ -35,6 +35,23 @@ const QStringList Utils::findExecutables(const QStringList& pPaths, const QStrin
 
 }
 
+const QString Utils::extractWalletAddress(const QString& pWalletPath) {
+
+    QFile lFile( pWalletPath + ".address.txt");
+    if ( !lFile.open(QFile::ReadOnly | QFile::Text) ) {
+        return "";
+    }
+
+    QTextStream lInputStream(&lFile);
+    const QString& lAddress = lInputStream.readAll();
+
+    if (lAddress.size() != 95) {
+        return "";
+    }
+
+    return lAddress;
+}
+
 
 const QStringList Utils::getStandardSearchPaths() {
 
