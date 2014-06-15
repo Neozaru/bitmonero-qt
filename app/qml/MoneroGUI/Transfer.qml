@@ -140,7 +140,7 @@ GuardedColumnLayout {
                     else {
 
                         var amount = Math.pow(10,12) * parseFloat(inputAmount.text)
-                        var fees = customFeesCheckbox.checked && customFeesInput.acceptableInput ? Math.pow(10,12) * parseFloat(customFeesInput.text) : transferLayout.defaultFee
+                        var fees = (customFeesCheckbox.checked && customFeesInput.acceptableInput) ? (Math.pow(10,12) * parseFloat(customFeesInput.text)) : transferLayout.defaultFee
 
                         console.log("Transfer")
                         console.log("Amount :" + amount)

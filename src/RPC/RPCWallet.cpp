@@ -85,6 +85,8 @@ void RPCWallet::transfer(unsigned long long pAmount, const QString& pAddress, un
     QJsonObject lParams;
     QJsonArray lDests;
 
+    qDebug() << "FEE : " << pFee;
+
     /* Single Dest for the moment */
     QJsonObject lDst;
     lDst["amount"] = QJsonValue::fromVariant(QVariant::fromValue(pAmount));

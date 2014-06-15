@@ -19,7 +19,7 @@ public:
 
     virtual void getBalance() = 0;
     virtual void getAddress() = 0;
-    virtual void transfer(unsigned long long pAmount, const QString& pAddress, unsigned long long pFee = 5000000000uLL, const QString& pPaymentId = "") = 0;
+    virtual void transfer(unsigned long long pAmount, const QString& pAddress, unsigned long long pFee, const QString& pPaymentId = "") = 0;
     virtual void getPayments(const QString& pPaymentId) = 0;
     virtual void store() = 0;
 
