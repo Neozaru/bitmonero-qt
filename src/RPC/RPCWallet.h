@@ -1,6 +1,9 @@
 #ifndef RPCWALLET_HH
 #define RPCWALLET_HH
 
+#include <ctype.h>
+
+
 #include <QJsonArray>
 #include <QJsonObject>
 #include <QTimer>
@@ -22,7 +25,7 @@ public:
     RPCWallet(WalletModel& pModel, const WalletSettings& pSettings);
     ~RPCWallet();
 
-    void transfer(double pAmount, const QString& pAddress, int pFee, const QString& pPaymentId);
+    void transfer(unsigned long long pAmount, const QString& pAddress, unsigned long long pFee, const QString& pPaymentId);
     void store();
     void getPayments(const QString& pPaymentId);
 

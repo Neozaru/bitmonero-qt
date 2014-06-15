@@ -3,6 +3,7 @@
 #include <QTimer>
 #include <iostream>
 #include <QObject>
+#include <QtCore/qmath.h>
 
 #include "Models/TransactionModel.h"
 
@@ -80,25 +81,27 @@ int RPCWallet::enable() {
 }
 
 
-void RPCWallet::transfer(double pAmount, const QString& pAddress, int pFee, const QString& pPaymentId) {
+void RPCWallet::transfer(unsigned long long pAmount, const QString& pAddress, unsigned long long pFee, const QString& pPaymentId) {
     QJsonObject lParams;
     QJsonArray lDests;
 
     /* Single Dest for the moment */
     QJsonObject lDst;
-    lDst["amount"] = pAmount;
+    lDst["amount"] = QJsonValue::fromVariant(QVariant::fromValue(pAmount));
     lDst["address"] = pAddress;
     lDests.append(lDst);
     lParams["destinations"] = lDests;
     /**/
 
-    lParams["fee"] = pFee;
+    lParams["fee"] = QJsonValue::fromVariant(QVariant::fromValue(pFee >= 5000000000uLL ? pFee : 5000000000uLL));
     lParams["payment_id"] = pPaymentId;
 
     /* TODO */
     lParams["mixin"] = 0;
     lParams["unlock_time"] = 0;
     /**/
+
+
 
     JsonRPCRequest* lReq = rpc.sendRequest("transfer",lParams);
     QObject::connect(lReq,SIGNAL(jsonResponseReceived(QJsonObject,QJsonObject)),this,SLOT(transferResponse(QJsonObject,QJsonObject)));
@@ -206,13 +209,13 @@ void RPCWallet::transferResponse(const QJsonObject& pObjResponse, const QJsonObj
         return;
     }
 
-    unsigned int lOriginalFee = 1000000;
+    unsigned long long lOriginalFee = 5000000000uLL;
     if ( pObjOriginalParams["fee"].isDouble() ) {
-        lOriginalFee = pObjOriginalParams["fee"].toInt();
+        lOriginalFee = pObjOriginalParams["fee"].toDouble();
     }
 
     /* OK */
-    onTransferSuccessful(pObjResponse["tx_hash"].toString(), lDestination["amount"].toInt(), lDestination["address"].toString(), lOriginalFee);
+    onTransferSuccessful(pObjResponse["tx_hash"].toString(), lDestination["amount"].toDouble(), lDestination["address"].toString(), lOriginalFee);
 
 }
 

@@ -5,6 +5,7 @@
 #include <QList>
 
 #include <map>
+#include <ctype.h>
 
 #include "Models/WalletModel.h"
 #include "Models/TransactionModel.h"
@@ -18,7 +19,7 @@ public:
 
     virtual void getBalance() = 0;
     virtual void getAddress() = 0;
-    virtual void transfer(double pAmount, const QString& pAddress, int pFee = 1000000, const QString& pPaymentId = "") = 0;
+    virtual void transfer(unsigned long long pAmount, const QString& pAddress, unsigned long long pFee = 5000000000uLL, const QString& pPaymentId = "") = 0;
     virtual void getPayments(const QString& pPaymentId) = 0;
     virtual void store() = 0;
 
@@ -48,7 +49,7 @@ protected:
     }
 
 
-    void onTransferSuccessful(const QString& pTxHash, double pAmount, const QString& pAddress, int pFee)
+    void onTransferSuccessful(const QString& pTxHash, unsigned long long pAmount, const QString& pAddress, unsigned long long pFee)
     {
         emit wallet_model.transferSuccessful(pTxHash,pAmount,pAddress,pFee);
         qDebug() << "Transfer Successful : " << pAmount << " to " << pAddress << " (fee : " << pFee << ")\nHash: " << pTxHash;

@@ -11,7 +11,7 @@ GuardedColumnLayout {
     id: transferLayout
 
     property string lastTransferError: ""
-    property int defaultFee: 1000000
+    property var defaultFee: 5000000000
 
     anchors.fill: parent
 //    anchors.margins: 10
@@ -206,7 +206,7 @@ GuardedColumnLayout {
 
                 placeholderText: (Math.pow(10,-12) * transferLayout.defaultFee).toFixed(12)
 
-                validator: DoubleValidator { bottom: 0.0; top: 1 }
+                validator: DoubleValidator { bottom: Math.pow(10,-12) * transferLayout.defaultFee; top: 1 }
             }
 
 
