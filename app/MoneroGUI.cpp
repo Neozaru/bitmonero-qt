@@ -126,21 +126,28 @@ void MoneroGUI::closeAllWindows() {
 
 
 
-void MoneroGUI::stepStartDaemon() {
+bool MoneroGUI::stepStartDaemon() {
 
     QObject::connect(monero_interface,SIGNAL(ready()),this, SLOT(stepConfigure()));
     int lDaemonReturnCode = monero_interface->enable();
     if ( lDaemonReturnCode != 0 ) {
 
+        QObject::disconnect(monero_interface,SIGNAL(ready()),this, SLOT(stepConfigure()));
         /* Starnge error codes :D */
         exit_status = 10 + lDaemonReturnCode;
-        dialogError(exit_status);
+
+        return false;
     }
+
+    return true;
 
 }
 
 void MoneroGUI::stepConfigure() {
 
+    if ( exit_status != 0 ) {
+        return;
+    }
     qWarning() << "[OK] Monero";
 
     /* TODO : Use builder and/or abstracted interface */
@@ -176,6 +183,9 @@ void MoneroGUI::stepConfigure() {
 
 void MoneroGUI::stepOpenWallet() {
 
+    if ( exit_status != 0 ) {
+        return;
+    }
 
     std::cout << "[New config]" << std::endl;
     std::cout << settings << std::endl;
@@ -223,12 +233,14 @@ int MoneroGUI::start() {
     initModels();
     initInterfaces();
 
-    stepStartDaemon();
+    if( stepStartDaemon() ) {
 
-    qWarning() << "Start SPLASH";
+        qWarning() << "Start SPLASH";
 
-    /* Blocking */
-    startSplashScreen();
+        /* Blocking */
+        startSplashScreen();
+
+    }
 
     qDebug() << "Closing remaining Windows...";
     closeAllWindows();
@@ -250,6 +262,7 @@ int MoneroGUI::start() {
 void MoneroGUI::dialogError(int pErrorCode) {
 
     closeAllWindows();
+    app.quit();
 
     qDebug() << "Opening error Window";
     engine.rootContext()->setContextProperty("error_message", "Error !!");

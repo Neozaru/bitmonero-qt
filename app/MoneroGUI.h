@@ -105,7 +105,7 @@ private:
 
 
 public slots:
-    void stepStartDaemon();
+    bool stepStartDaemon();
     void stepOpenWallet();
     void stepConfigure();
     void stepStartMainGUI();
