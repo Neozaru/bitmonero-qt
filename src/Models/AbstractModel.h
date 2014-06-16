@@ -8,7 +8,6 @@ class AbstractModel : public QObject {
     Q_OBJECT
     Q_PROPERTY(bool ready READ isReady NOTIFY readyChanged)
 
-
 public:
 
     AbstractModel();

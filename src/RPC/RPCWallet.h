@@ -16,7 +16,7 @@
 #include "WalletSettings.h"
 
 #include "Models/WalletModel.h"
-#include "WalletHandler.h"
+#include "RPC/WalletHandlerProcess.h"
 
 class RPCWallet : public WalletInterface
 {
@@ -28,11 +28,6 @@ public:
     void transfer(unsigned long long pAmount, const QString& pAddress, unsigned long long pFee, const QString& pPaymentId);
     void store();
     void getPayments(const QString& pPaymentId);
-
-
-    bool isOk() {
-        return !should_spawn_wallet || wallet_handler.isOk();
-    }
 
     int enable();
 
@@ -51,7 +46,7 @@ signals:
     void walletReady();
 
 private:
-    WalletHandler wallet_handler;
+
     const WalletSettings& settings;
     bool ready;
 

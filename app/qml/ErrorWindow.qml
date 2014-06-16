@@ -45,7 +45,7 @@ ApplicationWindow {
                       "Daemon error : Unable to find 'bitmonerod'"
                       break;
                   case 12:
-                      "Daemon error : Unable to start 'bitmonerod'\nIs your Wallet already running ?\nPlease restart Monero Wallet"
+                      "Daemon error : Unable to start 'bitmonerod'\nIs your Daemon already running ?\nPlease restart Monero Wallet"
                       break;
                   case 21:
                       "Wallet error : Unable to find 'simplewallet'"

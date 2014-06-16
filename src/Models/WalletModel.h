@@ -6,7 +6,6 @@
 #include <QList>
 
 #include "AbstractModel.h"
-//#include "TransactionsListModel.h"
 #include "TransactionModel.h"
 
 class WalletInterface;

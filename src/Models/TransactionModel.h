@@ -11,7 +11,6 @@ class TransactionModel : public QObject
 
 
 public:
-//    explicit TransactionModel(QObject *parent = 0);
 
     TransactionModel(const TransactionModel& pTransactionModel)
         : QObject(), id(pTransactionModel.getId()), amount(pTransactionModel.getAmount()), spendable(pTransactionModel.isSpendable()), type(pTransactionModel.getType())

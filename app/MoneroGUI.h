@@ -13,10 +13,11 @@
 #include "Models/MoneroModel.h"
 #include "Models/WalletModel.h"
 #include "Models/MinerModel.h"
+#include "Models/WalletHandlerModel.h"
 
 #include "WalletSettings.h"
 
-#include "WalletHandler.h"
+
 #include "DaemonHandler.h"
 
 
@@ -24,8 +25,9 @@
 class MoneroInterface;
 class MinerInterface;
 class WalletInterface;
+class WalletHandlerInterface;
 
-/* TODO : Fix this class with more clean methods a states */
+
 class MoneroGUI : public QObject
 {
     Q_OBJECT
@@ -105,9 +107,10 @@ private:
 
 
 public slots:
-    bool stepStartDaemon();
-    void stepOpenWallet();
+    bool stepEnableDaemon();
     void stepConfigure();
+    void stepEnableWalletHandler();
+    void stepEnableWallet();
     void stepStartMainGUI();
 
 private:
@@ -120,14 +123,15 @@ private:
     MoneroInterface* monero_interface;
     MinerInterface* miner_interface;
     WalletInterface* wallet_interface;
+    WalletHandlerInterface* wallet_handler_interface;
 
     MoneroModel monero_model;
     MinerModel miner_model;
     WalletModel wallet_model;
+    WalletHandlerModel wallet_handler_model;
 
     WalletSettings settings;
 
-    WalletHandler wallet_handler;
 
     QQmlEngine engine;
 

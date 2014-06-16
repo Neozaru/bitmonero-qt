@@ -45,8 +45,9 @@ AbstractPage {
 //                    walletLocationInput.text = fileDialog.folder
                     importWalletLayout.walletLocation = fileDialog.folder.toLocaleString()
 
-                    wallet_handler.findWallets(importWalletLayout.walletLocation)
+//                    wallet_handler.findWallets(importWalletLayout.walletLocation)
                     walletsTable.selection.select(0)
+                    walletsTable.updateWalletsList(importWalletLayout.walletLocation)
 
                 }
                 onRejected: {
@@ -95,8 +96,11 @@ AbstractPage {
             }
         }
 
+
         TableView {
             id: walletsTable
+
+            property var last_found_wallets: []
 
             anchors.top: walletNameLayout.bottom
             anchors.left: parent.left
@@ -104,7 +108,7 @@ AbstractPage {
 
             alternatingRowColors: true
 
-            model: wallet_handler.last_found_wallets
+            model: last_found_wallets
 
             TableViewColumn {
 
@@ -136,11 +140,15 @@ AbstractPage {
 
             }
 
+            function updateWalletsList(location) {
+
+                walletsTable.last_found_wallets = wallet_handler.findWallets(location)
+                selection.select(0)
+
+            }
 
             Component.onCompleted: {
-
-                wallet_handler.findWallets()
-                selection.select(0)
+                updateWalletsList(wallet_handler.default_wallet_location)
             }
 
 
@@ -179,8 +187,6 @@ AbstractPage {
 
             anchors.top: walletPasswordLayout.bottom
             anchors.topMargin: 10
-//            anchors.bottom: parent.bottom
-//            anchors.bottomMargin: 5
 
             text: "Import Wallet"
             action: importWalletAction
@@ -204,7 +210,7 @@ AbstractPage {
                         return;
                     }
 
-                    var location = wallet_handler.last_found_wallets[walletsTable.currentRow].file_path;
+                    var location = walletsTable.last_found_wallets[walletsTable.currentRow].file_path;
 
 
                     settings.setWalletFile(location);

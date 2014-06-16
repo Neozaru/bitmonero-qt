@@ -10,11 +10,7 @@ public:
     MoneroInterface(MoneroModel& pMoneroModel) : monero_model(pMoneroModel), daemon_ready(false) {}
     virtual ~MoneroInterface() {}
 
-//    virtual bool isReady() = 0;
     virtual int enable() = 0;
-
-    virtual bool isOk() = 0;
-//    virtual MoneroModel& getMoneroModel() = 0;
 
 signals:
     void ready();

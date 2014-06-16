@@ -22,12 +22,6 @@ public:
     RPCMonero(MoneroModel& pMoneroModel, const WalletSettings& pSettings);
     ~RPCMonero();
 
-    bool isOk() {
-        return !should_spawn_daemon || daemon_handler.isOk();
-    }
-
-//    bool isReady();
-
     virtual int enable();
 
 public slots:

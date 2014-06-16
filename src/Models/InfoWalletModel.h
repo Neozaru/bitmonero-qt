@@ -14,7 +14,6 @@ class InfoWalletModel : public QObject
 
 
 public:
-//    explicit InfoWalletModel(QObject *parent = 0);
 
     InfoWalletModel(const QString& pName, const QString& pPath, const QString& pAddress, int pStatus);
 

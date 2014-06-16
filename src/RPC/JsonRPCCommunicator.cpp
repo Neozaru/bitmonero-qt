@@ -36,10 +36,6 @@ JsonRPCRequest* JsonRPCCommunicator::sendRequest(const QString& pMethod, const Q
     QNetworkRequest lReq(lUrl);
     lReq.setHeader(QNetworkRequest::ContentTypeHeader,"application/json");
 
-//    qDebug() << "Req" << lReq.url();
-//    qDebug() << lJsonDoc.toJson();
-
-
     JsonRPCRequest* lJsonReq = new JsonRPCRequest(pParams, pDaemonHttp);
     QNetworkReply* lReply = network_access_mgr.post(lReq, lJsonDoc.toJson());
 

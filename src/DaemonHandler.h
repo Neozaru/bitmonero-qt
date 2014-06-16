@@ -12,7 +12,7 @@
 class DaemonHandler
 {
 public:
-//    DaemonHandler(const QString& pProgramPath);
+
     DaemonHandler(const WalletSettings& pSettings);
     ~DaemonHandler();
 
@@ -30,7 +30,7 @@ public:
     bool terminateDaemon();
 
 private:
-//    QString daemon_program;
+
     QProcess main_process;
 };
 

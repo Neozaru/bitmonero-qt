@@ -14,7 +14,10 @@ class WalletInterface : public QObject
 {
     Q_OBJECT
 public:
-    WalletInterface(WalletModel& pWalletModel) : wallet_model(pWalletModel), wallet_ready(false) {}
+    WalletInterface(WalletModel& pWalletModel) : wallet_model(pWalletModel), wallet_ready(false) {
+        pWalletModel.setWalletInterface(this);
+    }
+
     virtual ~WalletInterface() {}
 
     virtual void getBalance() = 0;
@@ -25,10 +28,7 @@ public:
 
     virtual int enable() = 0;
 
-    virtual bool isOk() = 0;
-
 signals:
-    /* TODO : Check if still useful */
     void ready();
 
 
@@ -77,7 +77,6 @@ protected:
             TransactionModel* lAggregatedTransaction = lTransactionsMap[lTransaction->getId()];
             lAggregatedTransaction->setAmount( lAggregatedTransaction->getAmount() + lTransaction->getAmount() );
             lAggregatedTransaction->setSpendable( lAggregatedTransaction->isSpendable() && lTransaction->isSpendable() );
-//            lAbstractTransfersList.append(lTransaction);
         }
 
         QList<QObject*> lAbstractAggregatedTransfersList;
@@ -107,9 +106,6 @@ protected:
         }
 
     }
-
-//signals:
-//    void walletReady();
 
 private:
     WalletModel& wallet_model;

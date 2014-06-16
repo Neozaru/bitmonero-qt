@@ -1,4 +1,4 @@
-#include "WalletHandler.h"
+#include "WalletHandlerProcess.h"
 
 #include <QStringList>
 #include <QDebug>
@@ -9,9 +9,17 @@
 
 #include "Utils.h"
 
-WalletHandler::WalletHandler(const WalletSettings& pWalletSettings)
-    : open(false), default_wallet_location(QDir::homePath() + "/.bitmonero/")
+//WalletHandlerProcess::WalletHandlerProcess(const WalletSettings& pWalletSettings)
+//    : WalletHandlerInterface(WalletHandlerModel()), open(false), default_wallet_location(QDir::homePath() + "/.bitmonero/")
+//{
+
+//}
+
+WalletHandlerProcess::WalletHandlerProcess(WalletHandlerModel& pModel, const WalletSettings& pWalletSettings)
+    : WalletHandlerInterface(pModel), settings(pWalletSettings)
 {
+
+
 
     QString lWalletProgram = pWalletSettings.getWalletProgram();
 
@@ -47,13 +55,13 @@ WalletHandler::WalletHandler(const WalletSettings& pWalletSettings)
 
 }
 
-WalletHandler::~WalletHandler() {
+WalletHandlerProcess::~WalletHandlerProcess() {
 
 //    try {
 
         if(closeWallet()) {
 
-            qWarning() << "Ending Wallet process...";
+            qWarning() << "Ending WALLET process...";
             if(!main_process.waitForFinished(10000)){
                 main_process.kill();
                 main_process.waitForFinished(1000);
@@ -67,10 +75,55 @@ WalletHandler::~WalletHandler() {
 
 }
 
-bool WalletHandler::findWallets(const QString& pPath) {
 
-    const QString& lSearchPath = pPath.isEmpty() ? default_wallet_location : pPath;
-    const QUrl& lUrl = QUrl::fromUserInput(lSearchPath);
+int WalletHandlerProcess::enable() {
+
+    /* TODO : Remove */
+    if ( settings.shouldSpawnWallet() ) {
+
+        QObject::connect(this, &WalletHandlerProcess::tryWalletResult, [this] (bool pResult) {
+
+            qDebug() << "[OK] Wallet try";
+            qDebug() << "With result : " << pResult;
+            if (!pResult) {
+                qDebug() << "Simplewallet try failed. Aborting.";
+
+                return 3;
+            }
+
+            if ( !openWalletAsync(settings.getWalletFile(), settings.getWalletPassword(), settings.getWalletIP(), settings.getWalletPort()) ) {
+                qDebug() << "Failed to start wallet ("<< settings.getWalletProgram() << ")";
+
+                return 4;
+            }
+            else {
+
+                QObject::disconnect(this, SIGNAL(tryWalletResult(bool)));
+                this->onReady();
+                return 0;
+            }
+
+
+        });
+
+        /* TODO : Emit errors */
+        if ( !tryWalletAsync(settings.getWalletFile(), settings.getWalletPassword()) ) {
+            qWarning() << "Wallet opening failed. Aborting.";
+
+            return 2;
+
+        }
+
+        return 0;
+    }
+
+    return 0;
+
+}
+
+QList<QObject*> WalletHandlerProcess::findWallets(const QString& pPath) {
+
+    const QUrl& lUrl = QUrl::fromUserInput(pPath);
 
 
     QStringList lWalletsFilesList =  Utils::findWalletsKeysFiles(lUrl);
@@ -88,15 +141,13 @@ bool WalletHandler::findWallets(const QString& pPath) {
     }
 
 
-    emit lastFoundWalletsChanged(last_found_wallets);
-
-    return !last_found_wallets.empty();
+    return last_found_wallets;
 
 }
 
 
 
-bool WalletHandler::openWalletAsync(const QString& pWalletFile, const QString& pWalletPassword, const QString& pBindIP, int pBindPort) {
+bool WalletHandlerProcess::openWalletAsync(const QString& pWalletFile, const QString& pWalletPassword, const QString& pBindIP, int pBindPort) {
 
     if ( main_process.state() == QProcess::Running ) {
         qWarning() << "Wallet is already open. Please close your wallet before opening another one";
@@ -126,17 +177,13 @@ bool WalletHandler::openWalletAsync(const QString& pWalletFile, const QString& p
         return false;
     }
 
-    open = true;
-
     qDebug() << "Wallet process started on " + pBindIP + ":" + QString::number(pBindPort) + " (" + main_process.program() + ")";
 
     return true;
 
 }
 
-bool WalletHandler::closeWallet() {
-
-    open = false;
+bool WalletHandlerProcess::closeWallet() {
 
     if ( main_process.state() == QProcess::Running ) {
         main_process.terminate();
@@ -148,7 +195,7 @@ bool WalletHandler::closeWallet() {
 
 }
 
-bool WalletHandler::walletFileExists(const QString& pFile) {
+bool WalletHandlerProcess::walletFileExists(const QString& pFile) {
 
     if ( pFile.isEmpty() ) {
         return false;
@@ -163,7 +210,7 @@ bool WalletHandler::walletFileExists(const QString& pFile) {
 }
 
 
-bool WalletHandler::walletDirectoryExists(const QString& pFile) {
+bool WalletHandlerProcess::walletDirectoryExists(const QString& pFile) {
 
     if ( pFile.isEmpty() ) {
         return false;
@@ -178,7 +225,7 @@ bool WalletHandler::walletDirectoryExists(const QString& pFile) {
 
 
 
-bool WalletHandler::createWallet(const QString& pFile, const QString& pPassword)
+bool WalletHandlerProcess::createWallet(const QString& pFile, const QString& pPassword)
 {
 
     if ( !walletDirectoryExists(pFile) ) {
@@ -225,17 +272,18 @@ bool WalletHandler::createWallet(const QString& pFile, const QString& pPassword)
 }
 
 
-void WalletHandler::tryWalletResponse(int pCode, QProcess::ExitStatus pExitStatus) {
+void WalletHandlerProcess::tryWalletResponse(int pCode, QProcess::ExitStatus pExitStatus) {
 
     qWarning() << "=======================";
     qWarning() << "tryWalletAsync returned status : " << pCode << ". " << pExitStatus << ".";
     qWarning() << "=======================";
     emit tryWalletResult(pCode == 0);
+    this->onTryWalletResult(pCode == 0);
 
 }
 
 
-bool WalletHandler::tryWalletAsync(const QString& pFile, const QString& pPassword) {
+bool WalletHandlerProcess::tryWalletAsync(const QString& pFile, const QString& pPassword) {
 
     QProcess* lTryWalletProcess = execTryWallet(pFile,pPassword);
     if (!lTryWalletProcess) {
@@ -249,7 +297,7 @@ bool WalletHandler::tryWalletAsync(const QString& pFile, const QString& pPasswor
 
 }
 
-QProcess* WalletHandler::execTryWallet(const QString& pFile, const QString& pPassword) {
+QProcess* WalletHandlerProcess::execTryWallet(const QString& pFile, const QString& pPassword) {
 
     qDebug() << "Trying wallet : " << pFile;
 
