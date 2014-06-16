@@ -3,6 +3,8 @@
 
 #include <QObject>
 
+class TransactionModel;
+
 class TransactionModel : public QObject
 {
     Q_OBJECT
@@ -12,7 +14,7 @@ public:
 //    explicit TransactionModel(QObject *parent = 0);
 
     TransactionModel(const TransactionModel& pTransactionModel)
-        : TransactionModel(pTransactionModel.getId(), pTransactionModel.getAmount(), pTransactionModel.isSpendable(), pTransactionModel.getType())
+        : QObject(), id(pTransactionModel.getId()), amount(pTransactionModel.getAmount()), spendable(pTransactionModel.isSpendable()), type(pTransactionModel.getType())
     {
 
     }
