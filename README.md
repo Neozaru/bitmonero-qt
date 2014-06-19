@@ -102,7 +102,7 @@ Debian
 
 You will need to work with "unstable" repositories (sid)
 
-Dependencies are : `qt5-default qtdeclarative5-dev qml-module-qtquick* qml-module-qt-labs-settings libboost1.55-all-dev`
+Dependencies are : `qt5-default qtdeclarative5-dev qml-module-qtquick* qml-module-qt-labs-* libboost1.55-all-dev`
 
 If you upgrade from stable release, your fonts may not show up correctly. Try as root :
 `mkdir ~/.config/fontconfig ; mv -i ~/.fonts.conf ~/.config/fontconfig/fonts.conf`
