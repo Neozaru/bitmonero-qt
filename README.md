@@ -93,6 +93,22 @@ Roadmap
 * Bitmonero C++ integration (all-in-one)
 * Advanced interface
 
+
+Specific platforms build instructions
+=====================================
+
+Debian
+------
+
+You will need to work with "unstable" repositories (sid)
+
+Dependencies are : `qt5-default qtdeclarative5-dev qml-module-qtquick* libboost1.55-all-dev`
+
+If you upgrade from stable release, your fonts may not show up correctly. Try as root :
+`mkdir ~/.config/fontconfig ; mv -i ~/.fonts.conf ~/.config/fontconfig/fonts.conf`
+
+
+
 Alternatives
 ------------
 
