@@ -17,7 +17,7 @@ WalletModel::~WalletModel()
 
 
 
-bool WalletModel::transfer(double amount, const QString& address, int pFee, const QString& pPaymentId)
+bool WalletModel::transfer(double amount, const QString& address, double pFee, const QString& pPaymentId)
 {
     qDebug() << amount << " to " << address;
 

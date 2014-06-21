@@ -36,7 +36,7 @@ public slots:
 
     void getAddress();
     void getBalance();
-    void getIncomingTransfers(const QString& pType = "all");
+    void getIncomingTransfers(const QString& pFilter = "all");
 
     void balanceResponse(const QJsonObject& pObjResponse);
     void transferResponse(const QJsonObject& pObjResponse, const QJsonObject& pObjOriginalParams);

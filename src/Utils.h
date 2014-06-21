@@ -4,6 +4,10 @@
 #include <QStringList>
 #include <QFileInfo>
 #include <QDebug>
+#include <QList>
+#include <QObject>
+
+class InfoWalletModel;
 
 class Utils
 {
@@ -18,6 +22,9 @@ public:
     static const QStringList findWalletsKeysFiles(const QUrl &pUrl, const QString& pFileSuffix = ".keys");
 
     static const QString extractWalletAddress(const QString& pWalletPath);
+
+    static const QList<QObject*> fileListToInfoWalletModelList(const QStringList& pWalletFilesList, const QUrl& pFolderUrl);
+
 };
 
 #endif // UTILS_H

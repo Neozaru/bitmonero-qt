@@ -50,7 +50,7 @@ ApplicationWindow {
 
         ColumnLayout {
 
-            anchors.centerIn: parent;
+//            anchors.centerIn: parent;
 //            anchors.horizontalCenter: parent.horizontalCenter
 
             Image {

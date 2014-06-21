@@ -11,7 +11,7 @@ GuardedColumnLayout {
     id: transferLayout
 
     property string lastTransferError: ""
-    property var defaultFee: 5000000000
+    property real defaultFee: 5000000000
 
     anchors.fill: parent
 //    anchors.margins: 10
@@ -139,13 +139,21 @@ GuardedColumnLayout {
                     }
                     else {
 
-                        var amount = Math.pow(10,12) * parseFloat(inputAmount.text)
-                        var fees = (customFeesCheckbox.checked && customFeesInput.acceptableInput) ? (Math.pow(10,12) * parseFloat(customFeesInput.text)) : transferLayout.defaultFee
+                        var text_amount = inputAmount.text
+                        var parsed_amount = parseFloat(inputAmount.text)
+                        var amount_mini = Math.pow(10,12) * parsed_amount
 
+                        var text_fees = customFeesInput.text
+                        var parsed_fees = parseFloat(customFeesInput.text)
+                        var fees_mini = Math.pow(10,12) * parsed_fees
+
+//                        var fees = (customFeesCheckbox.checked && customFeesInput.acceptableInput) ? (Math.pow(10,12) * parseFloat(customFeesInput.text)) : transferLayout.defaultFee
+
+                        var fees_to_apply = (customFeesCheckbox.checked && customFeesInput.acceptableInput) ? fees_mini : defaultFee
                         console.log("Transfer")
-                        console.log("Amount :" + amount)
-                        console.log("Fees : " + fees)
-                        var res = wallet.transfer(amount, inputAddress.text, fees, definePaymentIdCheckbox ? inputPaymentId.text : "");
+                        console.log("Amount :" + amount_mini + "(" + parsed_amount + ")")
+                        console.log("Fees : " + fees_mini + "("+parsed_fees+") --> " + fees_to_apply)
+                        var res = wallet.transfer(amount_mini, inputAddress.text, fees_to_apply, definePaymentIdCheckbox ? inputPaymentId.text : "");
                         lastTransactionLayout.visible = false;
                     }
 
@@ -243,6 +251,8 @@ GuardedColumnLayout {
     Connections {
         target: wallet
         onTransferSuccessful: {
+
+            console.log("Transfer successful : " + tx_hash)
 
             inputAmount.text = ""
             inputAddress.text = ""

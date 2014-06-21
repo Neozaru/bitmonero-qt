@@ -1,11 +1,7 @@
 #include "MinerInterfaceBuilder.h"
 
-
-//static const std::string avaiable_interfaces[] = {
-//    "a",
-//    ""
-//};
 #include "RPC/RPCMiner.h"
+
 
 MinerInterfaceBuilder::MinerInterfaceBuilder(MinerModel& pModel, const WalletSettings& pSettings)
     : model(pModel), settings(pSettings)

@@ -1,7 +1,13 @@
 #include "WalletHandlerInterfaceBuilder.h"
 
-#include "RPC/WalletHandlerProcess.h"
 #include "Interfaces/WalletHandlerInterface.h"
+
+#include "RPC/WalletHandlerProcess.h"
+
+#ifdef LIBMONEROWALLET_ENABLED
+#include "MoneroWalletWrappers/WrapperWalletHandler.h"
+#endif
+
 
 
 WalletHandlerInterfaceBuilder::WalletHandlerInterfaceBuilder(WalletHandlerModel& pModel, const WalletSettings& pSettings)
@@ -18,7 +24,12 @@ WalletHandlerInterface* WalletHandlerInterfaceBuilder::buildInterface() {
         return new WalletHandlerProcess(model,settings);
     }
 
+    #ifdef LIBMONEROWALLET_ENABLED
+    if (lInterfaceName == "LibMonero") {
+        return new WrapperWalletHandler(model, settings);
+    }
+    #endif
+
     throw(std::invalid_argument(lInterfaceName.toStdString() + " : " + "Interface not found."));
-//    return NULL;
 
 }

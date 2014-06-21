@@ -11,6 +11,10 @@ CONFIG(64bit) {
     TARGET = bitmonero-qt
 }
 
+contains(CUSTOM_LIBMONEROWALLET, "yes") {
+    CONFIG += libMoneroWallet
+}
+
 TEMPLATE = app
 QT += qml quick
 
@@ -23,10 +27,21 @@ HEADERS += MoneroGUI.h
 
 RESOURCES += qml.qrc
 
-unix:CONFIG(release):LIBS += -L$$PWD/../src -lbitmonero-qt-static
-unix:CONFIG(debug):LIBS += -L$$PWD/../src -lbitmonero-qt-static
+CONFIG(unix) {
 
-win32:CONFIG(release):LIBS += -L$$PWD\..\src\release -lbitmonero-qt-static
-win32:CONFIG(debug):LIBS += -L$$PWD\..\src\debug -lbitmonero-qt-static
+    CONFIG(libMoneroWallet) {
+        CONFIG(release):LIBS += -L$$PWD/../src -lbitmonero-qt-static -lmonerowallet
+        CONFIG(debug):LIBS += -L$$PWD/../src -lbitmonero-qt-static -lmonerowallet
+    }
+    else {
+        CONFIG(release):LIBS += -L$$PWD/../src -lbitmonero-qt-static
+        CONFIG(debug):LIBS += -L$$PWD/../src -lbitmonero-qt-static
+    }
+}
+
+CONFIG(win32) {
+    CONFIG(release):LIBS += -L$$PWD\..\src\release -lbitmonero-qt-static
+    CONFIG(debug):LIBS += -L$$PWD\..\src\debug -lbitmonero-qt-static
+}
 
 OTHER_FILES +=

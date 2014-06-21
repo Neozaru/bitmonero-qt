@@ -11,7 +11,7 @@ WalletSettings::WalletSettings(const QString& pConfigFile)
     }
 
 
-    monero_uri = settings.value("daemon_uri", "localhost/json_rpc").toString();
+    monero_uri = settings.value("daemon_uri", "localhost").toString();
     monero_port = settings.value("daemon_port", 18081).toInt();
 
     wallet_uri = settings.value("wallet_uri", "localhost").toString();

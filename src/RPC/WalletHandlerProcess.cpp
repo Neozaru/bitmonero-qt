@@ -127,21 +127,25 @@ QList<QObject*> WalletHandlerProcess::findWallets(const QString& pPath) {
 
 
     QStringList lWalletsFilesList =  Utils::findWalletsKeysFiles(lUrl);
-
-    last_found_wallets.clear();
-
-    qDebug() << "Found Wallets : ";
-    for ( const QString& lWalletName : lWalletsFilesList ) {
-        qDebug() << "- " << lWalletName;
-        const QString& lWalletPath = lUrl.toLocalFile() + QDir::separator() + lWalletName;
-        const QString& lAddress = Utils::extractWalletAddress(lWalletPath);
-        InfoWalletModel* ptrWalletInfo = new InfoWalletModel(lWalletName, lWalletPath, lAddress, 0);
-
-        last_found_wallets.append(ptrWalletInfo);
-    }
-
+    last_found_wallets = Utils::fileListToInfoWalletModelList(lWalletsFilesList, lUrl);
 
     return last_found_wallets;
+
+
+//    last_found_wallets.clear();
+
+//    qDebug() << "Found Wallets : ";
+//    for ( const QString& lWalletName : lWalletsFilesList ) {
+//        qDebug() << "- " << lWalletName;
+//        const QString& lWalletPath = lUrl.toLocalFile() + QDir::separator() + lWalletName;
+//        const QString& lAddress = Utils::extractWalletAddress(lWalletPath);
+//        InfoWalletModel* ptrWalletInfo = new InfoWalletModel(lWalletName, lWalletPath, lAddress, 0);
+
+//        last_found_wallets.append(ptrWalletInfo);
+//    }
+
+
+//    return last_found_wallets;
 
 }
 

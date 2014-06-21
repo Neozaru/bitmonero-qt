@@ -5,6 +5,8 @@
 #include <QUrl>
 #include <QString>
 
+#include "Models/InfoWalletModel.h"
+
 Utils::Utils()
 {
 //    NOP
@@ -88,5 +90,22 @@ const QStringList Utils::findWalletsKeysFiles(const QUrl& pUrl, const QString& p
     }
 
     return lFoundWalletKeysFiles;
+
+}
+
+const QList<QObject*> Utils::fileListToInfoWalletModelList(const QStringList& pWalletFilesList, const QUrl& pFolderUrl) {
+
+    QList<QObject*> lInfoWalletModelList;
+    qDebug() << "Found Wallets : ";
+    for ( const QString& lWalletName : pWalletFilesList ) {
+        qDebug() << "- " << lWalletName;
+        const QString& lWalletPath = pFolderUrl.toLocalFile() + QDir::separator() + lWalletName;
+        const QString& lAddress = Utils::extractWalletAddress(lWalletPath);
+        InfoWalletModel* ptrWalletInfo = new InfoWalletModel(lWalletName, lWalletPath, lAddress, 0);
+
+        lInfoWalletModelList.append(ptrWalletInfo);
+    }
+
+    return lInfoWalletModelList;
 
 }

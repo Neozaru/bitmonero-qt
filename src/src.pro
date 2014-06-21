@@ -6,6 +6,13 @@ CONFIG += qt staticlib c++11
 TEMPLATE = lib
 TARGET = bitmonero-qt-static
 
+
+contains(CUSTOM_LIBMONEROWALLET, "yes") {
+    CONFIG += libMoneroWallet
+}
+libMoneroWallet:DEFINES += LIBMONEROWALLET_ENABLED
+
+
 SOURCES += \
     Models/WalletModel.cpp \
     Models/MoneroModel.cpp \
@@ -16,7 +23,12 @@ SOURCES += \
     Utils.cpp \
     Models/TransactionModel.cpp \
     Models/InfoWalletModel.cpp \
-    Models/WalletHandlerModel.cpp \
+    Models/WalletHandlerModel.cpp
+
+libMoneroWallet:SOURCES += MoneroWalletWrappers/WrapperWallet.cpp
+libMoneroWallet:SOURCES += MoneroWalletWrappers/WrapperWalletHandler.cpp
+
+SOURCES += \
     Builders/WalletInterfaceBuilder.cpp \
     Builders/WalletHandlerInterfaceBuilder.cpp \
     Builders/MinerInterfaceBuilder.cpp
@@ -44,7 +56,13 @@ HEADERS += \
     Models/TransactionModel.h \
     Models/InfoWalletModel.h \
     Interfaces/WalletHandlerInterface.h \
-    Models/WalletHandlerModel.h \
+    Models/WalletHandlerModel.h
+
+
+libMoneroWallet:HEADERS += MoneroWalletWrappers/WrapperWallet.h
+libMoneroWallet:HEADERS += MoneroWalletWrappers/WrapperWalletHandler.h
+
+HEADERS += \
     Builders/WalletInterfaceBuilder.h \
     Builders/WalletHandlerInterfaceBuilder.h \
     Builders/MinerInterfaceBuilder.h

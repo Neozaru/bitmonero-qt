@@ -98,10 +98,10 @@ void RPCWallet::getBalance() {
     QObject::connect(lReq,SIGNAL(jsonResponseReceived(QJsonObject,QJsonObject)),this,SLOT(balanceResponse(QJsonObject)));
 }
 
-void RPCWallet::getIncomingTransfers(const QString& pType) {
+void RPCWallet::getIncomingTransfers(const QString& pFilter) {
 
     QJsonObject lParams;
-    lParams["transfer_type"] = pType;
+    lParams["transfer_type"] = pFilter;
     JsonRPCRequest* lReq = rpc.sendRequest("incoming_transfers", lParams);
 
     QObject::connect(lReq, &JsonRPCRequest::jsonResponseReceived, [this] (const QJsonObject& pJsonResponse) {
