@@ -1,10 +1,17 @@
 #include "MoneroGUI.h"
 
+#include "Builders/WalletInterfaceBuilder.h"
+#include "Builders/WalletHandlerInterfaceBuilder.h"
+#include "Builders/MinerInterfaceBuilder.h"
+
+#include "Interfaces/WalletInterface.h"
+#include "Interfaces/WalletHandlerInterface.h"
+#include "Interfaces/MinerInterface.h"
 
 #include "RPC/RPCMonero.h"
-#include "RPC/RPCWallet.h"
-#include "RPC/RPCMiner.h"
-#include "RPC/WalletHandlerProcess.h"
+//#include "RPC/RPCWallet.h"
+//#include "RPC/RPCMiner.h"
+//#include "RPC/WalletHandlerProcess.h"
 
 #include <QQuickWindow>
 
@@ -78,11 +85,19 @@ void MoneroGUI::initModels() {
 void MoneroGUI::initInterfaces() {
 
     monero_interface = new RPCMonero(monero_model,settings);
-    wallet_interface = new RPCWallet(wallet_model, settings);
-    miner_interface = new RPCMiner(miner_model, settings.getMinerUri(), settings.getMinerPort());
-    wallet_handler_interface = new WalletHandlerProcess(wallet_handler_model, settings);
 
-//    wallet_handler_interface = new
+    WalletInterfaceBuilder lWalletInterfaceBuilder(wallet_model,settings);
+    wallet_interface = lWalletInterfaceBuilder.buildInterface();
+//    wallet_interface = new RPCWallet(wallet_model, settings);
+
+//    miner_interface = new RPCMiner(miner_model, settings.getMinerUri(), settings.getMinerPort());
+    MinerInterfaceBuilder lMinerInterfaceBuilder(miner_model, settings);
+    miner_interface = lMinerInterfaceBuilder.buildInterface();
+
+    WalletHandlerInterfaceBuilder lWalletHandlerInterfaceBuilder(wallet_handler_model, settings);
+    wallet_handler_interface = lWalletHandlerInterfaceBuilder.buildInterface();
+
+//    wallet_handler_interface = new WalletHandlerProcess(wallet_handler_model, settings);
 
 }
 

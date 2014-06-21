@@ -110,6 +110,20 @@ public:
         return spawn_daemon;
     }
 
+
+    const QString& getWalletInterface() const {
+        return wallet_interface;
+    }
+
+    const QString& getWalletHandlerInterface() const {
+        return wallet_handler_interface;
+    }
+
+    const QString& getMinerInterface() const {
+        return miner_interface;
+    }
+
+
     /* Acceptable : Wallet file and password set OR uses RPC-only wallet */
     Q_INVOKABLE bool areSettingsAcceptable() const {
         return ( !wallet_password.isEmpty() && !wallet_file.isEmpty() ) || !spawn_wallet;
@@ -170,6 +184,11 @@ private:
 
     bool spawn_wallet;
     bool spawn_daemon;
+
+
+    QString wallet_interface;
+    QString wallet_handler_interface;
+    QString miner_interface;
 
 };
 

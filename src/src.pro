@@ -16,7 +16,10 @@ SOURCES += \
     Utils.cpp \
     Models/TransactionModel.cpp \
     Models/InfoWalletModel.cpp \
-    Models/WalletHandlerModel.cpp
+    Models/WalletHandlerModel.cpp \
+    Builders/WalletInterfaceBuilder.cpp \
+    Builders/WalletHandlerInterfaceBuilder.cpp \
+    Builders/MinerInterfaceBuilder.cpp
 
 SOURCES += \
     RPC/JsonRPCCommunicator.cpp \
@@ -41,7 +44,10 @@ HEADERS += \
     Models/TransactionModel.h \
     Models/InfoWalletModel.h \
     Interfaces/WalletHandlerInterface.h \
-    Models/WalletHandlerModel.h
+    Models/WalletHandlerModel.h \
+    Builders/WalletInterfaceBuilder.h \
+    Builders/WalletHandlerInterfaceBuilder.h \
+    Builders/MinerInterfaceBuilder.h
 
 HEADERS += \
     RPC/JsonRPCCommunicator.h \

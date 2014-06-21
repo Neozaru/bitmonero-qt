@@ -43,8 +43,6 @@ DaemonHandler::DaemonHandler(const WalletSettings& pSettings)
 
 DaemonHandler::~DaemonHandler() {
 
-//    try {
-
         if (terminateDaemon()) {
             qWarning() << "Ending DAEMON process...";
             if (!main_process.waitForFinished(15000)) {
@@ -53,12 +51,9 @@ DaemonHandler::~DaemonHandler() {
                 main_process.kill();
                 main_process.waitForFinished(1000);
             }
+            qDebug() << "Daemon ended";
 
         }
-//    }
-//    catch(std::exception e) {
-//        qDebug() << "Exception during Daemon closing: " << e.what();
-//    }
 
 }
 

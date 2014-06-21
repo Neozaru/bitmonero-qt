@@ -10,11 +10,13 @@
 #include "Interfaces/MinerInterface.h"
 #include "Models/MinerModel.h"
 
+#include "WalletSettings.h"
+
 class RPCMiner : public QObject, public MinerInterface
 {
     Q_OBJECT
 public:
-    RPCMiner(MinerModel& pMinerModel, const QString& pHost, unsigned int pPort);
+    RPCMiner(MinerModel& pMinerModel, const WalletSettings& pSettings);
     ~RPCMiner();
 
     int enable();
