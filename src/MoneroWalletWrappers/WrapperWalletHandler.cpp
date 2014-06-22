@@ -19,7 +19,19 @@ int WrapperWalletHandler::enable() {
 
 bool WrapperWalletHandler::createWallet(const QString& pFile, const QString& pPassword) {
 
-    Monero::Wallet::generateWallet(pFile.toStdString(), pPassword.toStdString());
+    try {
+        const std::string& lSeed = Monero::Wallet::generateWallet(pFile.toStdString(), pPassword.toStdString());
+
+        if (!lSeed.empty()) {
+            this->onSeedGenerated(QString::fromStdString(lSeed));
+        }
+
+        return true;
+    }
+    catch(Monero::Errors::NotWritableFile e) {
+        qWarning() << "Exception : Not writable file";
+        return false;
+    }
 }
 
 bool WrapperWalletHandler::tryWalletAsync(const QString& pFile, const QString& pPassword) {
@@ -34,6 +46,7 @@ bool WrapperWalletHandler::tryWalletAsync(const QString& pFile, const QString& p
             lWallet->connect(lMoneroAddressPort.toStdString());
 
             this->onTryWalletResult( lWallet->refresh() );
+            lWallet->store();
             delete lWallet;
         });
 

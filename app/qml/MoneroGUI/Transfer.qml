@@ -22,7 +22,7 @@ GuardedColumnLayout {
         onTransferError: {
             console.log("TRANSFER ERROR")
             var additional_info = "";
-            if ( error_message == "transaction was rejected by daemon" ) {
+            if ( error_message === "transaction was rejected by daemon" ) {
                 additional_info = "Please wait for network syncing.";
             }
 

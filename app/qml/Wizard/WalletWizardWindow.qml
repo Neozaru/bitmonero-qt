@@ -181,8 +181,23 @@ ApplicationWindow {
                 visible: status == 1
 
                 Label {
-                    text: "Monero Wallet was successfully configured.\n You can now start using your Wallet"
+                    text: "Monero Wallet was successfully configured.\n You can now start using your Wallet."
                 }
+
+                ColumnLayout {
+                    visible: wallet_handler.ephemeral_seed.length !== 0
+
+                    Label {
+                        text: "Please memorize or store this seed in a SAFE place (wallet recovery)"
+                    }
+
+                    TextArea {
+
+                        text: wallet_handler.ephemeral_seed
+                    }
+
+                }
+
 
                 Button {
                     text: "Go !"

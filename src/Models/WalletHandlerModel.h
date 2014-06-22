@@ -12,6 +12,7 @@ class WalletHandlerModel : public QObject
     Q_OBJECT
 
     Q_PROPERTY(QString default_wallet_location READ getDefaultWalletLocation WRITE setDefaultWalletLocation NOTIFY defaultWalletLocationChanged)
+    Q_PROPERTY(QString ephemeral_seed READ getSeed WRITE setSeed NOTIFY seedChanged)
 public:
     WalletHandlerModel();
 
@@ -35,6 +36,11 @@ public:
         return default_wallet_location;
     }
 
+    QString getSeed() const
+    {
+        return ephemeral_seed;
+    }
+
 public slots:
     void setDefaultWalletLocation(QString pWalletLocation)
     {
@@ -44,16 +50,27 @@ public slots:
         }
     }
 
+    void setSeed(QString pSeed)
+    {
+        if (ephemeral_seed != pSeed) {
+            ephemeral_seed = pSeed;
+            emit seedChanged(pSeed);
+        }
+    }
+
 signals:
     void tryWalletResult(bool result);
 
     void defaultWalletLocationChanged(QString arg);
+
+    void seedChanged(QString seed);
 
 private:
 
     WalletHandlerInterface* wallet_handler_interface;
 
     QString default_wallet_location;
+    QString ephemeral_seed;
 };
 
 #endif // WALLETHANDLERMODEL_H

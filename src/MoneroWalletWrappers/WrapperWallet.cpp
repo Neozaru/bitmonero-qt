@@ -71,9 +71,11 @@ void WrapperWallet::transfer(unsigned long long pAmount, const QString& pAddress
 
         try {
             const std::string& lTxHash = wallet->transferMini(pAddress.toStdString(), pAmount, pFee, pPaymentId.toStdString());
-    //        const QString lTxHash = QString::fromStdString();
+
             this->onTransferSuccessful(QString::fromStdString(lTxHash), pAmount, pAddress, pFee);
-            refreshWallet();
+
+            getBalance();
+
         }
         catch(const std::exception& e) {
             qDebug() << "Transfer error " << QString::fromStdString(e.what());
@@ -107,15 +109,19 @@ void WrapperWallet::store() {
 
 bool WrapperWallet::refreshWallet() {
 
-    qDebug() << "Refreshing wallet...";
+//    QtConcurrent::run([this]() {
 
-    wallet->refresh();
+      qDebug() << "Refreshing wallet...";
 
-    getAddress();
-    getBalance();
-    getIncomingTransfers();
+      wallet->refresh();
 
-    qDebug() << "Done Refreshing";
+      getAddress();
+      getBalance();
+      getIncomingTransfers();
+
+      qDebug() << "Done Refreshing";
+
+//    });
 
     return true;
 

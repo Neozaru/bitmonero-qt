@@ -37,6 +37,9 @@ public:
         emit wallet_handler_model.tryWalletResult(pResult);
     }
 
+    void onSeedGenerated(const QString& pSeed) {
+        wallet_handler_model.setSeed(pSeed);
+    }
 
     void onReady() {
 
