@@ -23,5 +23,7 @@
         <file>qml/res/MoneroLogo.png</file>
         <file>qml/res/MoneroLogoSquare.png</file>
         <file>qml/res/MoneroWhite.ico</file>
+        <file>qml/Wizard/ImportWalletChoicePage.qml</file>
+        <file>qml/Wizard/RecoverWalletPage.qml</file>
     </qresource>
 </RCC>

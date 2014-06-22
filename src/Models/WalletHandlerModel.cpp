@@ -9,9 +9,9 @@ WalletHandlerModel::WalletHandlerModel()
 
 
 
-bool WalletHandlerModel::createWallet(const QString& pFile, const QString& pPassword)
+bool WalletHandlerModel::createWallet(const QString& pFile, const QString& pPassword, const QString& pSeed)
 {
-    return wallet_handler_interface->createWallet(pFile, pPassword);
+    return wallet_handler_interface->createWallet(pFile, pPassword, pSeed);
 }
 
 bool WalletHandlerModel::tryWalletAsync(const QString& pFile, const QString& pPassword)

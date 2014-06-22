@@ -20,6 +20,12 @@ The Monero core itself is in perpetual improvement but not yet ready of end user
 Please use with caution.
 
 
+Recent changes
+--------------
+* [USER] Electrum-style seed added (copy it on wallet creation, paste it in wallet import)
+* [TECH] Dynamic architecture : Interfaces to Daemon and Wallet have been highly abstracted
+* [TECH] LibMoneroWallet mode : Uses Wallets with RPC and/or subprocesses. (more stable, with more features). This features uses an experimental Wallet C++ library (https://github.com/Neozaru/bitmonero/blob/wallet_wrapper/src/monero_wallet_wrapper/MoneroWallet.hh). The RPC-wallet mode will be deprecated as soon as build process will be made easier.
+
 Dependencies
 ------------
 
@@ -77,6 +83,7 @@ Configuration file example for using existing bitmonerod process
 Available features
 ------------------
 * Create/Import Wallet wizard
+* Recover wallet from electrum-style seed
 * Overview (balance, address)
 * Transfer (choose an amount and a recipient. Optional payment ID and custom fee)
 * Mining (choose number of threads and your address, and start mining)

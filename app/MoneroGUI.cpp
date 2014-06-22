@@ -106,12 +106,12 @@ int MoneroGUI::startWizard()
 
     closeAllWindows();
 
+    /* Starts the wizard */
     if ( !initWizard(engine) ) {
         qCritical() << "Wizard init failed. Aborting...";
         return -1;
     }
-    /* Starts the wizard */
-    qDebug() << "State wizard" << app.applicationState();
+
 
     return 0;
 
@@ -122,6 +122,7 @@ int MoneroGUI::startMainWindow()
 
     closeAllWindows();
 
+    /* Starts the main app */
     if (!initMainWindow(engine)) {
         qCritical() << "MainWindow init failed. Aborting...";
         return -1;
@@ -130,8 +131,6 @@ int MoneroGUI::startMainWindow()
     QObject::connect(&engine, SIGNAL(quit()), &app, SLOT(quit()));
     QObject::connect(&engine, SIGNAL(destroyed()), &app, SLOT(quit()));
 
-    /* Starts the main app */
-    qDebug() << "State main" << app.applicationState();
 
     return 0;
 }

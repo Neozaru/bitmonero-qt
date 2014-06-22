@@ -229,7 +229,7 @@ bool WalletHandlerProcess::walletDirectoryExists(const QString& pFile) {
 
 
 
-bool WalletHandlerProcess::createWallet(const QString& pFile, const QString& pPassword)
+bool WalletHandlerProcess::createWallet(const QString& pFile, const QString& pPassword, const QString& pSeed)
 {
 
     if ( !walletDirectoryExists(pFile) ) {

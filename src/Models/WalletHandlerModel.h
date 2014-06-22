@@ -13,11 +13,12 @@ class WalletHandlerModel : public QObject
 
     Q_PROPERTY(QString default_wallet_location READ getDefaultWalletLocation WRITE setDefaultWalletLocation NOTIFY defaultWalletLocationChanged)
     Q_PROPERTY(QString ephemeral_seed READ getSeed WRITE setSeed NOTIFY seedChanged)
+    Q_PROPERTY(bool seed_available READ isSeedAvailable WRITE setSeedAvailable NOTIFY seedAvailableChanged)
 public:
     WalletHandlerModel();
 
 
-    Q_INVOKABLE bool createWallet(const QString& pFile, const QString& pPassword);
+    Q_INVOKABLE bool createWallet(const QString& pFile, const QString& pPassword, const QString& pSeed);
 
     Q_INVOKABLE bool tryWalletAsync(const QString& pFile, const QString& pPassword);
 
@@ -41,6 +42,11 @@ public:
         return ephemeral_seed;
     }
 
+    bool isSeedAvailable() const
+    {
+        return seed_available;
+    }
+
 public slots:
     void setDefaultWalletLocation(QString pWalletLocation)
     {
@@ -58,6 +64,14 @@ public slots:
         }
     }
 
+    void setSeedAvailable(bool pSeedAvailable)
+    {
+        if (seed_available != pSeedAvailable) {
+            seed_available = pSeedAvailable;
+            emit seedAvailableChanged(pSeedAvailable);
+        }
+    }
+
 signals:
     void tryWalletResult(bool result);
 
@@ -65,12 +79,15 @@ signals:
 
     void seedChanged(QString seed);
 
+    void seedAvailableChanged(bool arg);
+
 private:
 
     WalletHandlerInterface* wallet_handler_interface;
 
     QString default_wallet_location;
     QString ephemeral_seed;
+    bool seed_available;
 };
 
 #endif // WALLETHANDLERMODEL_H

@@ -160,7 +160,8 @@ AbstractPage {
 
             anchors.top: walletsTable.bottom
             anchors.topMargin: 3
-            anchors.right: parent.verticalCenter
+            anchors.right: parent.horizontalCenter
+            anchors.left: parent.left
 
             Label {
                 id: walletPasswordLabel

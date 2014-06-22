@@ -20,7 +20,7 @@ public:
     virtual ~WalletHandlerInterface() {}
 
 
-    virtual bool createWallet(const QString& pFile, const QString& pPassword) = 0;
+    virtual bool createWallet(const QString& pFile, const QString& pPassword, const QString& pSeed) = 0;
 
     virtual bool tryWalletAsync(const QString& pFile, const QString& pPassword) = 0;
 
@@ -48,6 +48,10 @@ public:
             emit ready();
         }
 
+    }
+
+    void setSeedAvailable() {
+        wallet_handler_model.setSeedAvailable(true);
     }
 
 

@@ -12,7 +12,7 @@ public:
 
     int enable();
 
-    bool createWallet(const QString& pFile, const QString& pPassword);
+    bool createWallet(const QString& pFile, const QString& pPassword, const QString& pSeed);
 
     bool tryWalletAsync(const QString& pFile, const QString& pPassword);
 

@@ -9,6 +9,7 @@ AbstractPage {
 
     property string passwordToConfirm;
     property string walletFileToCreate;
+    property string seedToUse;
 
     property string createWalletError;
 
@@ -37,8 +38,7 @@ AbstractPage {
                 return;
             }
 
-
-            var res = wallet_handler.createWallet(walletFileToCreate, passwordToConfirm);
+            var res = wallet_handler.createWallet(walletFileToCreate, passwordToConfirm, seedToUse);
             if ( res ) {
 
                 settings.wallet_file = walletFileToCreate;

@@ -94,7 +94,7 @@ ApplicationWindow {
 
                 Button {
                     text: "Use existing wallet"
-                    onClicked: { myStack.push(importWalletPage) }
+                    onClicked: { myStack.push(importWalletChoicePage) }
 
                 }
             }
@@ -104,6 +104,7 @@ ApplicationWindow {
 
     property string walletFilename
     property string walletPassword
+    property string walletSeed
 
     Component {
         id: createWalletPage
@@ -124,8 +125,6 @@ ApplicationWindow {
 
         }
 
-
-
     }
 
 
@@ -139,7 +138,20 @@ ApplicationWindow {
 
             walletFileToCreate: walletFilename
             passwordToConfirm: walletPassword
+            seedToUse: walletSeed
         }
+
+    }
+
+    Component {
+        id: importWalletChoicePage
+
+        ImportWalletChoicePage {
+
+            stack: myStack
+            nextPage: importWalletChoicePage
+        }
+
 
     }
 
@@ -152,6 +164,25 @@ ApplicationWindow {
             nextPage: successPage
 
         }
+
+    }
+
+    Component {
+        id: recoverWalletPage
+
+        RecoverWalletPage {
+
+            stack: myStack
+            nextPage: createWalletPage
+
+
+            onWalletSeedSet: {
+                walletSeed = seed;
+            }
+
+        }
+
+
 
     }
 
@@ -189,10 +220,27 @@ ApplicationWindow {
 
                     Label {
                         text: "Please memorize or store this seed in a SAFE place (wallet recovery)"
+
+                        color: "red"
+                        font.pixelSize: 12
+                    }
+
+                    Button {
+                        text: "Copy seed"
+                        onClicked: {
+                            seedDisplayTextArea.selectAll()
+                            seedDisplayTextArea.copy();
+                            seedDisplayTextArea.select(0,0)
+                        }
                     }
 
                     TextArea {
+                        id: seedDisplayTextArea
 
+                        anchors.left: parent.left
+                        anchors.right: parent.right
+
+                        readOnly: true
                         text: wallet_handler.ephemeral_seed
                     }
 
@@ -202,7 +250,10 @@ ApplicationWindow {
                 Button {
                     text: "Go !"
 
-                    onClicked: { wizardSuccess() }
+                    onClicked: {
+                        wallet_handler.ephemeral_seed = "";
+                        wizardSuccess();
+                    }
                 }
 
             }
@@ -256,6 +307,7 @@ ApplicationWindow {
 
         }
     }
+
 
     onWizardSuccess: {
         visible = false; Qt.quit()

@@ -20,6 +20,16 @@ import QtQuick.Dialogs 1.0
 
     }
 
+    function goTo(page) {
+
+        if(page) {
+            stack.push(page)
+        }
+        else {
+            console.warn("Page not defined " + page)
+        }
+    }
+
     Button {
 
         text: "<--"
