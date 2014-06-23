@@ -32,6 +32,8 @@ AbstractPage {
 
         text: "Confirm password"
         onClicked: {
+            createWalletError = "";
+
             if (passwordConfirmationInput.text !== passwordToConfirm) {
 
                 createWalletError = "Wrong password";
@@ -39,17 +41,30 @@ AbstractPage {
             }
 
             var res = wallet_handler.createWallet(walletFileToCreate, passwordToConfirm, seedToUse);
-            if ( res ) {
+            switch(res) {
+                case 0:
 
-                settings.wallet_file = walletFileToCreate;
-                settings.wallet_password = passwordToConfirm;
-                goToNext();
+                    settings.wallet_file = walletFileToCreate;
+                    settings.wallet_password = passwordToConfirm;
+                    goToNext();
+                    return;
 
+//                    break;
+                case 1:
+                    createWalletError = "File error : Invalid wallet name or path."
+                    break;
+                case 2:
+                    createWalletError = "Password error (too short ?)."
+                    break;
+                case 3:
+                    createWalletError = "Invalid seed. Please restart with a proper seed."
+                    break;
+                default:
+                    createWalletError = qsTr("Unknown error (%1)").arg(res)
+                    break;
 
             }
-            else {
-                createWalletError = "An error has occurred while creating your Wallet";
-            }
+
 
 
         }

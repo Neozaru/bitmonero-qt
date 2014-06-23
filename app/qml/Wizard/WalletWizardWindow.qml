@@ -50,14 +50,10 @@ ApplicationWindow {
 
         ColumnLayout {
 
-//            anchors.centerIn: parent;
-//            anchors.horizontalCenter: parent.horizontalCenter
-
             Image {
                 id: wizardImage
 
                 anchors.margins: 10
-//                anchors.top: parent.top
                 anchors.left: parent.left
                 anchors.right: parent.right
 
@@ -89,7 +85,10 @@ ApplicationWindow {
 
                 Button {
                     text: "Create new wallet"
-                    onClicked: { myStack.push(createWalletPage) }
+                    onClicked: {
+                        walletSeed = "";
+                        myStack.push(createWalletPage)
+                    }
                 }
 
                 Button {
@@ -182,14 +181,14 @@ ApplicationWindow {
 
         }
 
-
-
     }
+
 
     Component {
         id: successPage
 
         ColumnLayout {
+            id: statusLayout
 
             property int status: 0;
 
@@ -258,11 +257,13 @@ ApplicationWindow {
 
             }
 
+            property string tryWalletError: "";
             ColumnLayout {
                 visible: status == -1
 
                 Label {
-                    text: "An error has occured while opening your Wallet.\nHave you set the right password ?"
+                    text: statusLayout.tryWalletError
+                    color: "red"
                 }
 
                 Button {
@@ -275,34 +276,53 @@ ApplicationWindow {
 
             Component.onCompleted: {
 
-
+                status = 0;
                 if (!wallet_handler.tryWalletAsync(settings.wallet_file,settings.wallet_password)) {
-                    status = -1
+                    /* Check if status is not already returned. Otherwise return generic error */
+                    if (status == 0) {
+                        statusLayout.tryWalletError = "Unknown error with wallet handler"
+                        status = -1
+                    }
+
                 }
 
-
             }
+
 
             Connections {
                 target: wallet_handler
                 onTryWalletResult: {
                     console.log("Try Wallet Result " + result);
 
-                    if ( result ) {
+                    if ( result == 0 ) {
                         status = 1
                         console.log("Try Wallet returned good status")
                     }
                     else {
-                        status = -1
                         console.log("Try Wallet returned BAD status")
+
+                        switch(result) {
+                            case 1:
+                                statusLayout.tryWalletError = "File error : Invalid wallet name or path."
+                                break;
+                            case 2:
+                                statusLayout.tryWalletError = "Error : Wrong password"
+                                break;
+                            default:
+                                statusLayout.tryWalletError = qsTr("Unknown error (%1)").arg(createWalletError)
+                                break;
+
+                        }
+
+                        status = -1
                         /* Rollback configuration */
                         settings.wallet_file = "";
                         settings.wallet_password = "";
                     }
+
                 }
 
             }
-
 
 
         }
@@ -311,7 +331,6 @@ ApplicationWindow {
 
     onWizardSuccess: {
         visible = false; Qt.quit()
-
     }
 
 

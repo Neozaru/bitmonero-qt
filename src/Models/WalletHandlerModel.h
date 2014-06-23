@@ -18,7 +18,7 @@ public:
     WalletHandlerModel();
 
 
-    Q_INVOKABLE bool createWallet(const QString& pFile, const QString& pPassword, const QString& pSeed);
+    Q_INVOKABLE int createWallet(const QString& pFile, const QString& pPassword, const QString& pSeed);
 
     Q_INVOKABLE bool tryWalletAsync(const QString& pFile, const QString& pPassword);
 
@@ -73,7 +73,7 @@ public slots:
     }
 
 signals:
-    void tryWalletResult(bool result);
+    void tryWalletResult(int result);
 
     void defaultWalletLocationChanged(QString arg);
 

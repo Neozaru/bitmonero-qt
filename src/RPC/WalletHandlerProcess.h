@@ -47,7 +47,7 @@ public:
 
 public slots:
 
-    bool createWallet(const QString& pFile, const QString& pPassword, const QString& pSeed);
+    int createWallet(const QString& pFile, const QString& pPassword, const QString& pSeed);
 
     bool tryWalletAsync(const QString& pFile, const QString& pPassword);
 
@@ -66,7 +66,7 @@ private slots:
 
 signals:
 
-    void tryWalletResult(bool result);
+    void tryWalletResult(int result);
     void lastFoundWalletsChanged(const QList<QObject*> found_wallets);
 
 private:

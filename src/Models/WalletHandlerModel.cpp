@@ -9,7 +9,7 @@ WalletHandlerModel::WalletHandlerModel()
 
 
 
-bool WalletHandlerModel::createWallet(const QString& pFile, const QString& pPassword, const QString& pSeed)
+int WalletHandlerModel::createWallet(const QString& pFile, const QString& pPassword, const QString& pSeed)
 {
     return wallet_handler_interface->createWallet(pFile, pPassword, pSeed);
 }

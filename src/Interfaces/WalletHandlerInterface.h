@@ -19,8 +19,14 @@ public:
 
     virtual ~WalletHandlerInterface() {}
 
-
-    virtual bool createWallet(const QString& pFile, const QString& pPassword, const QString& pSeed) = 0;
+    /**
+     * @brief createWallet
+     * @param pFile
+     * @param pPassword
+     * @param pSeed
+     * @return 0 if successful, 1 if file problem, 2 if password problem, 3 if seed problem, -1 otherwise.
+     */
+    virtual int createWallet(const QString& pFile, const QString& pPassword, const QString& pSeed) = 0;
 
     virtual bool tryWalletAsync(const QString& pFile, const QString& pPassword) = 0;
 
@@ -32,8 +38,11 @@ public:
     virtual int enable() = 0;
 
 
-
-    void onTryWalletResult(bool pResult) {
+    /**
+     * @brief onTryWalletResult
+     * @param pResult 0 if successful, 1 is wallet file error, 2 if password error, -1 otherwise
+     */
+    void onTryWalletResult(int pResult) {
         emit wallet_handler_model.tryWalletResult(pResult);
     }
 

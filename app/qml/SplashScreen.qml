@@ -122,7 +122,7 @@ ApplicationWindow {
 
 
         Label {
-            text: "Refreshing wallet..."
+            text: "Loading Monero Core..."
 
             anchors.right: parent.right
             anchors.bottom: parent.bottom

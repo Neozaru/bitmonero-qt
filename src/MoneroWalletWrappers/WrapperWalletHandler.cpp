@@ -18,7 +18,11 @@ int WrapperWalletHandler::enable() {
     return 0;
 }
 
-bool WrapperWalletHandler::createWallet(const QString& pFile, const QString& pPassword, const QString& pSeed) {
+int WrapperWalletHandler::createWallet(const QString& pFile, const QString& pPassword, const QString& pSeed) {
+
+    if (pPassword.isEmpty()) {
+        return 2;
+    }
 
     try {
         /* Check if seed could be placed in a safe memory place ? */
@@ -36,15 +40,15 @@ bool WrapperWalletHandler::createWallet(const QString& pFile, const QString& pPa
             this->onSeedGenerated(QString::fromStdString(lSeed));
         }
 
-        return true;
+        return 0;
     }
     catch(Monero::Errors::NotWritableFile e) {
         qWarning() << "Exception : Not writable file";
-        return false;
+        return 1;
     }
     catch(Monero::Errors::InvalidSeed e) {
         qWarning() << "Exception : Invalid seed" << "(" << pSeed << ")";
-        return false;
+        return 3;
     }
 }
 
@@ -59,7 +63,7 @@ bool WrapperWalletHandler::tryWalletAsync(const QString& pFile, const QString& p
 
             lWallet->connect(lMoneroAddressPort.toStdString());
 
-            this->onTryWalletResult( lWallet->refresh() );
+            this->onTryWalletResult( lWallet->refresh() ? 0 : -1 );
             lWallet->store();
             delete lWallet;
         });
@@ -67,15 +71,15 @@ bool WrapperWalletHandler::tryWalletAsync(const QString& pFile, const QString& p
         return true;
     }
     catch(Monero::Errors::InvalidFile e) {
-        this->onTryWalletResult(false);
+        this->onTryWalletResult(1);
         return false;
     }
     catch(Monero::Errors::InvalidPassword e) {
-        this->onTryWalletResult(false);
+        this->onTryWalletResult(2);
         return false;
     }
     catch(const std::exception& e) {
-        this->onTryWalletResult(false);
+        this->onTryWalletResult(-1);
         return false;
     }
 
