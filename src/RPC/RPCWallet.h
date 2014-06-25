@@ -25,7 +25,7 @@ public:
     RPCWallet(WalletModel& pModel, const WalletSettings& pSettings);
     ~RPCWallet();
 
-    void transfer(unsigned long long pAmount, const QString& pAddress, unsigned long long pFee, const QString& pPaymentId);
+    void transfer(unsigned long long pAmount, const QString& pAddress, unsigned long long pFee, const QString& pPaymentId, int pMixinCount);
     void store();
     void getPayments(const QString& pPaymentId);
 

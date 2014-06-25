@@ -117,6 +117,7 @@ GuardedColumnLayout {
     }
 
     property bool amountUsesComma: inputAmount.text.indexOf(",") != -1
+    property int defaultMixinCount: 0
 
     Button {
         id: buttonSend
@@ -139,6 +140,9 @@ GuardedColumnLayout {
                     }
                     else {
 
+                        /* Critical part (type conversion, very much if, wow) */
+                        var address = inputAddress.text
+
                         var text_amount = inputAmount.text
                         var parsed_amount = parseFloat(inputAmount.text)
                         var amount_mini = Math.pow(10,12) * parsed_amount
@@ -146,14 +150,20 @@ GuardedColumnLayout {
                         var text_fees = customFeesInput.text
                         var parsed_fees = parseFloat(customFeesInput.text)
                         var fees_mini = Math.pow(10,12) * parsed_fees
+                        var fees_to_apply = (mainWindow.advancedInterface && customFeesCheckbox.checked && customFeesInput.acceptableInput) ? fees_mini : defaultFee
 
-//                        var fees = (customFeesCheckbox.checked && customFeesInput.acceptableInput) ? (Math.pow(10,12) * parseFloat(customFeesInput.text)) : transferLayout.defaultFee
+                        var payment_id = definePaymentIdCheckbox ? inputPaymentId.text : ""
 
-                        var fees_to_apply = (customFeesCheckbox.checked && customFeesInput.acceptableInput) ? fees_mini : defaultFee
+                        var mixin_count = (mainWindow.advancedInterface && customMixinCountCheckbox.checked) ? customMixinCountSlider.value : defaultMixinCount;
+
+
                         console.log("Transfer")
+                        console.log("Address : " + address);
                         console.log("Amount :" + amount_mini + "(" + parsed_amount + ")")
                         console.log("Fees : " + fees_mini + "("+parsed_fees+") --> " + fees_to_apply)
-                        var res = wallet.transfer(amount_mini, inputAddress.text, fees_to_apply, definePaymentIdCheckbox ? inputPaymentId.text : "");
+                        console.log("Payment ID : " + payment_id);
+                        console.log("Mixin count : " + mixin_count);
+                        var res = wallet.transfer(amount_mini, address, fees_to_apply, payment_id, mixin_count);
                         lastTransactionLayout.visible = false;
                     }
 
@@ -178,9 +188,12 @@ GuardedColumnLayout {
     }
 
     ColumnLayout {
+        id: customFeeLayout
+
+        visible: mainWindow.advancedInterface
+
         anchors.top: buttonSend.bottom
         anchors.topMargin: 5
-
         anchors.left: parent.left
         anchors.right: parent.right
 
@@ -221,6 +234,58 @@ GuardedColumnLayout {
         }
     }
 
+    ColumnLayout {
+        id: customMixinCountLayout
+
+        visible: mainWindow.advancedInterface
+
+        anchors.top: customFeeLayout.bottom
+        anchors.topMargin: 15
+        anchors.left: parent.left
+        anchors.right: parent.right
+
+        CheckBox {
+            id: customMixinCountCheckbox
+
+            text: "Custom mixin count"
+        }
+
+        RowLayout {
+            visible: customMixinCountCheckbox.checked
+
+            anchors.left: parent.left
+            anchors.right: parent.horizontalCenter
+
+            Label {
+                id: customMixinCountLabel
+
+                text: "Mixin count :"
+            }
+
+            Slider {
+                id: customMixinCountSlider
+
+                anchors.left: customMixinCountLabel.right
+                anchors.leftMargin: 3
+
+                anchors.right: parent.horizontalCenter
+
+                stepSize: 1
+                minimumValue: 0
+                maximumValue: 5
+
+            }
+
+            Label {
+                text: customMixinCountSlider.value
+
+                anchors.left: customMixinCountSlider.right
+                anchors.leftMargin: 3
+            }
+
+
+        }
+    }
 
     ColumnLayout {
         id: lastTransactionLayout

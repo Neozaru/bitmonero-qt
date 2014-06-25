@@ -42,8 +42,7 @@ ColumnLayout {
         CheckBox {
             id: advancedViewCheckbox
 
-//            anchors.cop
-
+            visible: mainWindow.advancedInterface
             text: "Detailled transfers"
         }
 
@@ -64,8 +63,7 @@ ColumnLayout {
         alternatingRowColors: true
 
 
-//        model: wallet.transactions
-        model: advancedViewCheckbox.checked ? wallet.transactions : wallet.aggregated_transactions
+        model: (mainWindow.advancedInterface && advancedViewCheckbox.checked) ? wallet.transactions : wallet.aggregated_transactions
         TableViewColumn {
 
             role: "type";

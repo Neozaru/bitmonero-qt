@@ -64,13 +64,15 @@ void WrapperWallet::getAddress()
     this->onAddressUpdated( QString::fromStdString(wallet->getAddress()) );
 }
 
-void WrapperWallet::transfer(unsigned long long pAmount, const QString& pAddress, unsigned long long pFee, const QString& pPaymentId) {
+void WrapperWallet::transfer(unsigned long long pAmount, const QString& pAddress, unsigned long long pFee, const QString& pPaymentId, int pMixinCount) {
 
-    QtConcurrent::run([this, pAmount, pAddress, pFee, pPaymentId]() {
+    QtConcurrent::run([this, pAmount, pAddress, pFee, pPaymentId, pMixinCount]() {
         qDebug() << "Performing transfer of " << QString::number(pAmount) << " with fees : " << QString::number(pFee);
 
         try {
-            const std::string& lTxHash = wallet->transferMini(pAddress.toStdString(), pAmount, pFee, pPaymentId.toStdString());
+//            const std::string& lTxHash = wallet->transferMini(pAddress.toStdString(), pAmount, pFee, pPaymentId.toStdString());
+            /* TODO : Check int -> size_t conversion behaviour */
+            const std::string& lTxHash = wallet->transferMini(pAddress.toStdString(), pAmount, pMixinCount, 0, pFee, pPaymentId.toStdString());
 
             this->onTransferSuccessful(QString::fromStdString(lTxHash), pAmount, pAddress, pFee);
 

@@ -18,7 +18,7 @@ public:
 
     void getBalance();
     void getAddress();
-    void transfer(unsigned long long pAmount, const QString& pAddress, unsigned long long pFee, const QString& pPaymentId = "");
+    void transfer(unsigned long long pAmount, const QString& pAddress, unsigned long long pFee, const QString& pPaymentId, int pMixinCount);
     void getPayments(const QString& pPaymentId);
     void getIncomingTransfers(const QString& pFilter = "all");
     void store();

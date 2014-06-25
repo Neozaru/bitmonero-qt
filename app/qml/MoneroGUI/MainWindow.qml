@@ -12,6 +12,8 @@ ApplicationWindow {
     visible: false
     title: "Monero Wallet"
 
+    property bool advancedInterface: false
+
 
     onClosing: {
         Qt.quit();
@@ -68,8 +70,11 @@ ApplicationWindow {
 
                 text: "Advanced Interface"
 
-                checked: false
-                enabled: false
+                checked: mainWindow.advancedInterface
+                onCheckedChanged: {
+                    mainWindow.advancedInterface = checked;
+                }
+
             }
         }
     }

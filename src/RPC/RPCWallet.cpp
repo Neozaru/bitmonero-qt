@@ -44,7 +44,7 @@ int RPCWallet::enable() {
 }
 
 
-void RPCWallet::transfer(unsigned long long pAmount, const QString& pAddress, unsigned long long pFee, const QString& pPaymentId) {
+void RPCWallet::transfer(unsigned long long pAmount, const QString& pAddress, unsigned long long pFee, const QString& pPaymentId, int pMixinCount) {
     QJsonObject lParams;
     QJsonArray lDests;
 
@@ -61,8 +61,9 @@ void RPCWallet::transfer(unsigned long long pAmount, const QString& pAddress, un
     lParams["fee"] = QJsonValue::fromVariant(QVariant::fromValue(pFee >= 5000000000uLL ? pFee : 5000000000uLL));
     lParams["payment_id"] = pPaymentId;
 
+    lParams["mixin"] = pMixinCount;
+
     /* TODO */
-    lParams["mixin"] = 0;
     lParams["unlock_time"] = 0;
     /**/
 
