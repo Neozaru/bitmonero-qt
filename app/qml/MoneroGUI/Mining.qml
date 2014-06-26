@@ -72,7 +72,7 @@ GuardedColumnLayout {
         enabled: !toggleMiningSwitch.checked
 
         property int threads_count: 1
-        property int max_threads: 32
+        property int max_threads: mainWindow.advancedInterface ? 32 : 4
         property int threads_treshold: 4
 
         Label {

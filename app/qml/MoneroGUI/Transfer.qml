@@ -2,7 +2,7 @@ import QtQuick 2.2
 import QtQuick.Controls 1.1
 import QtQuick.Controls.Styles 1.1
 import QtQuick.Layouts 1.0
-import QtQuick.Dialogs 1.0
+import QtQuick.Dialogs 1.1
 
 import "Common"
 import "qrc:/qml/Utils"
@@ -11,6 +11,8 @@ GuardedColumnLayout {
     id: transferLayout
 
     property string lastTransferError: ""
+
+    property bool askConfirmation: true
     property real defaultFee: 5000000000
 
     anchors.fill: parent
@@ -163,8 +165,21 @@ GuardedColumnLayout {
                         console.log("Fees : " + fees_mini + "("+parsed_fees+") --> " + fees_to_apply)
                         console.log("Payment ID : " + payment_id);
                         console.log("Mixin count : " + mixin_count);
-                        var res = wallet.transfer(amount_mini, address, fees_to_apply, payment_id, mixin_count);
-                        lastTransactionLayout.visible = false;
+
+
+
+                        var transferCallback = function() {
+                            performTransfer(amount_mini, address, fees_to_apply, payment_id, mixin_count);
+                        }
+
+                        if (askConfirmation) {
+                            transferConfirmDialog.setCallback(transferCallback);
+                            transferConfirmDialog.open()
+                        }
+                        else {
+                            transferCallback();
+                        }
+
                     }
 
         style: ButtonStyle {
@@ -176,6 +191,26 @@ GuardedColumnLayout {
 
         }
 
+    }
+
+    ConfirmTransferDialog {
+        id: transferConfirmDialog
+
+        width: 100
+        height: 100
+
+        address: inputAddress.text
+        amount: parseFloat(inputAmount.text)
+        fee: customFeesCheckbox.checked ? parseFloat(customFeesInput.text) : (Math.pow(10,-12)*defaultFee)
+        payment_id: inputPaymentId.text
+
+    }
+
+    function performTransfer(amount_mini, address, fees_to_apply, payment_id, mixin_count) {
+
+        console.log("Performing transfer...")
+        var res = wallet.transfer(amount_mini, address, fees_to_apply, payment_id, mixin_count);
+        lastTransactionLayout.visible = false;
     }
 
     Label {
