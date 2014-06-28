@@ -38,7 +38,7 @@ Recent changes
 
 Limitations
 -----------
-* Transactions history is not (yet) available.
+* Transactions history with user-readable display is not (yet) available.
 * Mining interface can get confused if mining is started from somewhere else
 
 
