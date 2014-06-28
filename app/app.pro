@@ -23,6 +23,14 @@ CONFIG += c++11
 SOURCES += main.cpp \
     MoneroGUI.cpp
 
+lupdate_only {
+SOURCES = qml/*.qml \
+          qml/Utils/*.qml \
+          qml/Wizard/*.qml \
+          qml/MoneroGUI/*.qml \
+          qml/MoneroGUI/Common/*.qml
+}
+
 HEADERS += MoneroGUI.h
 
 RESOURCES += qml.qrc
