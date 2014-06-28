@@ -31,6 +31,7 @@ public:
 
 private:
 
+    const WalletSettings& settings;
     QProcess main_process;
 };
 

@@ -110,6 +110,10 @@ public:
         return spawn_daemon;
     }
 
+    int getDaemonKillDelay() const {
+        return daemon_kill_delay;
+    }
+
 
     const QString& getWalletInterface() const {
         return wallet_interface;
@@ -184,7 +188,7 @@ private:
 
     bool spawn_wallet;
     bool spawn_daemon;
-
+    int daemon_kill_delay;
 
     QString wallet_interface;
     QString wallet_handler_interface;

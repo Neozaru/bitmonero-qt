@@ -5,6 +5,7 @@
 #include "Utils.h"
 
 DaemonHandler::DaemonHandler(const WalletSettings& pSettings)
+    : settings(pSettings)
 {
 
     /* Try to get bitmonerod program from configuration */
@@ -45,7 +46,7 @@ DaemonHandler::~DaemonHandler() {
 
         if (terminateDaemon()) {
             qWarning() << "Ending DAEMON process...";
-            if (!main_process.waitForFinished(15000)) {
+            if (!main_process.waitForFinished(settings.getDaemonKillDelay() * 1000 )) {
 
                 qWarning() << "DAEMON took too long to close. KILL";
                 main_process.kill();

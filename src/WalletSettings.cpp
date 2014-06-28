@@ -34,10 +34,13 @@ WalletSettings::WalletSettings(const QString& pConfigFile)
 
     spawn_wallet = settings.value("spawn_wallet", true).toBool();
     spawn_daemon = settings.value("spawn_daemon", true).toBool();
+    daemon_kill_delay = settings.value("daemon_kill_delay", 15).toInt();
 
     wallet_interface = settings.value("wallet_interface", "RPC").toString();
     wallet_handler_interface = settings.value("wallet_handler_interface", "RPC").toString();
     miner_interface = settings.value("miner_interface", "RPC").toString();
+
+
 }
 
 
