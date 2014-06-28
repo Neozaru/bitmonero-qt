@@ -5,6 +5,7 @@ SUBDIRS = \
     app \
 #    tests
 
+RC_ICONS = app/qml/res/MoneroWhite.ico
 
 app.depends = src
 #RESOURCES += qml.qrc
