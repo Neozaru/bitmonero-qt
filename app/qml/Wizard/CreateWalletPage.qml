@@ -22,13 +22,13 @@ AbstractPage {
             Label {
                 id: newWalletNameLabel
 
-                text: "Choose the name of your wallet"
+                text:  qsTr("Choose the name of your wallet")
             }
 
             TextField {
                 id: newWalletNameInput
 
-                placeholderText: "Name of your Wallet"
+                placeholderText:  qsTr("Name of your Wallet", "wallet name placeholder")
                 textColor: if (acceptableInput) { "green" } else { "red" }
                 validator: RegExpValidator { regExp: /[a-zA-Z0-9]+/ }
 
@@ -40,13 +40,13 @@ AbstractPage {
             Label {
                 id: newWalletPasswordLabel
 
-                text: "Choose password for your wallet (4 chars min)"
+                text:  qsTr("Choose password for your wallet (4 chars min)")
             }
 
             PasswordTextField {
                 id: newWalletPasswordInput
 
-                placeholderText: "Password for your Wallet"
+                placeholderText:  qsTr("Password for your Wallet", "wallet password placeholder")
 
             }
 
@@ -57,7 +57,7 @@ AbstractPage {
             CheckBox {
                 id: useDefaultLocationCheckbox
 
-                text: "Use default Wallet location"
+                text:  qsTr("Use default Wallet location")
                 checked: true
             }
 
@@ -71,7 +71,7 @@ AbstractPage {
         }
 
         Button {
-            text: "Create Wallet"
+            text:  qsTr("Create Wallet", "create wallet button")
             onClicked: if (newWalletNameInput.acceptableInput && newWalletPasswordInput.acceptableInput) {
 
                            walletPasswordSet(newWalletPasswordInput.text)

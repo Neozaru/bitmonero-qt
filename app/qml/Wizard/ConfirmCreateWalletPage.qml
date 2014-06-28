@@ -17,26 +17,26 @@ AbstractPage {
 
     Label {
 
-        text: "Please confirm your wallet password to continue"
+        text: qsTr("Please confirm your wallet password to continue")
 
     }
 
     PasswordTextField {
         id: passwordConfirmationInput
 
-        placeholderText: "Confirm your password"
+        placeholderText: qsTr("Confirm your password", "confirm password placeholder")
 
     }
 
     Button {
 
-        text: "Confirm password"
+        text: qsTr("Confirm password", "confirm password button")
         onClicked: {
             createWalletError = "";
 
             if (passwordConfirmationInput.text !== passwordToConfirm) {
 
-                createWalletError = "Wrong password";
+                createWalletError = qsTr("Wrong password");
                 return;
             }
 
@@ -51,13 +51,13 @@ AbstractPage {
 
 //                    break;
                 case 1:
-                    createWalletError = "File error : Invalid wallet name or path."
+                    createWalletError =  qsTr("File error : Invalid wallet name or path.")
                     break;
                 case 2:
-                    createWalletError = "Password error (too short ?)."
+                    createWalletError =  qsTr("Password error (too short ?).")
                     break;
                 case 3:
-                    createWalletError = "Invalid seed. Please restart with a proper seed."
+                    createWalletError =  qsTr("Invalid seed. Please restart with a proper seed.")
                     break;
                 default:
                     createWalletError = qsTr("Unknown error (%1)").arg(res)

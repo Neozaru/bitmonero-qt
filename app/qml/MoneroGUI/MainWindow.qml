@@ -10,7 +10,7 @@ ApplicationWindow {
     id: mainWindow
 
     visible: false
-    title: "Monero Wallet"
+    title: qsTr("Monero Wallet", "window title")
 
     property bool advancedInterface: false
 
@@ -88,7 +88,7 @@ ApplicationWindow {
                 anchors.left: parent.left
 
                 Label {
-                    text: "Balance : "
+                    text: qsTr("Balance") + " : "
                 }
 
                 Balance {
@@ -121,12 +121,12 @@ ApplicationWindow {
 
                     anchors.horizontalCenter: syncStatusProgressBar.horizontalCenter
 
-                    text: "Syncing : " + (syncingStatusLayout.syncing_progress_user == -1 ? "unknown" : (syncingStatusLayout.syncing_progress_user) + "%")
+                    text: qsTr("Syncing : %1").arg(syncingStatusLayout.syncing_progress_user == -1 ? qsTr("unknown","syncing status unknown") : (syncingStatusLayout.syncing_progress_user) + "%")
                 }
 
                 Label {
                     visible: false
-                    text: "(" + monero.blockchain_height + " blks)";
+                    text: "(" + qsTr("%L1 blks").arg(monero.blockchain_height) + ")";
                 }
 
 
@@ -136,7 +136,7 @@ ApplicationWindow {
                 anchors.right: parent.right
 
                 Label {
-                    text: "Mining : "
+                    text: qsTr("Mining", "mining status") + " : "
                 }
 
 
@@ -163,8 +163,8 @@ ApplicationWindow {
     TabView {
         id:frame
 
-        property string unavailableWalletErrorMessage: wallet.ready ? "" : "Your Wallet is unreachable. Wait a few seconds or restart Monero Wallet"
-        property string unavailableMinerErrorMessage: miner.ready ? "" : "Error : Your Miner is unreachable. Wait for sync or restart Monero Wallet"
+        property string unavailableWalletErrorMessage: wallet.ready ? "" : qsTr("Your Wallet is unreachable. Wait a few seconds or restart Monero Wallet")
+        property string unavailableMinerErrorMessage: miner.ready ? "" : qsTr("Your Miner is unreachable. Wait for sync or restart Monero Wallet")
 
         anchors.fill: parent
 
@@ -175,7 +175,7 @@ ApplicationWindow {
 
 
 
-            title: "Overview"
+            title: qsTr("Overview", "overview tab")
             Overview {
                 enabled: wallet.ready
                 errorMessage: frame.unavailableWalletErrorMessage
@@ -184,7 +184,7 @@ ApplicationWindow {
 
         }
         Tab {
-            title: "Transfer"
+            title: qsTr("Transfer", "transfer tab")
             Transfer {
                 enabled: wallet.ready
                 errorMessage: frame.unavailableWalletErrorMessage
@@ -193,14 +193,14 @@ ApplicationWindow {
         }
 
         Tab {
-            title: "History (beta)"
+            title: qsTr("History", "history tab") + " (beta)"
             History {}
         }
 
 
         Tab {
             id: miningPage
-            title: "Mining"
+            title: qsTr("Mining", "mining tab")
             Mining {
                 enabled: miner.ready
                 errorMessage: frame.unavailableMinerErrorMessage

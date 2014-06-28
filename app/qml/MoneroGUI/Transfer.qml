@@ -16,8 +16,7 @@ GuardedColumnLayout {
     property real defaultFee: 5000000000
 
     anchors.fill: parent
-//    anchors.margins: 10
-//    anchors.top: parent.top
+
 
     Connections {
         target: wallet
@@ -25,7 +24,7 @@ GuardedColumnLayout {
             console.log("TRANSFER ERROR")
             var additional_info = "";
             if ( error_message === "transaction was rejected by daemon" ) {
-                additional_info = "Please wait for network syncing.";
+                additional_info = qsTr("Please wait for network syncing.");
             }
 
             transferLayout.lastTransferError = "["+error_message+"] " + additional_info;
@@ -39,7 +38,7 @@ GuardedColumnLayout {
         anchors.top: parent.top
         anchors.topMargin: 20
 
-        text: "Paste recipient address"
+        text: qsTr("Paste recipient address")
         onClicked: { inputAddress.text = ""; inputAddress.paste() }
     }
 
@@ -50,7 +49,7 @@ GuardedColumnLayout {
         anchors.left: parent.left
         anchors.right: parent.right
 
-        placeholderText: "Recipient address"
+        placeholderText: qsTr("Recipient address")
 
         focus: true;
 
@@ -64,7 +63,7 @@ GuardedColumnLayout {
         anchors.top: inputAddress.bottom
         anchors.topMargin: 10
 
-        text: "Define a payment ID for this transfer (useful for services/exchanges)"
+        text: qsTr("Define a payment ID for this transfer (useful for services/exchanges)")
         checked: false
     }
 
@@ -80,7 +79,7 @@ GuardedColumnLayout {
         Button {
             id: pastePaymentIDButton
 
-            text: "Paste"
+            text: qsTr("Paste")
             onClicked: { inputPaymentId.text = ""; inputPaymentId.paste() }
         }
 
@@ -90,7 +89,7 @@ GuardedColumnLayout {
             anchors.left: pastePaymentIDButton.right
             anchors.right: parent.right
 
-            placeholderText: "Payment ID"
+            placeholderText: qsTr("Payment ID")
 
             validator: RegExpValidator{ regExp: /[a-zA-Z0-9]{64}/ }
             textColor: acceptableInput ? "green" : "red"
@@ -132,13 +131,13 @@ GuardedColumnLayout {
         enabled: inputAmount.acceptableInput && inputAddress.acceptableInput && !amountUsesComma
 
         onClicked:  if (!inputAmount.acceptableInput && parseFloat(inputAmount) !== 0 && !amountUsesComma) {
-                        lastTransferError = "Please enter an amount to send";
+                        lastTransferError = qsTr("Please enter an amount to send");
                     }
                     else if (!inputAddress.acceptableInput) {
-                        lastTransferError = "Please enter a recipient address";
+                        lastTransferError = qsTr("Please enter a recipient address");
                     }
                     else if (inputPaymentId.text.length != 0 && !inputPaymentId.acceptableInput) {
-                        lastTransferError = "Please enter a valid payment ID (64 chars) or disable it";
+                        lastTransferError = qsTr("Please enter a valid payment ID (64 chars) or disable it");
                     }
                     else {
 
@@ -186,7 +185,7 @@ GuardedColumnLayout {
 
             label: Label {
                 font.pixelSize: 18
-                text: "SEND"
+                text: qsTr("SEND", "transfer 'send' button")
             }
 
         }
@@ -218,7 +217,7 @@ GuardedColumnLayout {
         anchors.leftMargin: 10
         anchors.verticalCenter: buttonSend.verticalCenter
 
-        text: ( inputAmount.text.length > 0 ? parseFloat(inputAmount.text) + " XMR" : "" ) + ( amountUsesComma ? " PLEASE USE '.' (dot) instead of ',' (comma) for decimals" : "")
+        text: ( inputAmount.text.length > 0 ? parseFloat(inputAmount.text) + " XMR" : "" ) + ( amountUsesComma ? qsTr(" PLEASE USE '.' (dot) instead of ',' (comma) for decimals") : "")
         color: amountUsesComma ? "red" : "green"
     }
 
@@ -235,7 +234,7 @@ GuardedColumnLayout {
         CheckBox {
             id: customFeesCheckbox
 
-            text: "Custom network fee"
+            text: qsTr("Custom network fee", "custom fee checkbox")
         }
 
         RowLayout {
@@ -247,7 +246,7 @@ GuardedColumnLayout {
             Label {
                 id: customFeesLabel
 
-                text: "Fee :"
+                text: qsTr("Fee", "custom fee label") + " : "
             }
 
             TextField {
@@ -282,7 +281,7 @@ GuardedColumnLayout {
         CheckBox {
             id: customMixinCountCheckbox
 
-            text: "Custom mixin count"
+            text: qsTr("Custom mixin count")
         }
 
         RowLayout {
@@ -294,7 +293,7 @@ GuardedColumnLayout {
             Label {
                 id: customMixinCountLabel
 
-                text: "Mixin count :"
+                text: qsTr("Mixin count", "custom mixin count label") + " : "
             }
 
             Slider {
@@ -327,14 +326,14 @@ GuardedColumnLayout {
         visible: false;
 
         Label {
-            text: "Transaction successful :"
+            text: qsTr("Transaction successful") + " : "
             color: "green"
         }
 
         RowLayout {
 
             Button {
-                text: "Copy Hash"
+                text: qsTr("Copy Hash")
                 onClicked: { lastTransactionHash.selectAll(); lastTransactionHash.copy(); lastTransactionHash.select(0,0) }
             }
 

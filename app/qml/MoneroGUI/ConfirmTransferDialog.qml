@@ -11,9 +11,9 @@ MessageDialog {
 
     property var callback;
 
-    title: "Confirm transaction."
+    title: qsTr("Confirm transaction")
 
-    text: qsTr("You are about to send %L1 XMR to\n%2.\n\nOk to confirm transfer.").arg(amount).arg(address)
+    text: qsTr("You are about to send %L1 XMR to").arg(amount) + "\n" + address+"." + "\n\n" + qsTr("Ok to confirm transfer.")
     detailedText: qsTr("Network fee : %L1 XMR").arg(fee)
 
     standardButtons: StandardButton.Abort | StandardButton.Ok

@@ -29,14 +29,14 @@ AbstractPage {
                 id: useDefaultImportLocationCheckbox
                 anchors.bottomMargin: 5
 
-                text: "Use default Wallet location"
+                text:  qsTr("Use default Wallet location", "wallet location checkbox")
                 checked: true
             }
 
 
             FileDialog {
                 id: fileDialog
-                title: "Please choose a file"
+                title:  qsTr("Please choose a file", "file chooser title")
                 selectFolder: true
                 selectExisting: true
 
@@ -65,7 +65,7 @@ AbstractPage {
                 Label {
                     id: walletFromFileLabel
 
-                    text: "Choose your wallet file (can be located in .bitmonero/)"
+                    text:  qsTr("Choose your wallet file (can be located in %1)").arg(".bitmonero/")
                 }
 
                 RowLayout {
@@ -76,7 +76,7 @@ AbstractPage {
                     Button {
                         id: browserFolderButton
 
-                        text: "Browse"
+                        text: qsTr("Browse", "Exec file chooser")
 
                         onClicked: fileDialog.visible = true
                     }
@@ -113,7 +113,7 @@ AbstractPage {
             TableViewColumn {
 
                 role: "name";
-                title: "Name";
+                title: qsTr("Name", "wallet list name");
                 width: 120
 
             }
@@ -121,13 +121,13 @@ AbstractPage {
             TableViewColumn {
 
                 role: "status" ;
-                title: "Status" ;
+                title: qsTr("Status", "wallet list status");
                 width: 60;
 
                 delegate: Text {
                     property bool sane: parseInt(styleData.value) === 0;
 
-                    text: sane ? "OK" : "To recover"
+                    text: sane ? qsTr("OK", "wallet status OK") : qsTr("To recover", "wallet status To recover")
                     color: sane ? "green" : "orange"
                 }
             }
@@ -135,7 +135,7 @@ AbstractPage {
             TableViewColumn{
 
                 role: "address";
-                title: "Address" ;
+                title: qsTr("Address", "wallet list address");
                 width: 400;
 
             }
@@ -166,14 +166,14 @@ AbstractPage {
             Label {
                 id: walletPasswordLabel
 
-                text: "Password of your existing wallet"
+                text: qsTr("Password of your existing wallet", "existing password label")
 
             }
 
             PasswordTextField {
                 id: walletPasswordInput
 
-                placeholderText: "Password of your Wallet"
+                placeholderText: qsTr("Password of your Wallet", "existing password placeholder")
             }
 
         }
@@ -189,7 +189,7 @@ AbstractPage {
             anchors.top: walletPasswordLayout.bottom
             anchors.topMargin: 10
 
-            text: "Import Wallet"
+            text: qsTr("Import Wallet", "confirm import wallet button")
             action: importWalletAction
 
         }
@@ -207,7 +207,7 @@ AbstractPage {
                     console.log("Row : " + walletsTable.currentRow)
 
                     if (walletsTable.currentRow < 0) {
-                        importWalletError = "No wallet selected"
+                        importWalletError = qsTr("No wallet selected", "error no wallet selected")
                         return;
                     }
 

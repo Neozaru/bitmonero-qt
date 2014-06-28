@@ -9,7 +9,7 @@ ApplicationWindow {
     id: splashScreenContainer
     visible: true
 
-    title: "Monero Wallet"
+    title: qsTr("Monero Wallet", "window title")
     flags: Qt.FramelessWindowHint
 
     property int fixedWidth: 720;
@@ -82,12 +82,6 @@ ApplicationWindow {
                 running: true
             }
 
-//            ProgressBar {
-//               id: splashProgressbar
-
-//               anchors.centerIn: parent
-//               indeterminate: true
-//            }
 
             Label {
                 id: splashPleaseWait
@@ -97,7 +91,7 @@ ApplicationWindow {
 
                 anchors.margins: 10
 
-                text: "Monero Wallet is loading. Please wait."
+                text: qsTr("Monero Wallet is loading. Please wait.")
 
                 font.pixelSize: 16
 
@@ -112,7 +106,7 @@ ApplicationWindow {
                 anchors.margins: 50
                 opacity: 0
 
-                text: "This operation can take minutes if you are importing an old wallet."
+                text: qsTr("This operation can take minutes.")
 
                 font.pixelSize: 14
 
@@ -122,7 +116,7 @@ ApplicationWindow {
 
 
         Label {
-            text: "Loading Monero Core..."
+            text: qsTr("Loading Monero Core...", "loading details")
 
             anchors.right: parent.right
             anchors.bottom: parent.bottom
@@ -139,7 +133,6 @@ ApplicationWindow {
                 }
             }
         }
-
 
 
         //starts the splashScreen

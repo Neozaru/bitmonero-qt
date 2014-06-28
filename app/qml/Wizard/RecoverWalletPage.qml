@@ -14,16 +14,15 @@ AbstractPage {
         anchors.left: parent.left
         anchors.right: parent.right
         anchors.top: parent.top
-//        anchors.fill: parent
         anchors.topMargin: 45
 
         Label {
-            text: "Write or paste your seed in the field above.\nYour seed should be a set of space separated shorts works"
+            text: qsTr("Write or paste your seed in the field above.\nYour seed should be a set of space separated shorts works")
         }
 
         Button {
 
-            text: "Paste seed"
+            text: qsTr("Paste seed")
             onClicked: {
                 seedTextarea.text = "";
                 seedTextarea.paste();
@@ -39,7 +38,7 @@ AbstractPage {
 
 
         Button {
-            text: "Recover"
+            text: qsTr("Recover", "confirm recover wallet button")
             enabled: seedTextarea.text.length > 0
 
             onClicked: {

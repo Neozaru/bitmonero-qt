@@ -8,35 +8,28 @@ AbstractPage {
 
     ColumnLayout {
 
-//        anchors.left: parent.left
-//        anchors.right: parent.right
-//        anchors.top: parent.top
-//        anchors.fill: parent
-        anchors.topMargin: 45
+
+    anchors.topMargin: 45
     anchors.centerIn: parent
 
         Label {
-            text: "Choose an import method.\n Your can either import an existing wallet (file)\nor use a previoulsy generated seed."
+            text:  qsTr("Choose an import method.\n Your can either import an existing wallet (file)\nor use a previoulsy generated seed.")
         }
 
         RowLayout {
 
             Button {
-                text: "Import Local Wallet"
+                text:  qsTr("Import Local Wallet", "import local wallet button")
                 onClicked: goTo(importWalletPage)
             }
 
             Button {
                 enabled: wallet_handler.seed_available
-                text: "Recover from Seed"
+                text:  qsTr("Recover from Seed", "recover wallet button")
                 onClicked: goTo(recoverWalletPage)
             }
 
-//            Component.onCompleted: {
-//                if (!wallet_handler.seed_available) {
-//                    goTo(importWalletPage);
-//                }
-//            }
+
         }
 
     }

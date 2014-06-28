@@ -41,7 +41,7 @@ GuardedColumnLayout {
         }
 
         Label {
-            text: "Toggle mining"
+            text: qsTr("Toggle mining")
 
             font.pixelSize: 16
         }
@@ -76,7 +76,7 @@ GuardedColumnLayout {
         property int threads_treshold: 4
 
         Label {
-            text: "Intensity (Number of threads) :"
+            text: qsTr("Intensity (Number of threads)") + " : "
         }
 
         onThreads_countChanged: {
@@ -144,7 +144,7 @@ GuardedColumnLayout {
 
             visible: miningControlLayout.threads_count > miningControlLayout.threads_treshold
 
-            text: "Intensity is TOO HIGH. Please ensure you know what you are doing."
+            text: qsTr("Intensity is TOO HIGH. Please ensure you know what you are doing.")
             color: "red"
 
         }
@@ -155,7 +155,7 @@ GuardedColumnLayout {
             anchors.top: threadsSliderLayout.bottom
             anchors.topMargin: 20
 
-            text: "Enter mining address manually"
+            text: qsTr("Enter mining address manually")
             checked: miner.address.length == 0
         }
 
@@ -169,7 +169,7 @@ GuardedColumnLayout {
             visible: useAnotherAddressCheckbox.checked
             Button {
                 id: pasteMiningAddressButton
-                text: "Paste"
+                text: qsTr("Paste")
                 onClicked: { miningAddressInput.text = ""; miningAddressInput.paste() }
             }
 
@@ -179,7 +179,7 @@ GuardedColumnLayout {
                 anchors.left: pasteMiningAddressButton.right
                 anchors.right: parent.right
 
-                placeholderText: "Target address for mining"
+                placeholderText: qsTr("Target address for mining")
                 text: miner.address
                 onTextChanged: if (miningAddressInput.acceptableInput || text.length == 0) { miner.address = text }
 
@@ -203,7 +203,7 @@ GuardedColumnLayout {
         Label {
             id: currentHashrateLabel;
 
-            text: "Current hash rate : "
+            text: qsTr("Current hash rate") + " : "
 
             font.pixelSize: 16
         }

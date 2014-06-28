@@ -32,7 +32,7 @@ import QtQuick.Dialogs 1.0
 
     Button {
 
-        text: "<--"
+        text: "<-- " + qsTr("Back", "back button wizard")
 
         onClicked: {
             stack.pop();

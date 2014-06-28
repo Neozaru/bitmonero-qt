@@ -24,7 +24,7 @@ ColumnLayout {
         Button {
             id: copyTxHashButton
 
-            text: "Copy Tx Hash"
+            text: qsTr("Copy transaction Hash")
             enabled: transactionsTable.currentRow >= 0
             onClicked: {
 
@@ -43,7 +43,7 @@ ColumnLayout {
             id: advancedViewCheckbox
 
             visible: mainWindow.advancedInterface
-            text: "Detailled transfers"
+            text: qsTr("Detailled transfers")
         }
 
     }
@@ -67,7 +67,7 @@ ColumnLayout {
         TableViewColumn {
 
             role: "type";
-            title: "Type";
+            title: qsTr("Type", "(tx list)");
             width: 45
 
             delegate: Text {
@@ -77,8 +77,8 @@ ColumnLayout {
 
         TableViewColumn{
 
-            role: "amount" ;
-            title: "Amount" ;
+            role: "amount";
+            title: qsTr("Amount", "(tx list)");
             width: 120;
 
             delegate: Text {
@@ -87,17 +87,17 @@ ColumnLayout {
         }
         TableViewColumn{
             role: "spendable" ;
-            title: "Spendable" ;
+            title: qsTr("Spendable","(tx list)") ;
             width: 40;
 
             delegate: Text {
-                text: styleData.value ? "yes" : "no"
+                text: styleData.value ? qsTr("yes") : qsTr("no")
             }
         }
 
         TableViewColumn {
             role: "id" ;
-            title: "Tx hash" ;
+            title: qsTr("Tx hash", "(tx list)");
             width: 750;
         }
 

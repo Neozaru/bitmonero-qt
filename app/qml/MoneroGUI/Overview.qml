@@ -36,7 +36,7 @@ GuardedColumnLayout {
         anchors.topMargin: overviewImage.height / 2
 
         Label {
-            text: "You have : "
+            text: qsTr("You have", "you have xxx XMR") + " : "
             font.pixelSize: 18
 
         }
@@ -50,7 +50,7 @@ GuardedColumnLayout {
             visible: wallet.balance != wallet.unlocked_balance
 
             Label {
-                text: "Usable right now : "
+                text: qsTr("Usable right now", "you have xxx XMR unlocked") + " : "
             }
 
             Balance {
@@ -60,7 +60,7 @@ GuardedColumnLayout {
         }
 
         Button {
-            text: "Copy balance"
+            text: qsTr("Copy balance")
             /* Hack copy */
             onClicked: { balanceValue.selectAll(); balanceValue.copy(); balanceValue.select(0,0)}
         }
@@ -85,7 +85,7 @@ GuardedColumnLayout {
        anchors.topMargin: 20
 
        Label {
-           text: "Your Monero address : "
+           text: qsTr("Your Monero address") + " : "
 
            font.pixelSize: 18
 
@@ -102,7 +102,7 @@ GuardedColumnLayout {
        }
 
        Button {
-           text: "Copy address"
+           text: qsTr("Copy address")
            /* Hack copy */
            onClicked: { addressValue.selectAll(); addressValue.copy(); addressValue.select(0,0)}
 

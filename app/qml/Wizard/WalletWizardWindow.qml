@@ -67,10 +67,10 @@ ApplicationWindow {
 
                 anchors.horizontalCenter: parent.horizontalCenter
 
-                text: "Welcome to Monero Wallet." + "\n" +
-                       "Your Wallet is not configured yet or it is " + "\n" +
-                       "the first time you launch the application." + "\n" +
-                       "Choose an option below to get started"
+                text: qsTr("Welcome to Monero Wallet.") + "\n" +
+                       qsTr("Your Wallet is not configured yet") + qsTr("or", "wallet not configured <or> first time") + "\n" +
+                       qsTr("it is the first time you launch the application.") + "\n" +
+                       qsTr("Choose an option below to get started")
 
                 font.pixelSize: 14
             }
@@ -84,7 +84,7 @@ ApplicationWindow {
                 anchors.horizontalCenter: parent.horizontalCenter
 
                 Button {
-                    text: "Create new wallet"
+                    text: qsTr("Create new wallet", "create new wallet button")
                     onClicked: {
                         walletSeed = "";
                         myStack.push(createWalletPage)
@@ -92,7 +92,7 @@ ApplicationWindow {
                 }
 
                 Button {
-                    text: "Use existing wallet"
+                    text: qsTr("Use existing wallet", "use existing wallet button")
                     onClicked: { myStack.push(importWalletChoicePage) }
 
                 }
@@ -199,7 +199,7 @@ ApplicationWindow {
                 visible: status == 0
 
                 Label {
-                    text: "Checking configuration...\nThis one-time operation can take several minutes."
+                    text: qsTr("Checking configuration...") + "\n" + qsTr("This one-time operation can take several minutes.")
                 }
 
                 ProgressBar {
@@ -211,21 +211,21 @@ ApplicationWindow {
                 visible: status == 1
 
                 Label {
-                    text: "Monero Wallet was successfully configured.\n You can now start using your Wallet."
+                    text: qsTr("Monero Wallet was successfully configured.") + "\n" + qsTr("You can now start using your Wallet.")
                 }
 
                 ColumnLayout {
                     visible: wallet_handler.ephemeral_seed.length !== 0
 
                     Label {
-                        text: "Please memorize or store this seed in a SAFE place (wallet recovery)"
+                        text: qsTr("Please memorize or store this seed in a SAFE place (wallet recovery)")
 
                         color: "red"
                         font.pixelSize: 12
                     }
 
                     Button {
-                        text: "Copy seed"
+                        text: qsTr("Copy seed")
                         onClicked: {
                             seedDisplayTextArea.selectAll()
                             seedDisplayTextArea.copy();
@@ -247,7 +247,7 @@ ApplicationWindow {
 
 
                 Button {
-                    text: "Go !"
+                    text: qsTr("Go !", "finish wizard")
 
                     onClicked: {
                         wallet_handler.ephemeral_seed = "";
@@ -267,7 +267,7 @@ ApplicationWindow {
                 }
 
                 Button {
-                    text: "Retry"
+                    text: qsTr("Retry", "retry after an error (button)")
 
                     onClicked: { myStack.clear(); myStack.push(myStack.initialItem) }
                 }
@@ -280,7 +280,7 @@ ApplicationWindow {
                 if (!wallet_handler.tryWalletAsync(settings.wallet_file,settings.wallet_password)) {
                     /* Check if status is not already returned. Otherwise return generic error */
                     if (status == 0) {
-                        statusLayout.tryWalletError = "Unknown error with wallet handler"
+                        statusLayout.tryWalletError = qsTr("Unknown error with wallet handler")
                         status = -1
                     }
 
@@ -303,10 +303,10 @@ ApplicationWindow {
 
                         switch(result) {
                             case 1:
-                                statusLayout.tryWalletError = "File error : Invalid wallet name or path."
+                                statusLayout.tryWalletError = qsTr("File error : Invalid wallet name or path.")
                                 break;
                             case 2:
-                                statusLayout.tryWalletError = "Error : Wrong password"
+                                statusLayout.tryWalletError = qsTr("Error : Wrong password")
                                 break;
                             default:
                                 statusLayout.tryWalletError = qsTr("Unknown error (%1)").arg(createWalletError)
