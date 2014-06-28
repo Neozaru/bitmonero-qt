@@ -276,6 +276,7 @@ ApplicationWindow {
 
             Component.onCompleted: {
 
+                connectionWalletHandler.target = wallet_handler;
                 status = 0;
                 if (!wallet_handler.tryWalletAsync(settings.wallet_file,settings.wallet_password)) {
                     /* Check if status is not already returned. Otherwise return generic error */
@@ -289,10 +290,14 @@ ApplicationWindow {
             }
 
 
+
             Connections {
-                target: wallet_handler
+                id: connectionWalletHandler
+                target: null
                 onTryWalletResult: {
                     console.log("Try Wallet Result " + result);
+
+                    connectionWalletHandler.target = null;
 
                     if ( result == 0 ) {
                         status = 1
@@ -330,7 +335,9 @@ ApplicationWindow {
 
 
     onWizardSuccess: {
-        visible = false; Qt.quit()
+        visible = false;
+        application.notifyWizardSuccess();
+//        Qt.quit();
     }
 
 

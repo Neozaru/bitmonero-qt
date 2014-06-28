@@ -3,13 +3,12 @@
 
 #include <QObject>
 #include <QDir>
+#include <QDebug>
 
 #include "Models/WalletHandlerModel.h"
 
 class WalletHandlerInterface : public QObject {
-
     Q_OBJECT
-
 public:
 
     WalletHandlerInterface(WalletHandlerModel& pModel) : wallet_handler_model(pModel), self_ready(false) {

@@ -10,6 +10,7 @@
 #include <QQmlContext>
 #include <QQmlComponent>
 
+#include "Models/ApplicationModel.h"
 #include "Models/MoneroModel.h"
 #include "Models/WalletModel.h"
 #include "Models/MinerModel.h"
@@ -46,7 +47,7 @@ signals:
 private:
 
     void initModels();
-    void initInterfaces();
+//    void initInterfaces();
 
     bool createComponent(QQmlComponent& pComponent) {
 
@@ -89,9 +90,14 @@ private:
     }
 
     bool isReady() const {
-        return settings.areSettingsAcceptable();
+        return settings.areSettingsAcceptable() && !reconfiguration_requested;
     }
 
+
+    void createMonero();
+    void createMiner();
+    void createWalletHandler();
+    void createWallet();
 
     int startSplashScreen() {
         if ( initSplashScreen(engine) ) {
@@ -113,6 +119,8 @@ public slots:
     void stepEnableWallet();
     void stepStartMainGUI();
 
+    void reconfigure();
+
 private:
 
     void dialogError(int pErrorCode);
@@ -125,6 +133,7 @@ private:
     WalletInterface* wallet_interface;
     WalletHandlerInterface* wallet_handler_interface;
 
+    ApplicationModel application_model;
     MoneroModel monero_model;
     MinerModel miner_model;
     WalletModel wallet_model;
@@ -136,6 +145,8 @@ private:
     QQmlEngine engine;
 
     int exit_status;
+
+    bool reconfiguration_requested;
 
 
 

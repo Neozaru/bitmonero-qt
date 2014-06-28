@@ -71,7 +71,7 @@ void MoneroGUI::initModels() {
         QObject::connect(&wallet_model,SIGNAL(addressChanged(QString)),&miner_model,SLOT(setAddress(QString)));
     }
 
-
+    engine.rootContext()->setContextProperty("application", &application_model);
     engine.rootContext()->setContextProperty("monero", &monero_model);
     engine.rootContext()->setContextProperty("wallet", &wallet_model);
     engine.rootContext()->setContextProperty("miner", &miner_model);
@@ -82,23 +82,69 @@ void MoneroGUI::initModels() {
 
 }
 
-void MoneroGUI::initInterfaces() {
+//void MoneroGUI::initInterfaces() {
+
+//    monero_interface = new RPCMonero(monero_model,settings);
+
+//    WalletInterfaceBuilder lWalletInterfaceBuilder(wallet_model,settings);
+//    wallet_interface = lWalletInterfaceBuilder.buildInterface();
+////    wallet_interface = new RPCWallet(wallet_model, settings);
+
+////    miner_interface = new RPCMiner(miner_model, settings.getMinerUri(), settings.getMinerPort());
+//    MinerInterfaceBuilder lMinerInterfaceBuilder(miner_model, settings);
+//    miner_interface = lMinerInterfaceBuilder.buildInterface();
+
+//    WalletHandlerInterfaceBuilder lWalletHandlerInterfaceBuilder(wallet_handler_model, settings);
+//    wallet_handler_interface = lWalletHandlerInterfaceBuilder.buildInterface();
+
+////    wallet_handler_interface = new WalletHandlerProcess(wallet_handler_model, settings);
+
+////    createMonero();
+
+
+//}
+
+void MoneroGUI::createMonero() {
+
+    if (monero_interface) {
+        delete monero_interface;
+        monero_interface = NULL;
+    }
 
     monero_interface = new RPCMonero(monero_model,settings);
+}
 
-    WalletInterfaceBuilder lWalletInterfaceBuilder(wallet_model,settings);
-    wallet_interface = lWalletInterfaceBuilder.buildInterface();
-//    wallet_interface = new RPCWallet(wallet_model, settings);
+void MoneroGUI::createMiner() {
 
-//    miner_interface = new RPCMiner(miner_model, settings.getMinerUri(), settings.getMinerPort());
+    if (miner_interface) {
+        delete miner_interface;
+        miner_interface = NULL;
+    }
+
     MinerInterfaceBuilder lMinerInterfaceBuilder(miner_model, settings);
     miner_interface = lMinerInterfaceBuilder.buildInterface();
+}
+
+void MoneroGUI::createWalletHandler() {
+
+    if (wallet_handler_interface) {
+        delete wallet_handler_interface;
+        wallet_handler_interface = NULL;
+    }
 
     WalletHandlerInterfaceBuilder lWalletHandlerInterfaceBuilder(wallet_handler_model, settings);
     wallet_handler_interface = lWalletHandlerInterfaceBuilder.buildInterface();
+}
 
-//    wallet_handler_interface = new WalletHandlerProcess(wallet_handler_model, settings);
+void MoneroGUI::createWallet() {
 
+    if (wallet_interface) {
+        delete wallet_interface;
+        wallet_interface = NULL;
+    }
+
+    WalletInterfaceBuilder lWalletInterfaceBuilder(wallet_model,settings);
+    wallet_interface = lWalletInterfaceBuilder.buildInterface();
 }
 
 int MoneroGUI::startWizard()
@@ -120,6 +166,8 @@ int MoneroGUI::startWizard()
 int MoneroGUI::startMainWindow()
 {
 
+    qDebug() << "Launching main window...";
+
     closeAllWindows();
 
     /* Starts the main app */
@@ -128,13 +176,19 @@ int MoneroGUI::startMainWindow()
         return -1;
     }
 
-    QObject::connect(&engine, SIGNAL(quit()), &app, SLOT(quit()));
-    QObject::connect(&engine, SIGNAL(destroyed()), &app, SLOT(quit()));
+    QObject::connect(&application_model, SIGNAL(onApplicationQuitRequested()), &app, SLOT(quit()), Qt::UniqueConnection);
+    QObject::connect(&application_model, SIGNAL(onLaunchWizardRequested()), this, SLOT(reconfigure()), Qt::UniqueConnection);
 
 
     return 0;
 }
 
+void MoneroGUI::reconfigure()
+{
+    reconfiguration_requested = true;
+    stepConfigure();
+    reconfiguration_requested = false;
+}
 
 void MoneroGUI::closeAllWindows() {
 
@@ -149,11 +203,13 @@ void MoneroGUI::closeAllWindows() {
 bool MoneroGUI::stepEnableDaemon() {
     qDebug() << "[STEP] Enable Daemon";
 
-    QObject::connect(monero_interface,SIGNAL(ready()),this, SLOT(stepConfigure()));
+    createMonero();
+
+    QObject::connect(monero_interface,SIGNAL(ready()),this, SLOT(stepConfigure()), Qt::UniqueConnection);
     int lDaemonReturnCode = monero_interface->enable();
     if ( lDaemonReturnCode != 0 ) {
 
-        QObject::disconnect(monero_interface,SIGNAL(ready()),this, SLOT(stepConfigure()));
+//        QObject::disconnect(monero_interface,SIGNAL(ready()),this, SLOT(stepConfigure()), Qt::UniqueConnection);
         /* Starnge error codes :D */
         exit_status = 10 + lDaemonReturnCode;
 
@@ -165,7 +221,11 @@ bool MoneroGUI::stepEnableDaemon() {
 }
 
 void MoneroGUI::stepConfigure() {
+
     qDebug() << "[STEP] Configure";
+    createWalletHandler();
+    createWallet();
+    createMiner();
 
     if ( exit_status != 0 ) {
         return;
@@ -177,7 +237,9 @@ void MoneroGUI::stepConfigure() {
         qWarning() << "Not configured. Starting wizard";
 
         /* Allow to pass to next step */
-        QObject::connect(&engine,SIGNAL(quit()),this,SLOT(stepEnableWalletHandler()));
+//        QObject::connect(&engine,SIGNAL(quit()),this,SLOT(stepEnableWalletHandler()));
+        /* Avoids duplicates */
+        QObject::connect(&application_model, SIGNAL(onWizardSuccess()), this, SLOT(stepEnableWalletHandler()), Qt::UniqueConnection);
         startWizard();
         /* Blocks */
         qWarning() << "Wizard exited ";
@@ -193,7 +255,7 @@ void MoneroGUI::stepConfigure() {
 void MoneroGUI::stepEnableWalletHandler() {
     qDebug() << "[STEP] Enable WalletHandler";
 
-    QObject::connect(wallet_handler_interface, SIGNAL(ready()), this, SLOT(stepEnableWallet()));
+    QObject::connect(wallet_handler_interface, SIGNAL(ready()), this, SLOT(stepEnableWallet()), Qt::UniqueConnection);
 
     int lReturnCode = wallet_handler_interface->enable();
     if ( lReturnCode != 0 ) {
@@ -223,7 +285,7 @@ void MoneroGUI::stepEnableWallet() {
         return;
     }
 
-    QObject::connect(wallet_interface, SIGNAL(ready()), this, SLOT(stepStartMainGUI()));
+    QObject::connect(wallet_interface, SIGNAL(ready()), this, SLOT(stepStartMainGUI()), Qt::UniqueConnection);
 
     int lWalletReturnCode = wallet_interface->enable();
 
@@ -257,7 +319,7 @@ int MoneroGUI::start() {
     std::cout << settings << std::endl;
 
     initModels();
-    initInterfaces();
+//    initInterfaces();
 
     if( stepEnableDaemon() ) {
 

@@ -16,7 +16,8 @@ ApplicationWindow {
 
 
     onClosing: {
-        Qt.quit();
+        console.log("CLOSING")
+        application.requestApplicationQuit()
     }
 
 
@@ -34,9 +35,15 @@ ApplicationWindow {
         Menu {
             title: "&File"
             MenuItem {
+                text: "Start Wizard"
+//                shortcut: StandardKey.c
+                onTriggered: application.requestLaunchWizard()
+            }
+
+            MenuItem {
                 text: "Close"
                 shortcut: StandardKey.Quit
-                onTriggered: Qt.quit()
+                onTriggered: application.requestApplicationQuit()
             }
         }
 
