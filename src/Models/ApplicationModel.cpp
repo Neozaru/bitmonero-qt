@@ -3,3 +3,8 @@
 ApplicationModel::ApplicationModel()
 {
 }
+
+ApplicationModel::~ApplicationModel()
+{
+
+}

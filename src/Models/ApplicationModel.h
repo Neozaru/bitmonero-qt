@@ -8,6 +8,7 @@ class ApplicationModel : public QObject
     Q_OBJECT
 public:
     ApplicationModel();
+    ~ApplicationModel();
 
     Q_INVOKABLE void requestLaunchWizard() {
         emit onLaunchWizardRequested();
