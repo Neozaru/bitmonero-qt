@@ -26,5 +26,6 @@
         <file>qml/Wizard/ImportWalletChoicePage.qml</file>
         <file>qml/Wizard/RecoverWalletPage.qml</file>
         <file>qml/MoneroGUI/ConfirmTransferDialog.qml</file>
+        <file>qml/HappyEnding.qml</file>
     </qresource>
 </RCC>

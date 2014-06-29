@@ -2,6 +2,7 @@ import QtQuick 2.0
 import QtQuick.Controls 1.1
 import QtQuick.Layouts 1.1
 import QtQuick.Dialogs 1.1
+import QtQuick.Controls.Styles 1.1
 
 import "qrc:/qml/Utils"
 
@@ -12,6 +13,8 @@ ApplicationWindow {
     signal walletCreated();
     signal walletImported();
     signal wizardSuccess();
+
+    color: "#FAFAFA"
 
     StackView {
         id: myStack
@@ -89,6 +92,7 @@ ApplicationWindow {
                         walletSeed = "";
                         myStack.push(createWalletPage)
                     }
+
                 }
 
                 Button {

@@ -89,6 +89,11 @@ private:
         return initQmlElement(pEngine, QUrl("qrc:/qml/SplashScreen.qml"));
     }
 
+    bool initHappyEnding(QQmlEngine& pEngine) {
+
+        return initQmlElement(pEngine, QUrl("qrc:/qml/HappyEnding.qml"));
+    }
+
     bool isReady() const {
         return settings.areSettingsAcceptable() && !reconfiguration_requested;
     }

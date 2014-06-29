@@ -341,6 +341,12 @@ int MoneroGUI::start() {
         dialogError(exit_status);
 
     }
+    else {
+
+//        initHappyEnding(engine);
+//        app.processEvents();
+
+    }
 
     return exit_status;
 

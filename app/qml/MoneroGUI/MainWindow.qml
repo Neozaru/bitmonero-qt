@@ -220,10 +220,14 @@ ApplicationWindow {
             tab: Rectangle {
 //                color: styleData.selected ? "steelblue" :"lightsteelblue"
                     color: styleData.selected ? "#FAFAFA" :"#EBEBEB"
+//                color: styleData.selected ? "white" :"#EBEBEB"
+
 //                color: "#E3E4FA"
+
 //                border.color:  "steelblue"
 //                border.color: "#EBEBEB"
-                    border.color: "#FAFAFA"
+                  border.color: "#FAFAFA"
+//                border.color: "white"
 
                 implicitWidth: Math.max(text.width + 4, 80)*2
                 implicitHeight: 50
@@ -241,6 +245,7 @@ ApplicationWindow {
 
                 /*color: "steelblue"*/ /* color: "#EDEEFA" */
                 color: "#FAFAFA"
+//                color: "white"
 //                color: "#F5F5FC";
 //                color: "#FCFDFF"
 //                color: "#FCFCFC"

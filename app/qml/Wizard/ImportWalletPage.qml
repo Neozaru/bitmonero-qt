@@ -100,8 +100,10 @@ AbstractPage {
         TableView {
             id: walletsTable
 
+
             property var last_found_wallets: []
 
+            height: 300
             anchors.top: walletNameLayout.bottom
             anchors.left: parent.left
             anchors.right: parent.right
@@ -188,6 +190,8 @@ AbstractPage {
 
             anchors.top: walletPasswordLayout.bottom
             anchors.topMargin: 10
+//            anchors.bottom: parent.bottom
+//            anchors.bottomMargin: 10
 
             text: qsTr("Import Wallet", "confirm import wallet button")
             action: importWalletAction
