@@ -318,7 +318,7 @@ ApplicationWindow {
                                 statusLayout.tryWalletError = qsTr("Error : Wrong password")
                                 break;
                             default:
-                                statusLayout.tryWalletError = qsTr("Unknown error (%1)").arg(createWalletError)
+                                statusLayout.tryWalletError = qsTr("Unknown error (%1). Please check wallet file and password").arg(result)
                                 break;
 
                         }
