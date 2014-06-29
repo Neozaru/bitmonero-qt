@@ -12,7 +12,7 @@ GuardedColumnLayout {
 
     property string lastTransferError: ""
 
-    property bool askConfirmation: true
+    property bool askConfirmation: false
     property real defaultFee: 5000000000
 
     anchors.fill: parent
