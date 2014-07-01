@@ -16,10 +16,9 @@
 #include <QQuickWindow>
 
 
-MoneroGUI::MoneroGUI(QGuiApplication& pApp)
-    : app(pApp), monero_interface(NULL), miner_interface(NULL), wallet_interface(NULL), wallet_handler_interface(NULL), exit_status(0)
+MoneroGUI::MoneroGUI(QGuiApplication& pApp, const QString& pCustomConfigFile)
+    : app(pApp), monero_interface(NULL), miner_interface(NULL), wallet_interface(NULL), wallet_handler_interface(NULL), settings(pCustomConfigFile), exit_status(0)
 {
-
 }
 
 MoneroGUI::~MoneroGUI() {

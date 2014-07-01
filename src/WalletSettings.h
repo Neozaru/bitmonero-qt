@@ -19,7 +19,7 @@ class WalletSettings : public QObject
 
 public:
 
-    WalletSettings(const QString& pConfigFile = QDir::homePath() + "/.bitmonero-qt/bitmonero-qt.conf");
+    WalletSettings(const QString& pConfigFile);
 
 
 

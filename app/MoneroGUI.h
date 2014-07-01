@@ -33,7 +33,7 @@ class MoneroGUI : public QObject
 {
     Q_OBJECT
 public:
-    MoneroGUI(QGuiApplication& pApp);
+    MoneroGUI(QGuiApplication& pApp, const QString& pCustomConfigFile);
     ~MoneroGUI();
 
     int start();
