@@ -82,27 +82,7 @@ void MoneroGUI::initModels() {
 
 }
 
-//void MoneroGUI::initInterfaces() {
 
-//    monero_interface = new RPCMonero(monero_model,settings);
-
-//    WalletInterfaceBuilder lWalletInterfaceBuilder(wallet_model,settings);
-//    wallet_interface = lWalletInterfaceBuilder.buildInterface();
-////    wallet_interface = new RPCWallet(wallet_model, settings);
-
-////    miner_interface = new RPCMiner(miner_model, settings.getMinerUri(), settings.getMinerPort());
-//    MinerInterfaceBuilder lMinerInterfaceBuilder(miner_model, settings);
-//    miner_interface = lMinerInterfaceBuilder.buildInterface();
-
-//    WalletHandlerInterfaceBuilder lWalletHandlerInterfaceBuilder(wallet_handler_model, settings);
-//    wallet_handler_interface = lWalletHandlerInterfaceBuilder.buildInterface();
-
-////    wallet_handler_interface = new WalletHandlerProcess(wallet_handler_model, settings);
-
-////    createMonero();
-
-
-//}
 
 void MoneroGUI::createMonero() {
 
@@ -256,6 +236,11 @@ void MoneroGUI::stepEnableWalletHandler() {
     qDebug() << "[STEP] Enable WalletHandler";
 
     QObject::connect(wallet_handler_interface, SIGNAL(ready()), this, SLOT(stepEnableWallet()), Qt::UniqueConnection);
+
+    QObject::connect(wallet_handler_interface, &WalletHandlerInterface::fatalError, [this](int pCode) {
+        exit_status = pCode + 30;
+        dialogError(exit_status);
+    });
 
     int lReturnCode = wallet_handler_interface->enable();
     if ( lReturnCode != 0 ) {

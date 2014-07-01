@@ -58,6 +58,10 @@ public:
 
     }
 
+    void onFatalError(int pErrorCode) {
+        emit fatalError(pErrorCode);
+    }
+
     void setSeedAvailable() {
         wallet_handler_model.setSeedAvailable(true);
     }
@@ -65,6 +69,7 @@ public:
 
 signals:
     void ready();
+    void fatalError(int pErrorCode);
 
 
 private:

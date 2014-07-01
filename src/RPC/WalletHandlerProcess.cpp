@@ -70,26 +70,27 @@ int WalletHandlerProcess::enable() {
     /* TODO : Remove */
     if ( settings.shouldSpawnWallet() ) {
 
+//        TODO : Throw errors
         QObject::connect(this, &WalletHandlerProcess::tryWalletResult, [this] (int pResult) {
 
             qDebug() << "[OK] Wallet try";
             qDebug() << "With result : " << pResult;
             if (pResult != 0) {
                 qDebug() << "Simplewallet try failed. Aborting.";
-
-                return 3;
+                this->onFatalError(3);
+                return;
             }
 
             if ( !openWalletAsync(settings.getWalletFile(), settings.getWalletPassword(), settings.getWalletIP(), settings.getWalletPort()) ) {
-                qDebug() << "Failed to start wallet ("<< settings.getWalletProgram() << ")";
-
-                return 4;
+                qDebug() << "Failed to start wallet ("<< main_process.program() << ")";
+                this->onFatalError(4);
+                return;
             }
             else {
 
                 QObject::disconnect(this, SIGNAL(tryWalletResult(int)));
                 this->onReady();
-                return 0;
+                return;
             }
 
 
