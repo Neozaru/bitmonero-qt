@@ -68,24 +68,30 @@ void RPCMonero::saveBlockchain()
 
 }
 
-//bool RPCMonero::isReady() {
-
-//    JsonRPCRequest* lReq = rpc.sendRequest("getheight",QJsonObject(), true);
-
-//    /* Synchronous call */
-//    QEventLoop loop;
-//    QObject::connect(lReq, SIGNAL(jsonResponseReceived(QJsonObject,QJsonObject)), &loop, SLOT(quit()));
-//    QObject::connect(lReq, SIGNAL(errorOccured(QNetworkReply::NetworkError)), &loop, SLOT(quit()));
-
-//    loop.exec();
-
-//    return lReq->getError() == QNetworkReply::NetworkError::NoError;
-
-//}
 
 
-int RPCMonero::enable()
+void RPCMonero::enable()
 {
+
+
+
+    if (should_spawn_daemon) {
+
+        if (!daemon_handler.isOk()) {
+            qCritical() << "Configured to spawn 'bitmonerod' daemon but no executable found. Aborting...";
+            this->onFatalError(1);
+            return;
+        }
+
+        if (!daemon_handler.execDaemon()) {
+            qCritical() << "'bitmonerod' Daemon start failed. Is '" << daemon_handler.getDaemonProgram() << "' the daemon executable ?";
+            this->onFatalError(2);
+            return;
+        }
+
+        qDebug() << "DAEMON STARTED";
+
+    }
 
     QObject::connect(&getinfo_timer, SIGNAL(timeout()), this, SLOT(getInfo()));
     getinfo_timer.start(5000);
@@ -93,26 +99,5 @@ int RPCMonero::enable()
     /* TODO : Move in another process (daemon itself ?) */
     QObject::connect(&savebc_timer, SIGNAL(timeout()), this, SLOT(saveBlockchain()));
     savebc_timer.start(1200000);
-
-
-    if (should_spawn_daemon) {
-
-        if (!daemon_handler.isOk()) {
-            qCritical() << "Configured to spawn 'bitmonerod' daemon but no executable found. Aborting...";
-            return 1;
-        }
-
-        if (!daemon_handler.execDaemon()) {
-            qCritical() << "'bitmonerod' Daemon start failed. Is '" << daemon_handler.getDaemonProgram() << "' the daemon executable ?";
-            return 2;
-        }
-        else {
-            qDebug() << "DAEMON STARTED";
-        }
-
-    }
-
-    return 0;
-
 
 }

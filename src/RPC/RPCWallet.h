@@ -29,7 +29,7 @@ public:
     void store();
     void getPayments(const QString& pPaymentId);
 
-    int enable();
+    void enable();
 
 
 public slots:

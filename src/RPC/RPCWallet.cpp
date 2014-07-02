@@ -26,7 +26,9 @@ RPCWallet::~RPCWallet() {
 
 }
 
-int RPCWallet::enable() {
+void RPCWallet::enable() {
+
+    /* "onReady" signal will be triggered after first RPC response */
 
     QObject::connect(&getbalance_timer,SIGNAL(timeout()), this, SLOT(getBalance()));
     getbalance_timer.start(5000);
@@ -39,7 +41,7 @@ int RPCWallet::enable() {
     incomingtransfers_timer.start(30000);
 
 
-    return 0;
+    return;
 
 }
 

@@ -16,29 +16,14 @@ class WalletHandlerProcess : public WalletHandlerInterface
 
 Q_OBJECT
 
-//Q_PROPERTY(QString default_wallet_location READ getDefaultWalletLocation)
-//Q_PROPERTY(const QList<QObject*> last_found_wallets READ getLastFoundWallets NOTIFY lastFoundWalletsChanged)
 
 public:
-
-//    WalletHandlerProcess(const WalletSettings& pWalletSettings);
 
     WalletHandlerProcess(WalletHandlerModel& pModel, const WalletSettings& pWalletSettings);
     ~WalletHandlerProcess();
 
+    void enable();
 
-    int enable();
-
-//    bool isOk() const {
-//        return !main_process.program().isEmpty();
-//    }
-
-
-//    const QString& getDefaultWalletLocation() const
-//    {
-//        qDebug() << "LOC ";
-//        return default_wallet_location;
-//    }
 
     const QList<QObject*>& getLastFoundWallets() const
     {

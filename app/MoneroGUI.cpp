@@ -179,22 +179,15 @@ void MoneroGUI::closeAllWindows() {
 
 
 
-bool MoneroGUI::stepEnableDaemon() {
+void MoneroGUI::stepEnableDaemon() {
     qDebug() << "[STEP] Enable Daemon";
 
     createMonero();
 
     QObject::connect(monero_interface,SIGNAL(ready()),this, SLOT(stepConfigure()), Qt::UniqueConnection);
-    int lDaemonReturnCode = monero_interface->enable();
-    if ( lDaemonReturnCode != 0 ) {
+    QObject::connect(monero_interface,SIGNAL(fatalError(int)), this, SLOT(daemonError(int)), Qt::UniqueConnection);
 
-//        exit_status = 10 + lDaemonReturnCode;
-        daemonError(lDaemonReturnCode);
-
-        return false;
-    }
-
-    return true;
+    monero_interface->enable();
 
 }
 
@@ -215,7 +208,6 @@ void MoneroGUI::stepConfigure() {
         qWarning() << "Not configured. Starting wizard";
 
         /* Allow to pass to next step */
-//        QObject::connect(&engine,SIGNAL(quit()),this,SLOT(stepEnableWalletHandler()));
         /* Avoids duplicates */
         QObject::connect(&application_model, SIGNAL(onWizardSuccess()), this, SLOT(stepEnableWalletHandler()), Qt::UniqueConnection);
         startWizard();
@@ -235,18 +227,7 @@ void MoneroGUI::stepEnableWalletHandler() {
 
     QObject::connect(wallet_handler_interface, SIGNAL(ready()), this, SLOT(stepEnableWallet()), Qt::UniqueConnection);
     QObject::connect(wallet_handler_interface, SIGNAL(fatalError(int)), this, SLOT(walletHandlerError(int)), Qt::UniqueConnection);
-//    QObject::connect(wallet_handler_interface, &WalletHandlerInterface::fatalError, [this](int pCode) {
-////        exit_status = pCode + 30;
-//        walletHandlerError(pCode);
-//    });
-
-    int lReturnCode = wallet_handler_interface->enable();
-    if ( lReturnCode != 0 ) {
-//        exit_status = 30 + lReturnCode;
-        walletHandlerError(lReturnCode);
-        return;
-    }
-
+    wallet_handler_interface->enable();
 
 }
 
@@ -270,14 +251,7 @@ void MoneroGUI::stepEnableWallet() {
     }
 
     QObject::connect(wallet_interface, SIGNAL(ready()), this, SLOT(stepStartMainGUI()), Qt::UniqueConnection);
-
-    int lWalletReturnCode = wallet_interface->enable();
-
-    if ( lWalletReturnCode != 0 ) {
-        exit_status = 20 + lWalletReturnCode;
-        walletError(lWalletReturnCode);
-    }
-
+    QObject::connect(wallet_interface, SIGNAL(fatalError(int)), this, SLOT(walletError(int)), Qt::UniqueConnection);
 
 }
 
@@ -288,9 +262,8 @@ void MoneroGUI::stepStartMainGUI() {
     /* At this stage, we can consider that the program configuration is sane. Let's save it */
     settings.saveWalletConfiguration();
 
-    if ( miner_interface->enable() != 0 ) {
-        qWarning() << "Error occured while initializing 'miner_interface'";
-    }
+    /* Doesn't wait for minre to be ready */
+    QObject::connect(miner_interface, SIGNAL(fatalError(int)), this, SLOT(minerError(int)), Qt::UniqueConnection);
 
     startMainWindow();
     /* Will block until main window is closed */
@@ -304,14 +277,14 @@ int MoneroGUI::start() {
 
     initModels();
 
-    if( stepEnableDaemon() ) {
+    /* TODO : minor leak */
+    QTimer* lFirstStepTimer = new QTimer(this);
+    connect(lFirstStepTimer, SIGNAL(timeout()), this, SLOT(stepEnableDaemon()));
+    lFirstStepTimer->setSingleShot(true);
+    lFirstStepTimer->start(2000);
+    qWarning() << "Start SPLASH";
+    startSplashScreen();
 
-        qWarning() << "Start SPLASH";
-
-        /* Blocking */
-        startSplashScreen();
-
-    }
 
     qDebug() << "Closing remaining Windows...";
     closeAllWindows();

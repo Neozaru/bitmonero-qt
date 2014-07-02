@@ -12,14 +12,13 @@ RPCMiner::~RPCMiner() {
 
 }
 
-int RPCMiner::enable() {
+void RPCMiner::enable() {
 
     getMiningStatus();
 
     QObject::connect(&miningstatus_timer,SIGNAL(timeout()), this, SLOT(getMiningStatus()));
     miningstatus_timer.start(5000);
 
-    return 0;
 }
 
 void RPCMiner::startMining(const QString& pMoneroAddress, unsigned int pNbThreads) {

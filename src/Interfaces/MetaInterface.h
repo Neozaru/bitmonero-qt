@@ -7,7 +7,7 @@ class MetaInterface : public QObject {
     Q_OBJECT
 
 public:
-    virtual int enable() = 0;
+    virtual void enable() = 0;
 
 protected:
 

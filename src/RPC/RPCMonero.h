@@ -22,7 +22,7 @@ public:
     RPCMonero(MoneroModel& pMoneroModel, const WalletSettings& pSettings);
     ~RPCMonero();
 
-    virtual int enable();
+    void enable();
 
 public slots:
     void getInfo();

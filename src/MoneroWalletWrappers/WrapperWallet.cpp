@@ -21,17 +21,19 @@ WrapperWallet::~WrapperWallet() {
 
 }
 
-int WrapperWallet::enable() {
+void WrapperWallet::enable() {
 
     /* TODO : Review errors */
     try {
         wallet = new Monero::Wallet(settings.getWalletFile().toStdString(), settings.getWalletPassword().toStdString());
     }
     catch(Monero::Errors::InvalidFile e) {
-        return 5;
+        this->onFatalError(5);
+        return;
     }
     catch(Monero::Errors::InvalidPassword e) {
-        return 6;
+        this->onFatalError(6);
+        return;
     }
 
     const QString lMoneroAddressPort = settings.getMoneroUri() + ":" + QString::number(settings.getMoneroPort());
@@ -42,7 +44,8 @@ int WrapperWallet::enable() {
 
 
     if ( !refreshWallet() ) {
-        return 7;
+        this->onFatalError(7);
+        return;
     }
 
     QObject::connect(&refresh_timer,SIGNAL(timeout()), this, SLOT(refreshWallet()));
@@ -51,7 +54,6 @@ int WrapperWallet::enable() {
 
     emit this->onReady();
 
-    return 0;
 }
 
 void WrapperWallet::getBalance()

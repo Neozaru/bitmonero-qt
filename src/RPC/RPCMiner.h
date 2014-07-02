@@ -19,7 +19,7 @@ public:
     RPCMiner(MinerModel& pMinerModel, const WalletSettings& pSettings);
     ~RPCMiner();
 
-    int enable();
+    void enable();
 
     void startMining(const QString& pMoneroAddress, unsigned int pNbThreads);
     void stopMining();

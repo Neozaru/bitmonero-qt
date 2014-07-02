@@ -12,10 +12,9 @@ WrapperWalletHandler::WrapperWalletHandler(WalletHandlerModel& pModel, const Wal
 }
 
 
-int WrapperWalletHandler::enable() {
+void WrapperWalletHandler::enable() {
 
     emit onReady();
-    return 0;
 }
 
 int WrapperWalletHandler::createWallet(const QString& pFile, const QString& pPassword, const QString& pSeed) {

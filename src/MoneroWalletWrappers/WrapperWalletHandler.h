@@ -10,7 +10,7 @@ class WrapperWalletHandler : public WalletHandlerInterface
 public:
     WrapperWalletHandler(WalletHandlerModel& pModel, const WalletSettings& pSettings);
 
-    int enable();
+    void enable();
 
     int createWallet(const QString& pFile, const QString& pPassword, const QString& pSeed);
 

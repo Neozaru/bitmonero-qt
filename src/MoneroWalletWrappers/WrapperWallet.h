@@ -23,7 +23,7 @@ public:
     void getIncomingTransfers(const QString& pFilter = "all");
     void store();
 
-    int enable();
+    void enable();
 
 
 public slots:

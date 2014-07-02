@@ -65,7 +65,7 @@ WalletHandlerProcess::~WalletHandlerProcess() {
 }
 
 
-int WalletHandlerProcess::enable() {
+void WalletHandlerProcess::enable() {
 
     /* TODO : Remove */
     if ( settings.shouldSpawnWallet() ) {
@@ -93,21 +93,16 @@ int WalletHandlerProcess::enable() {
                 return;
             }
 
-
         });
 
         /* TODO : Emit errors */
         if ( !tryWalletAsync(settings.getWalletFile(), settings.getWalletPassword()) ) {
             qWarning() << "Wallet opening failed. Aborting.";
-
-            return 2;
-
+            this->onFatalError(2);
         }
 
-        return 0;
     }
 
-    return 0;
 
 }
 

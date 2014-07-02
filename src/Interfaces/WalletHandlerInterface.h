@@ -35,9 +35,6 @@ public:
     virtual QList<QObject*> findWallets(const QString& pPath) = 0;
 
 
-    virtual int enable() = 0;
-
-
     /**
      * @brief onTryWalletResult
      * @param pResult 0 if successful, 1 is wallet file error, 2 if password error, -1 otherwise

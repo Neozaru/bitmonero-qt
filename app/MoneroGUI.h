@@ -118,7 +118,7 @@ private:
 
 
 public slots:
-    bool stepEnableDaemon();
+    void stepEnableDaemon();
     void stepConfigure();
     void stepEnableWalletHandler();
     void stepEnableWallet();
