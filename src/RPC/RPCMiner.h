@@ -12,7 +12,7 @@
 
 #include "WalletSettings.h"
 
-class RPCMiner : public QObject, public MinerInterface
+class RPCMiner : public MinerInterface
 {
     Q_OBJECT
 public:

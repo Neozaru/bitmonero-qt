@@ -1,9 +1,10 @@
 #ifndef MINERINTERFACE_H
 #define MINERINTERFACE_H
 
+#include "MetaInterface.h"
 #include "Models/MinerModel.h"
 
-class MinerInterface {
+class MinerInterface : public MetaInterface {
 
 public:
     MinerInterface(MinerModel& pMinerModel) : miner_model(pMinerModel) { pMinerModel.setMinerInterface(this); }
@@ -12,8 +13,6 @@ public:
     virtual void startMining(const QString& pMoneroAddress, unsigned int pNbThreads = 1) = 0;
     virtual void stopMining() = 0;
     virtual void getMiningStatus() = 0;
-
-    virtual int enable() = 0;
 
 protected:
 

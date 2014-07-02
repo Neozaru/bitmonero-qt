@@ -7,14 +7,15 @@
 #include <map>
 #include <ctype.h>
 
+#include "MetaInterface.h"
 #include "Models/WalletModel.h"
 #include "Models/TransactionModel.h"
 
-class WalletInterface : public QObject
+class WalletInterface : public MetaInterface
 {
-    Q_OBJECT
+
 public:
-    WalletInterface(WalletModel& pWalletModel) : wallet_model(pWalletModel), wallet_ready(false) {
+    WalletInterface(WalletModel& pWalletModel) : wallet_model(pWalletModel) {
         pWalletModel.setWalletInterface(this);
     }
 
@@ -26,12 +27,6 @@ public:
     virtual void getPayments(const QString& pPaymentId) = 0;
     virtual void getIncomingTransfers(const QString& pFilter) = 0;
     virtual void store() = 0;
-
-    virtual int enable() = 0;
-
-signals:
-    void ready();
-
 
 protected:
 
@@ -99,19 +94,8 @@ protected:
 
     }
 
-    void onReady() {
-
-        if ( !wallet_ready ) {
-            wallet_ready = true;
-            emit ready();
-        }
-
-    }
-
 private:
     WalletModel& wallet_model;
-
-    bool wallet_ready;
 };
 
 #endif // WALLETINTERFACE_HH

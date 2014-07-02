@@ -5,13 +5,14 @@
 #include <QDir>
 #include <QDebug>
 
+#include "MetaInterface.h"
 #include "Models/WalletHandlerModel.h"
 
-class WalletHandlerInterface : public QObject {
-    Q_OBJECT
+class WalletHandlerInterface : public MetaInterface {
+
 public:
 
-    WalletHandlerInterface(WalletHandlerModel& pModel) : wallet_handler_model(pModel), self_ready(false) {
+    WalletHandlerInterface(WalletHandlerModel& pModel) : wallet_handler_model(pModel) {
         wallet_handler_model.setWalletHandlerInterface(this);
         wallet_handler_model.setDefaultWalletLocation(QDir::homePath() + "/.bitmonero/");
     }
@@ -49,33 +50,14 @@ public:
         wallet_handler_model.setSeed(pSeed);
     }
 
-    void onReady() {
-
-        if ( !self_ready ) {
-            self_ready = true;
-            emit ready();
-        }
-
-    }
-
-    void onFatalError(int pErrorCode) {
-        emit fatalError(pErrorCode);
-    }
-
     void setSeedAvailable() {
         wallet_handler_model.setSeedAvailable(true);
     }
 
 
-signals:
-    void ready();
-    void fatalError(int pErrorCode);
-
 
 private:
-
     WalletHandlerModel& wallet_handler_model;
-    bool self_ready;
 };
 
 #endif // WALLETHANDLERINTERFACE_H

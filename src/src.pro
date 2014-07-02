@@ -58,7 +58,8 @@ HEADERS += \
     Models/InfoWalletModel.h \
     Interfaces/WalletHandlerInterface.h \
     Models/WalletHandlerModel.h \
-    Models/ApplicationModel.h
+    Models/ApplicationModel.h \
+    Interfaces/MetaInterface.h
 
 
 libMoneroWallet:HEADERS += MoneroWalletWrappers/WrapperWallet.h

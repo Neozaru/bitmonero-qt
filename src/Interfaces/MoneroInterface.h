@@ -1,19 +1,18 @@
 #ifndef MONEROINTERFACE_HH
 #define MONEROINTERFACE_HH
 
-#include "Models/MoneroModel.h"
 #include <ctype.h>
 
-class MoneroInterface : public QObject {
-    Q_OBJECT
+#include "MetaInterface.h"
+#include "Models/MoneroModel.h"
+
+
+class MoneroInterface : public MetaInterface {
+
 public:
-    MoneroInterface(MoneroModel& pMoneroModel) : monero_model(pMoneroModel), daemon_ready(false) {}
+    MoneroInterface(MoneroModel& pMoneroModel) : monero_model(pMoneroModel) {}
     virtual ~MoneroInterface() {}
 
-    virtual int enable() = 0;
-
-signals:
-    void ready();
 
 protected:
     void onInfoUpdated(unsigned int pBlockchainHeight, unsigned int pTargetBlockchainHeight, unsigned int pDifficulty, unsigned int pIncomingConnections, unsigned int pOutgoingConnections) {
@@ -23,19 +22,10 @@ protected:
 
     }
 
-    void onReady() {
-
-        if ( !daemon_ready ) {
-            daemon_ready = true;
-            emit ready();
-        }
-
-    }
 
 protected:
     MoneroModel& monero_model;
 
-    bool daemon_ready;
 };
 
 #endif // MONEROINTERFACE_HH
