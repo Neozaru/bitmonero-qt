@@ -252,6 +252,7 @@ void MoneroGUI::stepEnableWallet() {
 
     QObject::connect(wallet_interface, SIGNAL(ready()), this, SLOT(stepStartMainGUI()), Qt::UniqueConnection);
     QObject::connect(wallet_interface, SIGNAL(fatalError(int)), this, SLOT(walletError(int)), Qt::UniqueConnection);
+    wallet_interface->enable();
 
 }
 
