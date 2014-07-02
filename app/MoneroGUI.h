@@ -126,6 +126,13 @@ public slots:
 
     void reconfigure();
 
+
+    /* Handles fatal errors triggered during 'enable' */
+    void daemonError(int pCode);
+    void walletHandlerError(int pCode);
+    void walletError(int pCode);
+    void minerError(int pCode);
+
 private:
 
     void dialogError(int pErrorCode);

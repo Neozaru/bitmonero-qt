@@ -188,9 +188,8 @@ bool MoneroGUI::stepEnableDaemon() {
     int lDaemonReturnCode = monero_interface->enable();
     if ( lDaemonReturnCode != 0 ) {
 
-//        QObject::disconnect(monero_interface,SIGNAL(ready()),this, SLOT(stepConfigure()), Qt::UniqueConnection);
-        /* Starnge error codes :D */
-        exit_status = 10 + lDaemonReturnCode;
+//        exit_status = 10 + lDaemonReturnCode;
+        daemonError(lDaemonReturnCode);
 
         return false;
     }
@@ -235,16 +234,16 @@ void MoneroGUI::stepEnableWalletHandler() {
     qDebug() << "[STEP] Enable WalletHandler";
 
     QObject::connect(wallet_handler_interface, SIGNAL(ready()), this, SLOT(stepEnableWallet()), Qt::UniqueConnection);
-
-    QObject::connect(wallet_handler_interface, &WalletHandlerInterface::fatalError, [this](int pCode) {
-        exit_status = pCode + 30;
-        dialogError(exit_status);
-    });
+    QObject::connect(wallet_handler_interface, SIGNAL(fatalError(int)), this, SLOT(walletHandlerError(int)), Qt::UniqueConnection);
+//    QObject::connect(wallet_handler_interface, &WalletHandlerInterface::fatalError, [this](int pCode) {
+////        exit_status = pCode + 30;
+//        walletHandlerError(pCode);
+//    });
 
     int lReturnCode = wallet_handler_interface->enable();
     if ( lReturnCode != 0 ) {
-        exit_status = 30 + lReturnCode;
-        dialogError(exit_status);
+//        exit_status = 30 + lReturnCode;
+        walletHandlerError(lReturnCode);
         return;
     }
 
@@ -266,6 +265,7 @@ void MoneroGUI::stepEnableWallet() {
     /* Main Window instructions */
     if (!isReady()) {
         exit_status = 5;
+        dialogError(5);
         return;
     }
 
@@ -274,8 +274,8 @@ void MoneroGUI::stepEnableWallet() {
     int lWalletReturnCode = wallet_interface->enable();
 
     if ( lWalletReturnCode != 0 ) {
-        exit_status = 20+lWalletReturnCode;
-        dialogError(exit_status);
+        exit_status = 20 + lWalletReturnCode;
+        walletError(lWalletReturnCode);
     }
 
 
@@ -303,7 +303,6 @@ int MoneroGUI::start() {
     std::cout << settings << std::endl;
 
     initModels();
-//    initInterfaces();
 
     if( stepEnableDaemon() ) {
 
@@ -320,6 +319,7 @@ int MoneroGUI::start() {
 
     qDebug() << "exit_status : " << exit_status;
 
+    /* Unhandler errors */
     if (exit_status != 0) {
 
         dialogError(exit_status);
@@ -337,10 +337,33 @@ int MoneroGUI::start() {
 }
 
 
+void MoneroGUI::daemonError(int pCode)
+{
+    qCritical() << "Daemon error : " << pCode;
+    dialogError(10+pCode);
+}
+
+void MoneroGUI::walletError(int pCode)
+{
+    qCritical() << "Wallet error : " << pCode;
+    dialogError(20+pCode);
+}
+
+void MoneroGUI::walletHandlerError(int pCode)
+{
+    qCritical() << "WalletHandler error : " << pCode;
+    dialogError(30+pCode);
+}
+
+void MoneroGUI::minerError(int pCode)
+{
+    qCritical() << "Miner error : " << pCode;
+    dialogError(40+pCode);
+}
+
 void MoneroGUI::dialogError(int pErrorCode) {
 
     closeAllWindows();
-    app.quit();
 
     qDebug() << "Opening error Window";
     engine.rootContext()->setContextProperty("error_message", "Error !!");
