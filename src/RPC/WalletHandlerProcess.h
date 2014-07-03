@@ -50,14 +50,16 @@ public slots:
     bool walletFileExists(const QString &pFile);
 
     /**
-     * @brief Opens a wallet asynchronously using 'simplewallet' subprocess, and enables RPC.
+     * @brief Opens a wallet using 'simplewallet' subprocess, and enables RPC.
+     * After starting the subprocess, the function will block x (=3) seconds to check if the program exists abruptly.
+     * If program is not stopped after the delay, we assume that it was successfully opened in RPC mode. (infinite run)
      * @param pWalletFile
      * @param pWalletPassword
-     * @param pBindIP
-     * @param pBindPort
-     * @return
+     * @param pBindIP RPC wallet host (localhost)
+     * @param pBindPort RPC wallet port (19091)
+     * @return false in process exits before xx seconds (error), true otherwise
      */
-    bool openWalletAsync(const QString& pWalletFile, const QString& pWalletPassword, const QString& pBindIP, int pBindPort);
+    bool openWallet(const QString& pWalletFile, const QString& pWalletPassword, const QString& pBindIP, int pBindPort);
 
 
 private slots:

@@ -82,7 +82,7 @@ void WalletHandlerProcess::enable() {
                 return;
             }
 
-            if ( !openWalletAsync(settings.getWalletFile(), settings.getWalletPassword(), settings.getWalletIP(), settings.getWalletPort()) ) {
+            if ( !openWallet(settings.getWalletFile(), settings.getWalletPassword(), settings.getWalletIP(), settings.getWalletPort()) ) {
                 qDebug() << "Failed to start wallet ("<< main_process.program() << ")";
                 this->onFatalError(4);
                 return;
@@ -117,7 +117,7 @@ QList<QObject*> WalletHandlerProcess::findWallets(const QString& pPath) {
 
 
 
-bool WalletHandlerProcess::openWalletAsync(const QString& pWalletFile, const QString& pWalletPassword, const QString& pBindIP, int pBindPort) {
+bool WalletHandlerProcess::openWallet(const QString& pWalletFile, const QString& pWalletPassword, const QString& pBindIP, int pBindPort) {
 
     if ( main_process.state() == QProcess::Running ) {
         qWarning() << "Wallet is already open. Please close your wallet before opening another one";
