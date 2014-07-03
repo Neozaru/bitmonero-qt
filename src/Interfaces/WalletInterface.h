@@ -11,6 +11,12 @@
 #include "Models/WalletModel.h"
 #include "Models/TransactionModel.h"
 
+/**
+ * @brief Handles a wallet instance.
+ * Provides wallet-specific methods for interacting with an existing wallet. (balance, transfers, etc)
+ * In RPC mode, 'enable()' method will only try to connect to RPC wallet already instanciated by WalletHandlerInterface
+ * In LibMoneroWallet mode, 'enable()' method will handle wallet opening
+ */
 class WalletInterface : public MetaInterface
 {
 

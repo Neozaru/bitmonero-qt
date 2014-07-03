@@ -36,6 +36,12 @@ public slots:
 
     int createWallet(const QString& pFile, const QString& pPassword, const QString& pSeed);
 
+    /**
+     * @brief Lanch 'simplewallet' subprocess in "--command" mode, causing exiting with code 0 if file/password/seeds are correct
+     * Triggers 'tryWalletResult' signal
+     * @param pFile
+     * @param pPassword
+     */
     void tryWalletAsync(const QString& pFile, const QString& pPassword);
 
     QList<QObject*> findWallets(const QString& pPath);
@@ -44,7 +50,7 @@ public slots:
     bool walletFileExists(const QString &pFile);
 
     /**
-     * @brief Opens a wallet asynchronously using 'simplewallet' subprocess, enabling RPC.
+     * @brief Opens a wallet asynchronously using 'simplewallet' subprocess, and enables RPC.
      * @param pWalletFile
      * @param pWalletPassword
      * @param pBindIP

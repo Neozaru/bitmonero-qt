@@ -4,6 +4,9 @@
 #include "MetaInterface.h"
 #include "Models/MinerModel.h"
 
+/**
+ * @brief Handles Miner status and controls
+ */
 class MinerInterface : public MetaInterface {
 
 public:

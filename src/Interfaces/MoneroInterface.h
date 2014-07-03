@@ -6,7 +6,10 @@
 #include "MetaInterface.h"
 #include "Models/MoneroModel.h"
 
-
+/**
+ * @brief Handles Monero/Daemon interface.
+ * Basically, this class will handle all actions and events related to 'bitmonerod'
+ */
 class MoneroInterface : public MetaInterface {
 
 public:
