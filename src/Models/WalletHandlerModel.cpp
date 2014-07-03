@@ -14,9 +14,9 @@ int WalletHandlerModel::createWallet(const QString& pFile, const QString& pPassw
     return wallet_handler_interface->createWallet(pFile, pPassword, pSeed);
 }
 
-bool WalletHandlerModel::tryWalletAsync(const QString& pFile, const QString& pPassword)
+void WalletHandlerModel::tryWalletAsync(const QString& pFile, const QString& pPassword)
 {
-    return wallet_handler_interface->tryWalletAsync(pFile, pPassword);
+    wallet_handler_interface->tryWalletAsync(pFile, pPassword);
 }
 
 QList<QObject*> WalletHandlerModel::findWallets(const QString& pPath)

@@ -10,7 +10,9 @@
 #include "Interfaces/WalletHandlerInterface.h"
 #include "Models/WalletHandlerModel.h"
 
-/* TODO : Add an abstraction layer */
+/**
+ * @brief The WalletHandlerProcess class
+ */
 class WalletHandlerProcess : public WalletHandlerInterface
 {
 
@@ -34,19 +36,27 @@ public slots:
 
     int createWallet(const QString& pFile, const QString& pPassword, const QString& pSeed);
 
-    bool tryWalletAsync(const QString& pFile, const QString& pPassword);
+    void tryWalletAsync(const QString& pFile, const QString& pPassword);
 
     QList<QObject*> findWallets(const QString& pPath);
 
 
     bool walletFileExists(const QString &pFile);
 
-
+    /**
+     * @brief Opens a wallet asynchronously using 'simplewallet' subprocess, enabling RPC.
+     * @param pWalletFile
+     * @param pWalletPassword
+     * @param pBindIP
+     * @param pBindPort
+     * @return
+     */
     bool openWalletAsync(const QString& pWalletFile, const QString& pWalletPassword, const QString& pBindIP, int pBindPort);
 
 
 private slots:
     void tryWalletResponse(int pCode, QProcess::ExitStatus pExitStatus);
+    void tryWalletError(QProcess::ProcessError pError);
 
 
 signals:
@@ -60,7 +70,7 @@ private:
 
     const WalletSettings& settings;
 
-    QProcess* execTryWallet(const QString& pFile, const QString& pPassword);
+    QProcess* createTryWalletProcess(const QString& pFile, const QString& pPassword);
 
     bool walletDirectoryExists(const QString& pFile);
 

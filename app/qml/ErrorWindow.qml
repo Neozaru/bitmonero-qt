@@ -62,6 +62,9 @@ ApplicationWindow {
                   case 22:
                       qsTr("Wallet error : Unable to start '%1'.\nPlease check your version or update '%2'").arg(walletExec).arg(walletExec)
                       break;
+                  case 31:
+                      qsTr("Unknown wallet error. Check your 'simplewallet' executable");
+                      break;
                   case 33:
                       qsTr("Wallet error : Bad wallet executable or your wallet is outdated");
                       break;

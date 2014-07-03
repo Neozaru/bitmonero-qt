@@ -14,7 +14,7 @@ public:
 
     int createWallet(const QString& pFile, const QString& pPassword, const QString& pSeed);
 
-    bool tryWalletAsync(const QString& pFile, const QString& pPassword);
+    void tryWalletAsync(const QString& pFile, const QString& pPassword);
 
     bool walletFileExists(const QString& pFile);
 

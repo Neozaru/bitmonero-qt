@@ -14,8 +14,6 @@ WalletHandlerProcess::WalletHandlerProcess(WalletHandlerModel& pModel, const Wal
     : WalletHandlerInterface(pModel), settings(pWalletSettings)
 {
 
-
-
     QString lWalletProgram = pWalletSettings.getWalletProgram();
 
     if (lWalletProgram.isEmpty()) {
@@ -67,17 +65,20 @@ WalletHandlerProcess::~WalletHandlerProcess() {
 
 void WalletHandlerProcess::enable() {
 
-    /* TODO : Remove */
     if ( settings.shouldSpawnWallet() ) {
 
-//        TODO : Throw errors
         QObject::connect(this, &WalletHandlerProcess::tryWalletResult, [this] (int pResult) {
 
             qDebug() << "[OK] Wallet try";
             qDebug() << "With result : " << pResult;
             if (pResult != 0) {
                 qDebug() << "Simplewallet try failed. Aborting.";
-                this->onFatalError(3);
+                if (pResult == -1) {
+                    this->onFatalError(1);
+                }
+                else {
+                    this->onFatalError(pResult);
+                }
                 return;
             }
 
@@ -95,11 +96,7 @@ void WalletHandlerProcess::enable() {
 
         });
 
-        /* TODO : Emit errors */
-        if ( !tryWalletAsync(settings.getWalletFile(), settings.getWalletPassword()) ) {
-            qWarning() << "Wallet opening failed. Aborting.";
-            this->onFatalError(2);
-        }
+        tryWalletAsync(settings.getWalletFile(), settings.getWalletPassword());
 
     }
 
@@ -136,8 +133,6 @@ bool WalletHandlerProcess::openWalletAsync(const QString& pWalletFile, const QSt
 
     main_process.setArguments(lArguments);
 
-
-    /* TODO : Remove */
     main_process.setProcessChannelMode(QProcess::MergedChannels);
     main_process.start();
 
@@ -241,44 +236,56 @@ int WalletHandlerProcess::createWallet(const QString& pFile, const QString& pPas
     int lExitCode = lCreateWalletProcess.exitCode();
     qDebug() << "PROCESS finished with : " << QString::number(lExitCode);
 
-    return lExitCode == 0 ? 0 : -1;
+    return lExitCode == 0 ? 0 : 1;
 }
 
 
 void WalletHandlerProcess::tryWalletResponse(int pCode, QProcess::ExitStatus pExitStatus) {
 
-    qWarning() << "=======================";
     qWarning() << "tryWalletAsync returned status : " << pCode << ". " << pExitStatus << ".";
-    qWarning() << "=======================";
     emit tryWalletResult(pCode);
     this->onTryWalletResult(pCode == 0 ? 0 : -1);
 
 }
 
+void WalletHandlerProcess::tryWalletError(QProcess::ProcessError pError) {
+    qDebug() << "Process error" << pError;
 
-bool WalletHandlerProcess::tryWalletAsync(const QString& pFile, const QString& pPassword) {
+    if (pError == QProcess::FailedToStart) {
 
-    QProcess* lTryWalletProcess = execTryWallet(pFile,pPassword);
+        emit tryWalletResult(-1);
+        this->onTryWalletResult(-1);
+    }
+}
+
+void WalletHandlerProcess::tryWalletAsync(const QString& pFile, const QString& pPassword) {
+
+    QProcess* lTryWalletProcess = createTryWalletProcess(pFile,pPassword);
     if (!lTryWalletProcess) {
         qWarning() << "TryWalletProcess CANNOT START";
-        emit tryWalletResult(-1);
-        return false;
+        emit tryWalletResult(2);
+        return;
     }
 
+    qDebug() << "Trying wallet : " << pFile;
+
     QObject::connect(lTryWalletProcess, SIGNAL(finished(int,QProcess::ExitStatus)), this, SLOT(tryWalletResponse(int,QProcess::ExitStatus)));
-    return true;
+    QObject::connect(lTryWalletProcess, SIGNAL(error(QProcess::ProcessError)), this, SLOT(tryWalletError(QProcess::ProcessError)));
+
+    lTryWalletProcess->start();
 
 }
 
-QProcess* WalletHandlerProcess::execTryWallet(const QString& pFile, const QString& pPassword) {
 
-    qDebug() << "Trying wallet : " << pFile;
+QProcess* WalletHandlerProcess::createTryWalletProcess(const QString& pFile, const QString& pPassword) {
+
 
     if ( pPassword.isEmpty() ) {
         qWarning() << "No password defined";
         return NULL;
     }
 
+    qDebug() << "Creating wallet process : " << main_process.program();
 
     QProcess* lTryWalletProcess = new QProcess();
     lTryWalletProcess->setProgram(main_process.program());
@@ -290,8 +297,6 @@ QProcess* WalletHandlerProcess::execTryWallet(const QString& pFile, const QStrin
     lArguments.append("--command=balance");
     lTryWalletProcess->setArguments(lArguments);
 
-
-    lTryWalletProcess->start();
 
     return lTryWalletProcess;
 

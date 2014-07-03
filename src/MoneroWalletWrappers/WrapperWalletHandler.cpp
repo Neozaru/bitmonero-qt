@@ -51,7 +51,7 @@ int WrapperWalletHandler::createWallet(const QString& pFile, const QString& pPas
     }
 }
 
-bool WrapperWalletHandler::tryWalletAsync(const QString& pFile, const QString& pPassword) {
+void WrapperWalletHandler::tryWalletAsync(const QString& pFile, const QString& pPassword) {
 
     try {
         Monero::Wallet* lWallet = new Monero::Wallet(pFile.toStdString(), pPassword.toStdString());
@@ -67,22 +67,17 @@ bool WrapperWalletHandler::tryWalletAsync(const QString& pFile, const QString& p
             delete lWallet;
         });
 
-        return true;
     }
     catch(Monero::Errors::InvalidFile e) {
         this->onTryWalletResult(1);
-        return false;
     }
     catch(Monero::Errors::InvalidPassword e) {
         this->onTryWalletResult(2);
-        return false;
     }
     catch(const std::exception& e) {
         this->onTryWalletResult(-1);
-        return false;
     }
 
-//    return false;
 }
 
 bool WrapperWalletHandler::walletFileExists(const QString& pFile) {

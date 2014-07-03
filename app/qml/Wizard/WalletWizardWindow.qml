@@ -282,14 +282,7 @@ ApplicationWindow {
 
                 connectionWalletHandler.target = wallet_handler;
                 status = 0;
-                if (!wallet_handler.tryWalletAsync(settings.wallet_file,settings.wallet_password)) {
-                    /* Check if status is not already returned. Otherwise return generic error */
-                    if (status == 0) {
-                        statusLayout.tryWalletError = qsTr("Unknown error with wallet handler")
-                        status = -1
-                    }
-
-                }
+                wallet_handler.tryWalletAsync(settings.wallet_file,settings.wallet_password);
 
             }
 

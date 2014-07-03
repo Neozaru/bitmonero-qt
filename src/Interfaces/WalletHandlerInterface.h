@@ -28,7 +28,7 @@ public:
      */
     virtual int createWallet(const QString& pFile, const QString& pPassword, const QString& pSeed) = 0;
 
-    virtual bool tryWalletAsync(const QString& pFile, const QString& pPassword) = 0;
+    virtual void tryWalletAsync(const QString& pFile, const QString& pPassword) = 0;
 
     virtual bool walletFileExists(const QString& pFile) = 0;
 

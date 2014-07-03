@@ -20,7 +20,7 @@ public:
 
     Q_INVOKABLE int createWallet(const QString& pFile, const QString& pPassword, const QString& pSeed);
 
-    Q_INVOKABLE bool tryWalletAsync(const QString& pFile, const QString& pPassword);
+    Q_INVOKABLE void tryWalletAsync(const QString& pFile, const QString& pPassword);
 
     Q_INVOKABLE QList<QObject*>  findWallets(const QString& pPath);
 
