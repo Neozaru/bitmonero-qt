@@ -68,22 +68,22 @@ private slots:
 
 
 signals:
-
     void tryWalletResult(int result);
     void lastFoundWalletsChanged(const QList<QObject*> found_wallets);
 
 private:
 
     bool closeWallet();
-
-    const WalletSettings& settings;
+    bool walletDirectoryExists(const QString& pFile);
 
     QProcess* createTryWalletProcess(const QString& pFile, const QString& pPassword);
 
-    bool walletDirectoryExists(const QString& pFile);
+
+    const WalletSettings& settings;
+    QString wallet_cli_program;
+    QString wallet_rpc_program;
 
     QProcess main_process;
-
     QList<QObject*> last_found_wallets;
 };
 

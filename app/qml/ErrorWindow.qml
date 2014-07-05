@@ -63,13 +63,16 @@ ApplicationWindow {
                       qsTr("Wallet error : Unable to start '%1'.\nPlease check your version or update '%2'").arg(walletExec).arg(walletExec)
                       break;
                   case 31:
-                      qsTr("Unknown wallet error. Check your 'simplewallet' executable");
+                      qsTr("Unknown wallet error. Check your 'simplewallet' and 'rpcwallet' executables");
                       break;
                   case 33:
                       qsTr("Wallet error : Bad wallet executable or your wallet is outdated");
                       break;
                   case 34:
                       qsTr("Wallet error : Either another instance is already running or your wallet is outdated");
+                      break;
+                  case 35:
+                      qsTr("Unable to find 'rpcwallet' or 'simplewallet' exectuables");
                       break;
                   default:
                       qsTr("Unknown error (%L1)").arg(parseInt(errorWindow.errorCode))

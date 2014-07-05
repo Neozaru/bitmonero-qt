@@ -20,7 +20,8 @@ WalletSettings::WalletSettings(const QString& pConfigFile)
     miner_uri = settings.value("miner_uri", "localhost").toString();
     miner_port = settings.value("miner_port", 18081).toInt();
 
-    wallet_program = settings.value("wallet_program", "").toString();
+    wallet_cli_program = settings.value("wallet_cli_program", "").toString();
+    wallet_rpc_program = settings.value("wallet_rpc_program", "").toString();
     daemon_program = settings.value("daemon_program", "").toString();
 
     mining_enabled = settings.value("mining_enabled",false).toBool();;
@@ -52,7 +53,7 @@ bool WalletSettings::saveWalletConfiguration()
     }
 
     /* Option which are settable with the GUI */
-    settings.setValue("wallet_program", wallet_program);
+    settings.setValue("wallet_program", wallet_cli_program);
     settings.setValue("wallet_file", wallet_file);
     settings.setValue("wallet_password", wallet_password);
 

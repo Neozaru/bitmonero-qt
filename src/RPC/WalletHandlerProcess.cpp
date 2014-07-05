@@ -9,41 +9,72 @@
 
 #include "Utils.h"
 
+const QString cWalletCli = "simplewallet";
+/* TODO : Change to 'rpcwallet' */
+const QString cWalletRpc = "rpcwallet";
 
 WalletHandlerProcess::WalletHandlerProcess(WalletHandlerModel& pModel, const WalletSettings& pWalletSettings)
     : WalletHandlerInterface(pModel), settings(pWalletSettings)
 {
 
-    QString lWalletProgram = pWalletSettings.getWalletProgram();
+    wallet_cli_program = pWalletSettings.getWalletCliProgram();
+    const QStringList& lSearchPaths = Utils::getStandardSearchPaths();
 
-    if (lWalletProgram.isEmpty()) {
+    if (wallet_cli_program.isEmpty()) {
 
-        const QStringList& lSearchPaths = Utils::getStandardSearchPaths();
 
         QStringList lWalletSearchFilenames;
-        lWalletSearchFilenames.append("simplewallet");
-        lWalletSearchFilenames.append("simplewallet.exe");
+        lWalletSearchFilenames.append(cWalletCli);
+        lWalletSearchFilenames.append(cWalletCli+".exe");
 
 
         QStringList lFoundWalletExecutables = Utils::findExecutables(lSearchPaths, lWalletSearchFilenames, true);
 
 
-        qDebug() << "Found " << lFoundWalletExecutables.size() << " wallet executables : ";
+        qDebug() << "Found " << lFoundWalletExecutables.size() << " cli wallet executables : ";
         for( const QString& lWalletExec : lFoundWalletExecutables ) {
             qDebug() << "- " << lWalletExec;
         }
 
         if (!lFoundWalletExecutables.empty()) {
-            lWalletProgram = lFoundWalletExecutables.first();
+            wallet_cli_program = lFoundWalletExecutables.first();
         }
 
     }
 
-    if (!lWalletProgram.isEmpty()) {
+//    if (!wallet_cli_program.isEmpty()) {
 
-        main_process.setProgram(lWalletProgram);
+//        main_process.setProgram(wallet_cli_program);
+//    }
+
+
+    wallet_rpc_program = pWalletSettings.getWalletRpcProgram();
+
+    if (wallet_rpc_program.isEmpty()) {
+
+        QStringList lWalletSearchFilenames;
+        lWalletSearchFilenames.append(cWalletRpc);
+        lWalletSearchFilenames.append(cWalletRpc+".exe");
+
+
+        QStringList lFoundWalletExecutables = Utils::findExecutables(lSearchPaths, lWalletSearchFilenames, true);
+
+
+        qDebug() << "Found " << lFoundWalletExecutables.size() << " rpc wallet executables : ";
+        for( const QString& lWalletExec : lFoundWalletExecutables ) {
+            qDebug() << "- " << lWalletExec;
+        }
+
+        if (!lFoundWalletExecutables.empty()) {
+            wallet_rpc_program = lFoundWalletExecutables.first();
+        }
+
     }
 
+//    if (!wallet_rpc_program.isEmpty()) {
+
+//        main_process.setProgram(wallet_rpc_program);
+//    }
 
 }
 
@@ -65,7 +96,13 @@ WalletHandlerProcess::~WalletHandlerProcess() {
 
 void WalletHandlerProcess::enable() {
 
+    /* TODO : Check programs are not empty */
     if ( settings.shouldSpawnWallet() ) {
+
+        if (wallet_cli_program.isEmpty() || wallet_rpc_program.isEmpty()) {
+            this->onFatalError(5);
+            return;
+        }
 
         QObject::connect(this, &WalletHandlerProcess::tryWalletResult, [this] (int pResult) {
 
@@ -123,6 +160,8 @@ bool WalletHandlerProcess::openWallet(const QString& pWalletFile, const QString&
         qWarning() << "Wallet is already open. Please close your wallet before opening another one";
         return false;
     }
+
+    main_process.setProgram(wallet_rpc_program);
 
     QStringList lArguments;
 
@@ -212,7 +251,7 @@ int WalletHandlerProcess::createWallet(const QString& pFile, const QString& pPas
     }
 
     QProcess lCreateWalletProcess;
-    lCreateWalletProcess.setProgram(main_process.program());
+    lCreateWalletProcess.setProgram(wallet_cli_program);
 
     QStringList lArguments;
 
@@ -285,10 +324,10 @@ QProcess* WalletHandlerProcess::createTryWalletProcess(const QString& pFile, con
         return NULL;
     }
 
-    qDebug() << "Creating wallet process : " << main_process.program();
+    qDebug() << "Creating wallet process : " << wallet_cli_program;
 
     QProcess* lTryWalletProcess = new QProcess();
-    lTryWalletProcess->setProgram(main_process.program());
+    lTryWalletProcess->setProgram(wallet_cli_program);
 
     QStringList lArguments;
 

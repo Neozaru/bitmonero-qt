@@ -55,13 +55,22 @@ public:
     }
 
 
-    const QString& getWalletProgram() const {
-        return wallet_program;
+    const QString& getWalletCliProgram() const {
+        return wallet_cli_program;
     }
 
 
-    void setWalletProgram(const QString& pWalletProgram) {
-        wallet_program = pWalletProgram;
+    void setWalletCliProgram(const QString& pWalletProgram) {
+        wallet_cli_program = pWalletProgram;
+    }
+
+    const QString& getWalletRpcProgram() const {
+        return wallet_rpc_program;
+    }
+
+
+    void setWalletRpcProgram(const QString& pWalletProgram) {
+        wallet_rpc_program = pWalletProgram;
     }
 
     const QString& getDaemonProgram() const {
@@ -142,7 +151,7 @@ public:
         lStr << "\n" << "Daemon : " << getMoneroUri().toStdString() << " " << getMoneroPort();
         lStr << "\n" << "Wallet : " << getWalletUri().toStdString() << " " << getWalletPort();
         lStr << "\n" << "Miner : " << getMinerUri().toStdString() << " " << getMinerPort();
-        lStr << "\n" << "Wallet program : " << getWalletProgram().toStdString();
+        lStr << "\n" << "Wallet program : " << getWalletCliProgram().toStdString();
         lStr << "\n" << "Wallet file : " << getWalletFile().toStdString();
 
         return lStr.str();
@@ -175,8 +184,10 @@ private:
     QString miner_uri;
     int miner_port;
 
-    QString wallet_program;
+    QString wallet_cli_program;
+    QString wallet_rpc_program;
     QString daemon_program;
+
 
     bool mining_enabled;
     QString mining_address;
