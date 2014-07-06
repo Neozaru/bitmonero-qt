@@ -10,6 +10,8 @@
 #include <QQmlContext>
 #include <QQmlComponent>
 
+#include <QTimer>
+
 #include "Models/ApplicationModel.h"
 #include "Models/MoneroModel.h"
 #include "Models/WalletModel.h"
@@ -152,6 +154,8 @@ private:
     WalletHandlerModel wallet_handler_model;
 
     WalletSettings settings;
+
+    QTimer startup_timer;
 
 
     QQmlEngine engine;

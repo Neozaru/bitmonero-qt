@@ -72,7 +72,6 @@ WalletHandlerProcess::~WalletHandlerProcess() {
 
 void WalletHandlerProcess::enable() {
 
-    /* TODO : Check programs are not empty */
     if ( settings.shouldSpawnWallet() ) {
 
         if (wallet_cli_program.isEmpty() || wallet_rpc_program.isEmpty()) {

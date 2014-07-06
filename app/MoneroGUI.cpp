@@ -278,11 +278,9 @@ int MoneroGUI::start() {
 
     initModels();
 
-    /* TODO : minor leak */
-    QTimer* lFirstStepTimer = new QTimer(this);
-    connect(lFirstStepTimer, SIGNAL(timeout()), this, SLOT(stepEnableDaemon()));
-    lFirstStepTimer->setSingleShot(true);
-    lFirstStepTimer->start(2000);
+    startup_timer.setSingleShot(true);
+    connect(&startup_timer, SIGNAL(timeout()), this, SLOT(stepEnableDaemon()));
+    startup_timer.start(2000);
     qWarning() << "Start SPLASH";
     startSplashScreen();
 
