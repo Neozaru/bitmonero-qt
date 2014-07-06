@@ -49,7 +49,6 @@ signals:
 private:
 
     void initModels();
-//    void initInterfaces();
 
     bool createComponent(QQmlComponent& pComponent) {
 
