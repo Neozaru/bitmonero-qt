@@ -10,31 +10,24 @@
 #include "Utils.h"
 
 const QString cWalletCli = "simplewallet";
-/* TODO : Change to 'rpcwallet' */
 const QString cWalletRpc = "rpcwallet";
 
 WalletHandlerProcess::WalletHandlerProcess(WalletHandlerModel& pModel, const WalletSettings& pWalletSettings)
     : WalletHandlerInterface(pModel), settings(pWalletSettings)
 {
 
-    wallet_cli_program = pWalletSettings.getWalletCliProgram();
     const QStringList& lSearchPaths = Utils::getStandardSearchPaths();
 
+    wallet_cli_program = pWalletSettings.getWalletCliProgram();
     if (wallet_cli_program.isEmpty()) {
 
 
-        QStringList lWalletSearchFilenames;
-        lWalletSearchFilenames.append(cWalletCli);
-        lWalletSearchFilenames.append(cWalletCli+".exe");
-
-
-        QStringList lFoundWalletExecutables = Utils::findExecutables(lSearchPaths, lWalletSearchFilenames, true);
-
+        const QStringList lWalletSearchFilenames = QStringList() << cWalletCli << cWalletCli+".exe";
+        const QStringList lFoundWalletExecutables = Utils::findExecutables(lSearchPaths, lWalletSearchFilenames, true);
 
         qDebug() << "Found " << lFoundWalletExecutables.size() << " cli wallet executables : ";
-        for( const QString& lWalletExec : lFoundWalletExecutables ) {
-            qDebug() << "- " << lWalletExec;
-        }
+        Utils::debugQStringList(lFoundWalletExecutables);
+
 
         if (!lFoundWalletExecutables.empty()) {
             wallet_cli_program = lFoundWalletExecutables.first();
@@ -42,28 +35,15 @@ WalletHandlerProcess::WalletHandlerProcess(WalletHandlerModel& pModel, const Wal
 
     }
 
-//    if (!wallet_cli_program.isEmpty()) {
-
-//        main_process.setProgram(wallet_cli_program);
-//    }
-
 
     wallet_rpc_program = pWalletSettings.getWalletRpcProgram();
-
     if (wallet_rpc_program.isEmpty()) {
 
-        QStringList lWalletSearchFilenames;
-        lWalletSearchFilenames.append(cWalletRpc);
-        lWalletSearchFilenames.append(cWalletRpc+".exe");
-
-
-        QStringList lFoundWalletExecutables = Utils::findExecutables(lSearchPaths, lWalletSearchFilenames, true);
-
+        const QStringList lWalletSearchFilenames = QStringList() << cWalletRpc << cWalletRpc+".exe";
+        const QStringList lFoundWalletExecutables = Utils::findExecutables(lSearchPaths, lWalletSearchFilenames, true);
 
         qDebug() << "Found " << lFoundWalletExecutables.size() << " rpc wallet executables : ";
-        for( const QString& lWalletExec : lFoundWalletExecutables ) {
-            qDebug() << "- " << lWalletExec;
-        }
+        Utils::debugQStringList(lFoundWalletExecutables);
 
         if (!lFoundWalletExecutables.empty()) {
             wallet_rpc_program = lFoundWalletExecutables.first();
@@ -71,10 +51,6 @@ WalletHandlerProcess::WalletHandlerProcess(WalletHandlerModel& pModel, const Wal
 
     }
 
-//    if (!wallet_rpc_program.isEmpty()) {
-
-//        main_process.setProgram(wallet_rpc_program);
-//    }
 
 }
 

@@ -25,6 +25,7 @@ public:
 
     static const QList<QObject*> fileListToInfoWalletModelList(const QStringList& pWalletFilesList, const QUrl& pFolderUrl);
 
+    static const void debugQStringList(const QStringList& pList);
 };
 
 #endif // UTILS_H

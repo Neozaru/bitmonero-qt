@@ -109,3 +109,9 @@ const QList<QObject*> Utils::fileListToInfoWalletModelList(const QStringList& pW
     return lInfoWalletModelList;
 
 }
+
+const void Utils::debugQStringList(const QStringList& pList) {
+    for( const QString& lItemStr : pList ) {
+        qDebug() << "- " << lItemStr;
+    }
+}
