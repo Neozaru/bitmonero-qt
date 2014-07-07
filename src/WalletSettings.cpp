@@ -48,15 +48,25 @@ WalletSettings::WalletSettings(const QString& pConfigFile)
 bool WalletSettings::saveWalletConfiguration()
 {
 
-    if ( !areSettingsAcceptable() ) {
+    if ( !areWalletSettingsAcceptable() ) {
         return false;
     }
 
     /* Option which are settable with the GUI */
-    settings.setValue("wallet_program", wallet_cli_program);
+    settings.setValue("wallet_cli_program", wallet_cli_program);
+    settings.setValue("wallet_rpc_program", wallet_rpc_program);
     settings.setValue("wallet_file", wallet_file);
     settings.setValue("wallet_password", wallet_password);
 
     return true;
 
+}
+
+bool WalletSettings::saveGlobalConfiguration() {
+
+//    TODO : Check
+    settings.setValue("daemon_uri", monero_uri);
+    settings.setValue("daemon_port", monero_port);
+
+    return true;
 }

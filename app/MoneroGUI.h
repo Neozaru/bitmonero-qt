@@ -96,7 +96,7 @@ private:
     }
 
     bool isReady() const {
-        return settings.areSettingsAcceptable() && !reconfiguration_requested;
+        return settings.areWalletSettingsAcceptable() && !reconfiguration_requested;
     }
 
 

@@ -29,6 +29,9 @@ ApplicationWindow {
         onTriggered: aboutDialog.open()
     }
 
+    SettingsWindow {
+        id: settingsWindow
+    }
 
 
     menuBar: MenuBar {
@@ -46,6 +49,18 @@ ApplicationWindow {
                 onTriggered: application.requestApplicationQuit()
             }
         }
+
+        Menu {
+            title: "&Edit"
+            MenuItem {
+                text: "Preferencees"
+//                shortcut: StandardKey.c
+                onTriggered: settingsWindow.show()
+            }
+
+
+        }
+
 
         Menu {
             title: "&Help"

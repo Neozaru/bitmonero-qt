@@ -10,13 +10,17 @@
 #include <QSettings>
 #include <QDir>
 
+#include <QDebug>
+
 class WalletSettings : public QObject
 {
     Q_OBJECT
 
-    Q_PROPERTY(QString wallet_password READ getWalletPassword WRITE setWalletPassword);
-    Q_PROPERTY(QString wallet_file READ getWalletFile WRITE setWalletFile);
+    Q_PROPERTY(QString wallet_password READ getWalletPassword WRITE setWalletPassword)
+    Q_PROPERTY(QString wallet_file READ getWalletFile WRITE setWalletFile)
 
+    Q_PROPERTY(QString monero_uri READ getMoneroUri WRITE setMoneroUri)
+    Q_PROPERTY(int monero_port READ getMoneroPort WRITE setMoneroPort)
 public:
 
     WalletSettings(const QString& pConfigFile);
@@ -138,11 +142,12 @@ public:
 
 
     /* Acceptable : Wallet file and password set OR uses RPC-only wallet */
-    Q_INVOKABLE bool areSettingsAcceptable() const {
+    Q_INVOKABLE bool areWalletSettingsAcceptable() const {
         return ( !wallet_password.isEmpty() && !wallet_file.isEmpty() ) || !spawn_wallet;
     }
 
     bool saveWalletConfiguration();
+    Q_INVOKABLE bool saveGlobalConfiguration();
 
     const std::string toString() const {
 
@@ -167,8 +172,20 @@ public slots:
 
     void setWalletFile(const QString& pWalletFile)
     {
-        std::cout << "Set Wallet file " << pWalletFile.toStdString() << std::endl;
+        qDebug() << "Set Wallet file " << pWalletFile;
         wallet_file = pWalletFile;
+    }
+
+    void setMoneroUri(const QString& pMoneroUri)
+    {
+        qDebug() << "Set Daemon uri : " << pMoneroUri;
+        monero_uri = pMoneroUri;
+    }
+
+    void setMoneroPort(int pMoneroPort)
+    {
+        qDebug() << "Set Daemon port : " << QString::number(pMoneroPort);
+        monero_port = pMoneroPort;
     }
 
 private:
