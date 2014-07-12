@@ -57,7 +57,18 @@ GuardedColumnLayout {
 
         focus: true;
 
-        onTextChanged: lastTransferError = ""
+        onTextChanged: {
+            lastTransferError = ""
+
+            /* If longuer than a standard address, extract payment ID */
+            if(acceptableInput && text.length == maximumLength) {
+                var paymentId = text.substring(95 + paymentIdSeperator.length);
+                console.log("Detected payment id : " + paymentId)
+                definePaymentIdCheckbox.checked = true;
+                inputPaymentId.text = paymentId;
+                text  = text.substring(0,95)
+            }
+        }
 
     }
 
