@@ -15,12 +15,12 @@ AbstractPage {
 
         property string walletLocation;
 
-        anchors.left: parent.left
-        anchors.right: parent.right
-        anchors.top: parent.top
-//        anchors.fill: parent
-        anchors.topMargin: 45
-//        anchors.bottom: parent.bottom
+        anchors {
+            left: parent.left
+            right: parent.right
+            top: parent.top
+            topMargin: 45
+        }
 
         ColumnLayout {
             id: walletNameLayout
@@ -70,8 +70,10 @@ AbstractPage {
 
                 RowLayout {
 
-                    anchors.left: parent.left
-                    anchors.right: parent.right
+                    anchors {
+                        left: parent.left
+                        right: parent.right
+                    }
 
                     Button {
                         id: browserFolderButton
@@ -84,9 +86,12 @@ AbstractPage {
                     Label {
                         id: walletLocationInput
 
-                        anchors.left: browserFolderButton.right
-                        anchors.leftMargin: 5
-                        anchors.right: parent.right
+                        anchors {
+                            left: browserFolderButton.right
+                            leftMargin: 5
+                            right: parent.right
+                        }
+
                         text: importWalletLayout.walletLocation
 
                     }
@@ -100,13 +105,15 @@ AbstractPage {
         TableView {
             id: walletsTable
 
-
             property var last_found_wallets: []
 
             height: 300
-            anchors.top: walletNameLayout.bottom
-            anchors.left: parent.left
-            anchors.right: parent.right
+
+            anchors {
+                top: walletNameLayout.bottom
+                left: parent.left
+                right: parent.right
+            }
 
             alternatingRowColors: true
 
@@ -160,16 +167,19 @@ AbstractPage {
         ColumnLayout {
             id: walletPasswordLayout
 
-            anchors.top: walletsTable.bottom
-            anchors.topMargin: 3
-            anchors.right: parent.horizontalCenter
-            anchors.left: parent.left
+            anchors {
+                top: walletsTable.bottom
+                topMargin: 3
+
+                right: parent.horizontalCenter
+                left: parent.left
+            }
+
 
             Label {
                 id: walletPasswordLabel
 
                 text: qsTr("Password of your existing wallet", "existing password label")
-
             }
 
             PasswordTextField {
@@ -188,10 +198,10 @@ AbstractPage {
         Button {
             id: importWalletButton
 
-            anchors.top: walletPasswordLayout.bottom
-            anchors.topMargin: 10
-//            anchors.bottom: parent.bottom
-//            anchors.bottomMargin: 10
+            anchors {
+                top: walletPasswordLayout.bottom
+                topMargin: 10
+            }
 
             text: qsTr("Import Wallet", "confirm import wallet button")
             action: importWalletAction

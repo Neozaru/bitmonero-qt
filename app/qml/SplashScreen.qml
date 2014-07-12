@@ -42,10 +42,14 @@ ApplicationWindow {
         Image {
             id: splashImage
 
-            anchors.margins: 10
-            anchors.top: parent.top
-            anchors.left: parent.left
-            anchors.right: parent.right
+            anchors {
+                top: parent.top
+                left: parent.left
+                right: parent.right
+
+                margins: 10
+            }
+
             fillMode: Image.PreserveAspectFit
             smooth: true
 
@@ -86,10 +90,14 @@ ApplicationWindow {
             Label {
                 id: splashPleaseWait
 
-                anchors.top: splashProgressbar.bottom
-                anchors.horizontalCenter: splashProgressbar.horizontalCenter
+                anchors {
+                    top: splashProgressbar.bottom
 
-                anchors.margins: 10
+                    horizontalCenter: splashProgressbar.horizontalCenter
+
+                    margins: 10
+                }
+
 
                 text: qsTr("Monero Wallet is loading. Please wait.")
 
@@ -100,10 +108,13 @@ ApplicationWindow {
             Label {
                 id: splashCanTakeLongLabel
 
-                anchors.top: splashPleaseWait.bottom
-                anchors.horizontalCenter: splashPleaseWait.horizontalCenter
+                anchors {
+                    top: splashPleaseWait.bottom
+                    horizontalCenter: splashPleaseWait.horizontalCenter
 
-                anchors.margins: 50
+                    margins: 50
+                }
+
                 opacity: 0
 
                 text: qsTr("This operation can take minutes.")
@@ -118,10 +129,13 @@ ApplicationWindow {
         Label {
             text: qsTr("Loading Monero Core...", "loading details")
 
-            anchors.right: parent.right
-            anchors.bottom: parent.bottom
-            anchors.rightMargin: 3
-            anchors.bottomMargin: 3
+            anchors {
+                right: parent.right
+                bottom: parent.bottom
+                rightMargin: 3
+                bottomMargin: 3
+            }
+
         }
 
         Connections {

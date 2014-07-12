@@ -35,8 +35,10 @@ GuardedColumnLayout {
     Button {
         id: pasteInputAddress
 
-        anchors.top: parent.top
-        anchors.topMargin: 20
+        anchors {
+            top: parent.top
+            topMargin: 20
+        }
 
         text: qsTr("Paste recipient address")
         onClicked: { inputAddress.text = ""; inputAddress.paste() }
@@ -45,9 +47,11 @@ GuardedColumnLayout {
     AddressTextField {
         id: inputAddress
 
-        anchors.top: pasteInputAddress.bottom
-        anchors.left: parent.left
-        anchors.right: parent.right
+        anchors {
+            top: pasteInputAddress.bottom
+            left: parent.left
+            right: parent.right
+        }
 
         placeholderText: qsTr("Recipient address")
 
@@ -60,8 +64,10 @@ GuardedColumnLayout {
     CheckBox {
         id: definePaymentIdCheckbox
 
-        anchors.top: inputAddress.bottom
-        anchors.topMargin: 10
+        anchors {
+            top: inputAddress.bottom
+            topMargin: 10
+        }
 
         text: qsTr("Define a payment ID for this transfer (useful for services/exchanges)")
         checked: false
@@ -70,10 +76,13 @@ GuardedColumnLayout {
     RowLayout {
         id: paymentIDLayout
 
-        anchors.top: definePaymentIdCheckbox.bottom
-        anchors.topMargin: 3
-        anchors.left: parent.left
-        anchors.right: parent.right
+        anchors {
+            top: definePaymentIdCheckbox.bottom
+            topMargin: 3
+            left: parent.left
+            right: parent.right
+        }
+
         visible: definePaymentIdCheckbox.checked
 
         Button {
@@ -86,8 +95,10 @@ GuardedColumnLayout {
         TextField {
             id: inputPaymentId
 
-            anchors.left: pastePaymentIDButton.right
-            anchors.right: parent.right
+            anchors {
+                left: pastePaymentIDButton.right
+                right: parent.right
+            }
 
             placeholderText: qsTr("Payment ID")
 
@@ -100,8 +111,10 @@ GuardedColumnLayout {
     TextField {
         id: inputAmount
 
-        anchors.top: paymentIDLayout.bottom
-        anchors.topMargin: 5
+        anchors {
+            top: paymentIDLayout.bottom
+            topMargin: 5
+        }
 
         placeholderText: "0.00"
         onTextChanged: lastTransferError = ""
@@ -123,9 +136,11 @@ GuardedColumnLayout {
     Button {
         id: buttonSend
 
-        anchors.left: inputAmount.right
-        anchors.top: inputAmount.top
-        anchors.leftMargin: 3
+        anchors {
+            left: inputAmount.right
+            top: inputAmount.top
+            leftMargin: 3
+        }
 
 //        text: "Send"
         enabled: inputAmount.acceptableInput && inputAddress.acceptableInput && !amountUsesComma
@@ -213,9 +228,13 @@ GuardedColumnLayout {
     }
 
     Label {
-        anchors.left: buttonSend.right
-        anchors.leftMargin: 10
-        anchors.verticalCenter: buttonSend.verticalCenter
+
+        anchors {
+            left: buttonSend.right
+            leftMargin: 10
+            verticalCenter: buttonSend.verticalCenter
+        }
+
 
         text: ( inputAmount.text.length > 0 ? parseFloat(inputAmount.text) + " XMR" : "" ) + ( amountUsesComma ? qsTr(" PLEASE USE '.' (dot) instead of ',' (comma) for decimals") : "")
         color: amountUsesComma ? "red" : "green"
@@ -226,10 +245,13 @@ GuardedColumnLayout {
 
         visible: mainWindow.advancedInterface
 
-        anchors.top: buttonSend.bottom
-        anchors.topMargin: 5
-        anchors.left: parent.left
-        anchors.right: parent.right
+        anchors {
+            top: buttonSend.bottom
+            topMargin: 5
+            left: parent.left
+            right: parent.right
+        }
+
 
         CheckBox {
             id: customFeesCheckbox
@@ -240,8 +262,11 @@ GuardedColumnLayout {
         RowLayout {
             visible: customFeesCheckbox.checked
 
-            anchors.left: parent.left
-            anchors.right: parent.horizontalCenter
+            anchors {
+                left: parent.left
+                right: parent.horizontalCenter
+            }
+
 
             Label {
                 id: customFeesLabel
@@ -252,10 +277,13 @@ GuardedColumnLayout {
             TextField {
                 id: customFeesInput
 
-                anchors.left: customFeesLabel.right
-                anchors.leftMargin: 3
+                anchors {
+                    left: customFeesLabel.right
+                    leftMargin: 3
 
-                anchors.right: parent.horizontalCenter
+                    right: parent.horizontalCenter
+                }
+
 
                 text: (Math.pow(10,-12) * transferLayout.defaultFee).toFixed(12)
 
@@ -273,10 +301,13 @@ GuardedColumnLayout {
 
         visible: mainWindow.advancedInterface
 
-        anchors.top: customFeeLayout.bottom
-        anchors.topMargin: 15
-        anchors.left: parent.left
-        anchors.right: parent.right
+        anchors {
+            top: customFeeLayout.bottom
+            topMargin: 15
+            left: parent.left
+            right: parent.right
+        }
+
 
         CheckBox {
             id: customMixinCountCheckbox
@@ -285,10 +316,14 @@ GuardedColumnLayout {
         }
 
         RowLayout {
+
+            anchors {
+                left: parent.left
+                right: parent.horizontalCenter
+            }
+
             visible: customMixinCountCheckbox.checked
 
-            anchors.left: parent.left
-            anchors.right: parent.horizontalCenter
 
             Label {
                 id: customMixinCountLabel
@@ -299,10 +334,12 @@ GuardedColumnLayout {
             Slider {
                 id: customMixinCountSlider
 
-                anchors.left: customMixinCountLabel.right
-                anchors.leftMargin: 3
+                anchors {
+                    left: customMixinCountLabel.right
+                    leftMargin: 3
 
-                anchors.right: parent.horizontalCenter
+                    right: parent.horizontalCenter
+                }
 
                 stepSize: 1
                 minimumValue: 0
@@ -313,8 +350,11 @@ GuardedColumnLayout {
             Label {
                 text: customMixinCountSlider.value
 
-                anchors.left: customMixinCountSlider.right
-                anchors.leftMargin: 3
+                anchors {
+                    left: customMixinCountSlider.right
+                    leftMargin: 3
+                }
+
             }
 
 
@@ -369,8 +409,6 @@ GuardedColumnLayout {
         color: "red"
         text: lastTransferError
     }
-
-
 
 
 

@@ -11,10 +11,13 @@ AbstractPage {
 
     ColumnLayout {
 
-        anchors.left: parent.left
-        anchors.right: parent.right
-        anchors.top: parent.top
-        anchors.topMargin: 45
+        anchors {
+            left: parent.left
+            right: parent.right
+
+            top: parent.top
+            topMargin: 45
+        }
 
         Label {
             text: qsTr("Write or paste your seed in the field above.\nYour seed should be a set of space separated shorts works")
@@ -32,8 +35,11 @@ AbstractPage {
         TextArea {
             id: seedTextarea
 
-            anchors.left: parent.left
-            anchors.right: parent.right
+            anchors {
+                left: parent.left
+                right: parent.right
+            }
+
         }
 
 

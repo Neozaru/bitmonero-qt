@@ -29,8 +29,11 @@ ApplicationWindow {
 
         anchors.fill: parent
 
-        border.width: 1
-        border.color: "black"
+        border {
+            width: 1
+            color: "black"
+        }
+
         smooth: true
 
         Label {

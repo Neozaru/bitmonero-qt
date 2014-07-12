@@ -188,9 +188,10 @@ ApplicationWindow {
         property string unavailableWalletErrorMessage: wallet.ready ? "" : qsTr("Your Wallet is unreachable. Wait a few seconds or restart Monero Wallet")
         property string unavailableMinerErrorMessage: miner.ready ? "" : qsTr("Your Miner is unreachable. Wait for sync or restart Monero Wallet")
 
-        anchors.fill: parent
-
-        anchors.margins: Qt.platform.os === "osx" ? 12 : 2
+        anchors {
+            fill: parent
+            margins: Qt.platform.os === "osx" ? 12 : 2
+        }
 
         Tab {
             id: controlPage

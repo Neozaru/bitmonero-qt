@@ -12,12 +12,18 @@ Window {
     modality: Qt.WindowModal
 
     ColumnLayout {
-        anchors.fill: parent
-        anchors.margins: 10
+
+        anchors {
+            fill: parent
+            margins: 10
+        }
 
         RowLayout {
-            anchors.left: parent.left
-            anchors.right: parent.right
+
+            anchors {
+                left: parent.left
+                right: parent.right
+            }
 
             Label {
                 text: qsTr("Daemon uri")
@@ -34,8 +40,12 @@ Window {
         }
 
         RowLayout {
-            anchors.left: parent.left
-            anchors.right: parent.right
+
+            anchors {
+                left: parent.left
+                right: parent.right
+            }
+
 
             Label {
                 text: qsTr("Daemon port")
@@ -54,9 +64,12 @@ Window {
 
 
         RowLayout {
-            anchors.bottom: parent.bottom
-            anchors.left: parent.left
-            anchors.right: parent.right
+
+            anchors {
+                bottom: parent.bottom
+                left: parent.left
+                right: parent.right
+            }
 
             Button {
                 anchors.left: parent.left

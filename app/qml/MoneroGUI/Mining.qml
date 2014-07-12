@@ -16,10 +16,13 @@ GuardedColumnLayout {
     RowLayout {
         id: toggleMiningLayout
 
-        anchors.top: parent.top
-        anchors.topMargin: 20
+        anchors {
+            top: parent.top
 
-        anchors.bottomMargin: 15;
+            topMargin: 20
+            bottomMargin: 15;
+        }
+
 
         Switch {
             id: toggleMiningSwitch
@@ -86,14 +89,19 @@ GuardedColumnLayout {
         RowLayout {
             id: threadsSliderLayout
 
-            anchors.left: parent.left
-            anchors.right: parent.right
+            anchors {
+                left: parent.left
+                right: parent.right
+            }
 
 
             Slider {
                 id: nbthreadsSlider
-                anchors.left: parent.left
-                anchors.right: parent.horizontalCenter
+
+                anchors {
+                    left: parent.left
+                    right: parent.horizontalCenter
+                }
 
                 minimumValue: 1
                 maximumValue: miningControlLayout.max_threads
@@ -116,8 +124,11 @@ GuardedColumnLayout {
                     handle: Rectangle {
                         anchors.centerIn: parent
                         color: control.pressed ? "white" : "lightgray"
-                        border.color: "gray"
-                        border.width: 2
+                        border {
+                            color: "gray"
+                            width: 2
+                        }
+
                         width: 20
                         height: 20
                         radius: 12
@@ -128,15 +139,21 @@ GuardedColumnLayout {
 
             Label {
 
-                anchors.left: nbthreadsSlider.right
-                anchors.leftMargin: 10
+                anchors {
+                    left: nbthreadsSlider.right
+                    leftMargin: 10
+                }
+
 
                 text: parseInt(miningControlLayout.threads_count)
 
                 color: miningControlLayout.threads_count > 8 ? "red" : (miningControlLayout.threads_count > 4 ? "purple" : "black")
-                font.bold: miningControlLayout.threads_count > 8
 
-                font.pixelSize: 16
+                font {
+                    bold: miningControlLayout.threads_count > 8
+                    pixelSize: 16
+                }
+
             }
         }
 
@@ -152,8 +169,10 @@ GuardedColumnLayout {
         CheckBox {
             id: useAnotherAddressCheckbox
 
-            anchors.top: threadsSliderLayout.bottom
-            anchors.topMargin: 20
+            anchors {
+                top: threadsSliderLayout.bottom
+                topMargin: 20
+            }
 
             text: qsTr("Enter mining address manually")
             checked: miner.address.length == 0
@@ -161,10 +180,13 @@ GuardedColumnLayout {
 
         RowLayout {
 
-            anchors.left: parent.left
-            anchors.right: parent.right
-            anchors.top: useAnotherAddressCheckbox.bottom
-            anchors.topMargin: 5
+
+            anchors {
+                left: parent.left
+                right: parent.right
+                top: useAnotherAddressCheckbox.bottom
+                topMargin: 5
+            }
 
             visible: useAnotherAddressCheckbox.checked
             Button {
@@ -176,8 +198,10 @@ GuardedColumnLayout {
             AddressTextField {
                 id: miningAddressInput
 
-                anchors.left: pasteMiningAddressButton.right
-                anchors.right: parent.right
+                anchors {
+                    left: pasteMiningAddressButton.right
+                    right: parent.right
+                }
 
                 placeholderText: qsTr("Target address for mining")
                 text: miner.address

@@ -15,11 +15,14 @@ GuardedColumnLayout {
     Image {
         id: overviewImage
 
-        anchors.margins: 10
 
-//        anchors.left: parent.left
-        anchors.top: parent.top
-        anchors.right: parent.right
+        anchors {
+            top: parent.top
+            right: parent.right
+
+            margins: 10
+        }
+
 
         source: "../res/MoneroLogoSquare.png"
         fillMode: Image.PreserveAspectFit
@@ -32,8 +35,11 @@ GuardedColumnLayout {
     ColumnLayout {
         id: balanceLayout
 
-        anchors.top: parent.top
-        anchors.topMargin: overviewImage.height / 2
+        anchors {
+            top: parent.top
+            topMargin: overviewImage.height / 2
+        }
+
 
         Label {
             text: qsTr("You have", "you have xxx XMR") + " : "
@@ -81,8 +87,11 @@ GuardedColumnLayout {
 
    ColumnLayout {
 
-       anchors.top: balanceLayout.bottom
-       anchors.topMargin: 20
+       anchors {
+           top: balanceLayout.bottom
+           topMargin: 20
+       }
+
 
        Label {
            text: qsTr("Your Monero address") + " : "

@@ -48,8 +48,6 @@ AbstractPage {
                     settings.wallet_password = passwordToConfirm;
                     goToNext();
                     return;
-
-//                    break;
                 case 1:
                     createWalletError =  qsTr("File error : Invalid wallet name or path.")
                     break;

@@ -19,8 +19,10 @@ ApplicationWindow {
     StackView {
         id: myStack
 
-        anchors.fill: parent;
-        anchors.margins: 10;
+        anchors {
+            fill: parent;
+            margins: 10;
+        }
 
         delegate: StackViewDelegate {
             function transitionFinished(properties)
@@ -56,9 +58,12 @@ ApplicationWindow {
             Image {
                 id: wizardImage
 
-                anchors.margins: 10
-                anchors.left: parent.left
-                anchors.right: parent.right
+                anchors {
+                    margins: 10
+                    left: parent.left
+                    right: parent.right
+                }
+
 
                 source: "../res/MoneroLogo.png"
                 fillMode: Image.PreserveAspectFit
@@ -81,10 +86,13 @@ ApplicationWindow {
 
             RowLayout {
 
-                anchors.top: welcomeLabel.bottom;
-                anchors.topMargin: 10
+                anchors {
+                    top: welcomeLabel.bottom;
+                    topMargin: 10
 
-                anchors.horizontalCenter: parent.horizontalCenter
+                    horizontalCenter: parent.horizontalCenter
+                }
+
 
                 Button {
                     text: qsTr("Create new wallet", "create new wallet button")
@@ -240,8 +248,10 @@ ApplicationWindow {
                     TextArea {
                         id: seedDisplayTextArea
 
-                        anchors.left: parent.left
-                        anchors.right: parent.right
+                        anchors {
+                            left: parent.left
+                            right: parent.right
+                        }
 
                         readOnly: true
                         text: wallet_handler.ephemeral_seed

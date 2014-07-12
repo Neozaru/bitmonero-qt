@@ -53,12 +53,13 @@ ColumnLayout {
 
         id: transactionsTable
 
-        anchors.top: controlsLayout.bottom
-        anchors.topMargin: 5
-
-        anchors.bottom: parent.bottom
-        anchors.left: parent.left
-        anchors.right: parent.right
+        anchors {
+            top: controlsLayout.bottom
+            topMargin: 5
+            bottom: parent.bottom
+            left: parent.left
+            right: parent.right
+        }
 
         alternatingRowColors: true
 

@@ -8,9 +8,10 @@ AbstractPage {
 
     ColumnLayout {
 
-
-    anchors.topMargin: 45
-    anchors.centerIn: parent
+        anchors {
+            topMargin: 45
+            centerIn: parent
+        }
 
         Label {
             text:  qsTr("Choose an import method.\n Your can either import an existing wallet (file)\nor use a previoulsy generated seed.")
