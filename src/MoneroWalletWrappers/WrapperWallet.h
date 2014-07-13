@@ -13,7 +13,7 @@ class WrapperWallet : public WalletInterface
 {
     Q_OBJECT
 public:
-    WrapperWallet(WalletModel& pModel, const WalletSettings& pSettings) : WalletInterface(pModel), wallet(NULL), settings(pSettings) {}
+    WrapperWallet(WalletModel& pModel, const WalletSettings& pSettings, const MoneroInterface& pMoneroInterface) : WalletInterface(pModel,pMoneroInterface), wallet(NULL), settings(pSettings) {}
      ~WrapperWallet();
 
     void getBalance();

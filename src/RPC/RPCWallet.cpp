@@ -7,9 +7,9 @@
 
 #include "Models/TransactionModel.h"
 
-RPCWallet::RPCWallet(WalletModel& pModel, const WalletSettings& pSettings)
+RPCWallet::RPCWallet(WalletModel& pModel, const WalletSettings& pSettings, const MoneroInterface& pMoneroInterface)
 //    : WalletInterface(pModel), wallet_handler(pSettings), settings(pSettings),ready(false), rpc(pSettings.getWalletUri(), pSettings.getWalletPort())
-    : WalletInterface(pModel), settings(pSettings),ready(false), rpc(pSettings.getWalletUri(), pSettings.getWalletPort())
+    : WalletInterface(pModel,pMoneroInterface), settings(pSettings), ready(false), rpc(pSettings.getWalletUri(), pSettings.getWalletPort())
 
 {
 

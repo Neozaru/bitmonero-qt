@@ -29,7 +29,6 @@ MoneroGUI::~MoneroGUI() {
             delete miner_interface;
         }
 
-
         if (wallet_interface) {
             qWarning() << "Deleting wallet interface ...";
             delete wallet_interface;
@@ -44,7 +43,6 @@ MoneroGUI::~MoneroGUI() {
             qWarning() << "Deleting monero interface ...";
             delete monero_interface;
         }
-
 
 
     }
@@ -122,7 +120,13 @@ void MoneroGUI::createWallet() {
         wallet_interface = NULL;
     }
 
-    WalletInterfaceBuilder lWalletInterfaceBuilder(wallet_model,settings);
+    if (monero_interface == NULL) {
+        qCritical() << "Trying to instanciate wallet interface but Monero is not initialized";
+        dialogError(-1);
+        return;
+    }
+
+    WalletInterfaceBuilder lWalletInterfaceBuilder(wallet_model,settings,*monero_interface);
     wallet_interface = lWalletInterfaceBuilder.buildInterface();
 }
 

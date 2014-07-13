@@ -10,6 +10,7 @@
 #include "MetaInterface.h"
 #include "Models/WalletModel.h"
 #include "Models/TransactionModel.h"
+#include "Interfaces/MoneroInterface.h"
 
 /**
  * @brief Handles a wallet instance.
@@ -21,7 +22,7 @@ class WalletInterface : public MetaInterface
 {
 
 public:
-    WalletInterface(WalletModel& pWalletModel) : wallet_model(pWalletModel) {
+    WalletInterface(WalletModel& pWalletModel, const MoneroInterface& pMoneroInterface) : wallet_model(pWalletModel), monero_interface(pMoneroInterface) {
         pWalletModel.setWalletInterface(this);
     }
 
@@ -100,8 +101,14 @@ protected:
 
     }
 
+//    void setMoneroInterface(MoneroInterface* pMoneroInterface) {
+//        monero_interface = pMoneroInterface;
+//    }
+
 private:
     WalletModel& wallet_model;
+
+    const MoneroInterface& monero_interface;
 };
 
 #endif // WALLETINTERFACE_HH

@@ -196,8 +196,6 @@ ApplicationWindow {
         Tab {
             id: controlPage
 
-
-
             title: qsTr("Overview", "overview tab")
             Overview {
                 enabled: wallet.ready

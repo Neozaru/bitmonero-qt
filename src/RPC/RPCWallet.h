@@ -11,6 +11,9 @@
 #include "Interfaces/WalletInterface.h"
 
 
+#include "Interfaces/MoneroInterface.h"
+
+
 #include "JsonRPCCommunicator.h"
 #include "JsonRPCRequest.h"
 #include "WalletSettings.h"
@@ -22,7 +25,7 @@ class RPCWallet : public WalletInterface
 {
     Q_OBJECT
 public:
-    RPCWallet(WalletModel& pModel, const WalletSettings& pSettings);
+    RPCWallet(WalletModel& pModel, const WalletSettings& pSettings, const MoneroInterface& pMoneroInterface);
     ~RPCWallet();
 
     void transfer(unsigned long long pAmount, const QString& pAddress, unsigned long long pFee, const QString& pPaymentId, int pMixinCount);
