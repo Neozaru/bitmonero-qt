@@ -28,8 +28,8 @@ ColumnLayout {
             enabled: transactionsTable.currentRow >= 0
             onClicked: {
 
-
                 var hash = transactionsTable.model[transactionsTable.currentRow].id
+
                 console.log(hash)
                 /* TODO : Make a C++ interface for clipboard in order to remove this UGLY hack */
                 stubCopyPasteTextEdit.text = hash;
@@ -48,7 +48,6 @@ ColumnLayout {
 
     }
 
-
     TableView {
 
         id: transactionsTable
@@ -62,19 +61,41 @@ ColumnLayout {
         }
 
         alternatingRowColors: true
+        sortIndicatorColumn: 1
+        sortIndicatorOrder: Qt.DescendingOrder
+        sortIndicatorVisible: true
 
 
         model: (mainWindow.advancedInterface && advancedViewCheckbox.checked) ? wallet.transactions : wallet.aggregated_transactions
-        TableViewColumn {
 
-            role: "type";
-            title: qsTr("Type", "(tx list)");
-            width: 45
+
+        TableViewColumn {
+            role: "block_height" ;
+            title: qsTr("Block", "(tx list)");
+            width: 80;
+        }
+
+        TableViewColumn {
+            role: "date" ;
+            title: qsTr("Date", "(tx list)");
+            width: 120;
+
 
             delegate: Text {
-                text: styleData.value ? styleData.value : " ?"
+                text: Qt.formatDateTime(styleData.value)
             }
         }
+
+//        TableViewColumn {
+
+//            role: "type";
+//            title: qsTr("Type", "(tx list)");
+//            width: 45
+
+//            delegate: Text {
+//                text: styleData.value ? styleData.value : " ?"
+//            }
+//        }
 
         TableViewColumn{
 
@@ -101,7 +122,6 @@ ColumnLayout {
             title: qsTr("Tx hash", "(tx list)");
             width: 750;
         }
-
 
 
     }

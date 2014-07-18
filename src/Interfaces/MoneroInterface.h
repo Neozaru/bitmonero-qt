@@ -2,6 +2,7 @@
 #define MONEROINTERFACE_HH
 
 #include <ctype.h>
+#include <QDateTime>
 
 #include "MetaInterface.h"
 #include "Models/MoneroModel.h"
@@ -16,6 +17,7 @@ public:
     MoneroInterface(MoneroModel& pMoneroModel) : monero_model(pMoneroModel) {}
     virtual ~MoneroInterface() {}
 
+    virtual QDateTime getBlockDateTime(unsigned int pBlockIndex) const = 0;
 
 protected:
     void onInfoUpdated(unsigned int pBlockchainHeight, unsigned int pTargetBlockchainHeight, unsigned int pDifficulty, unsigned int pIncomingConnections, unsigned int pOutgoingConnections) {

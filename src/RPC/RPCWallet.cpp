@@ -113,12 +113,17 @@ void RPCWallet::getIncomingTransfers(const QString& pFilter) {
             return;
         }
 
-        QList<TransactionModel*> lNewTransactions;
+        QList<Transaction> lNewTransactions;
         QJsonArray lTransfersJson = pJsonResponse["transfers"].toArray();
-        for ( const QJsonValueRef& lTransJsonRef : lTransfersJson ) {
+        for (const QJsonValueRef& lTransJsonRef : lTransfersJson) {
 
-            const QJsonObject lTransJson = lTransJsonRef.toObject();
-            lNewTransactions.append(new TransactionModel(lTransJson["tx_hash"].toString(),lTransJson["amount"].toDouble(),lTransJson["spent"].toBool(), false));
+            const QJsonObject& lTransJson = lTransJsonRef.toObject();
+            try {
+                lNewTransactions.append(Transaction::fromJson(lTransJson));
+            }
+            catch(std::invalid_argument e) {
+                qWarning() << "Error while parsing transaction" << QString::fromStdString(e.what());
+            }
         }
 
         this->onIncomingTransfersUpdated(lNewTransactions);
@@ -126,7 +131,6 @@ void RPCWallet::getIncomingTransfers(const QString& pFilter) {
     });
 
 }
-
 
 
 

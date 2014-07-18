@@ -97,9 +97,9 @@ void WrapperWallet::getPayments(const QString& pPaymentId) {
 void WrapperWallet::getIncomingTransfers(const QString& pFilter) {
     const std::vector<Monero::Transfer>& lTransfers = wallet->getIncomingTransfers();
 
-    QList<TransactionModel*> lTransfersModels;
-    for ( Monero::Transfer lTransfer : lTransfers ) {
-        lTransfersModels.append(new TransactionModel(QString::fromStdString(lTransfer.transaction_id), lTransfer.amount_mini, !lTransfer.spent, false));
+    QList<Transaction> lTransfersModels;
+    for (Monero::Transfer lTransfer : lTransfers) {
+        lTransfersModels.append(Transaction(lTransfer.block_height, QString::fromStdString(lTransfer.transaction_id), lTransfer.amount_mini, !lTransfer.spent));
     }
 
     this->onIncomingTransfersUpdated(lTransfersModels);

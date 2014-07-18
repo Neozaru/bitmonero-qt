@@ -18,7 +18,8 @@ void JsonRPCRequest::onRequestFinished() {
 //        qDebug() << lReply->readAll();
     }
     else {
-        QByteArray lData =     lReply->readAll();
+        QByteArray lData = lReply->readAll();
+        delete lReply;
 //        qDebug() << "Server response : ";
 //        qDebug() << QString(lData).left(1024);
         QJsonDocument lResJson = QJsonDocument::fromJson(lData);
@@ -41,6 +42,9 @@ void JsonRPCRequest::onRequestFinished() {
 
         error = QNetworkReply::NetworkError::NoError;
         emit jsonResponseReceived(lJsonObj,original_params);
+
+        /* Don't use a request after processing events */
+        delete this;
 
     }
 

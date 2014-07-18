@@ -92,6 +92,8 @@ public:
 
         /* Basic comparison : TODO */
         if ( transactions.size() != pTransactions.size() ) {
+
+            qDeleteAll(transactions);
             transactions = pTransactions;
             emit transactionsChanged(pTransactions);
         }
@@ -102,6 +104,8 @@ public:
 
         /* Basic comparison : TODO */
         if ( aggregated_transactions.size() != pAggregatedTransactions.size() ) {
+
+            qDeleteAll(aggregated_transactions);
             aggregated_transactions = pAggregatedTransactions;
             emit aggregatedTransactionsChanged(pAggregatedTransactions);
         }
@@ -146,6 +150,7 @@ void setReady(bool pReady)
 }
 
 private:
+
     WalletInterface* wallet_interface;
 
     double balance;

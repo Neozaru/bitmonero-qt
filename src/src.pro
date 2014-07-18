@@ -24,7 +24,10 @@ SOURCES += \
     Models/TransactionModel.cpp \
     Models/InfoWalletModel.cpp \
     Models/WalletHandlerModel.cpp \
-    Models/ApplicationModel.cpp
+    Models/ApplicationModel.cpp \
+    RPC/BlocksProcessor.cpp \
+    Common/Block.cpp \
+    Common/Transaction.cpp
 
 libMoneroWallet:SOURCES += MoneroWalletWrappers/WrapperWallet.cpp
 libMoneroWallet:SOURCES += MoneroWalletWrappers/WrapperWalletHandler.cpp
@@ -59,7 +62,10 @@ HEADERS += \
     Interfaces/WalletHandlerInterface.h \
     Models/WalletHandlerModel.h \
     Models/ApplicationModel.h \
-    Interfaces/MetaInterface.h
+    Interfaces/MetaInterface.h \
+    RPC/BlocksProcessor.h \
+    Common/Block.h \
+    Common/Transaction.h
 
 
 libMoneroWallet:HEADERS += MoneroWalletWrappers/WrapperWallet.h

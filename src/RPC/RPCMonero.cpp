@@ -1,5 +1,7 @@
 #include "RPCMonero.h"
 
+#include <memory>
+
 #include <QString>
 #include <QtNetwork/QNetworkReply>
 
@@ -16,7 +18,7 @@
 #include "JsonRPCRequest.h"
 
 RPCMonero::RPCMonero(MoneroModel& pMoneroModel, const WalletSettings& pSettings)
-    : MoneroInterface(pMoneroModel), daemon_handler(pSettings), rpc(pSettings.getMoneroUri(),pSettings.getMoneroPort())
+    : MoneroInterface(pMoneroModel), daemon_handler(pSettings), rpc(pSettings.getMoneroUri(),pSettings.getMoneroPort()), blockchain_height(0), last_pulled_block(0), block_pull_in_process(false)
 {
     should_spawn_daemon = pSettings.shouldSpawnDaemon();
 }
@@ -38,8 +40,11 @@ void RPCMonero::getInfo()
 
         if ( lStatus == "OK" ) {
 
-            this->onReady();
+            unsigned int lBlockChainHeight = pJsonResponse["height"].toInt();
 
+            blockchainHeightUpdated(lBlockChainHeight);
+
+            this->onReady();
 
             this->onInfoUpdated(
                 pJsonResponse["height"].toInt(),
@@ -58,11 +63,20 @@ void RPCMonero::getInfo()
 
 }
 
+QDateTime RPCMonero::getBlockDateTime(unsigned int pBlockIndex) const {
+
+    if (!blocks_processor.isBlockProcessed(pBlockIndex)) {
+        return QDateTime();
+    }
+
+    return QDateTime::fromTime_t(blocks_processor.getBlockTimestamp(pBlockIndex));
+}
+
 void RPCMonero::saveBlockchain()
 {
 
     JsonRPCRequest* lReq = rpc.sendRequest("save_bc",QJsonObject(), true);
-    QObject::connect(lReq,&JsonRPCRequest::jsonResponseReceived,[this](const QJsonObject pJsonResponse) {
+    QObject::connect(lReq, &JsonRPCRequest::jsonResponseReceived,[this](const QJsonObject pJsonResponse) {
         //NOP
     });
 
@@ -72,8 +86,6 @@ void RPCMonero::saveBlockchain()
 
 void RPCMonero::enable()
 {
-
-
 
     if (should_spawn_daemon) {
 
@@ -101,3 +113,104 @@ void RPCMonero::enable()
     savebc_timer.start(1200000);
 
 }
+
+
+void RPCMonero::blockchainHeightUpdated(unsigned int pNewHeight)
+{
+    int lDifference = pNewHeight - blockchain_height;
+
+//    TODO: For debug
+    if (lDifference < 1) {
+        return;
+    }
+
+    qDebug() << "New blockchain height : " << pNewHeight << ". Difference : " << lDifference;
+
+    if (lDifference <= 1) {
+        return;
+    }
+
+
+    /* If high difference, launch parallel processing */
+    if (lDifference >= 100) {
+        pullBlocks(blockchain_height, pNewHeight-1, 10);
+    }
+    else {
+        pullBlocks(blockchain_height, pNewHeight-1);
+    }
+
+    blockchain_height = pNewHeight;
+}
+
+void RPCMonero::pullBlock(unsigned int pIndex)
+{
+
+    if (blocks_processor.isBlockProcessed(pIndex)) {
+        qDebug() << "Block already processed" << pIndex;
+        emit blocks_processor.blockProcessed(pIndex);
+        return;
+    }
+
+    QJsonObject lParams;
+    lParams["height"] = QJsonValue::fromVariant(pIndex);
+    JsonRPCRequest* lReq = rpc.sendRequest("getblockheaderbyheight",lParams);
+    QObject::connect(lReq, &JsonRPCRequest::jsonResponseReceived,[this, lReq, pIndex](const QJsonObject pJsonResponse) {
+
+        const QString& lStatus = pJsonResponse["status"].toString();
+
+        if ( lStatus == "OK" ) {
+
+            try {
+                const Block lBlock = Block::fromJson(pJsonResponse);
+                blocks_processor.processBlock(lBlock);
+            }
+            catch(std::runtime_error e) {
+                qCritical() << "Block pull aborted.";
+            }
+
+
+        }
+        else {
+            qWarning() << "Bad status for 'getblockheaderbyheight' (" << QString::number(pIndex) << ") : " << lStatus;
+
+        }
+    });
+}
+
+
+void RPCMonero::pullBlocks(unsigned int pStartIndex, unsigned int pEndIndex, unsigned int pParallelRequests)
+{
+
+    if (block_pull_in_process) {
+        qDebug() << "Blocks processing already in process";
+        return;
+    }
+
+    if (pParallelRequests < 1) {
+        pParallelRequests = 1;
+    }
+
+    if (pEndIndex < pStartIndex) {
+        qWarning() << "Asked block pull from " << pStartIndex << " to " << pEndIndex << ". Aborting.";
+        return;
+    }
+
+    block_pull_in_process = true;
+    auto lNextWindowCallback = [this, pEndIndex, pParallelRequests] (unsigned int pBlockIndex) {
+        if(pBlockIndex < pEndIndex) {
+            pullBlock(pBlockIndex+pParallelRequests);
+        }
+        else {
+            block_pull_in_process = false;
+        }
+    };
+    QObject::connect(&blocks_processor, &BlocksProcessor::blockProcessed, lNextWindowCallback);
+
+    for (unsigned int i=0; i<pParallelRequests; i++) {
+        pullBlock(pStartIndex+i);
+    }
+
+
+}
+
+

@@ -11,7 +11,7 @@
 #include "Models/WalletModel.h"
 #include "Models/TransactionModel.h"
 #include "Interfaces/MoneroInterface.h"
-
+#include "Common/Transaction.h"
 /**
  * @brief Handles a wallet instance.
  * Provides wallet-specific methods for interacting with an existing wallet. (balance, transfers, etc)
@@ -59,33 +59,26 @@ protected:
     }
 
 
-    void onIncomingTransfersUpdated(const QList<TransactionModel*>& pTransfers) {
+    void onIncomingTransfersUpdated(const QList<Transaction>& pTransactions) {
 
         QList<QObject*> lAbstractTransfersList;
-        for( TransactionModel* lTransaction : pTransfers ) {
-            lAbstractTransfersList.append(lTransaction);
+        for(const Transaction& lTransaction : pTransactions) {
+            lAbstractTransfersList.append(new TransactionModel(lTransaction));
         }
 
         wallet_model.setTransactions(lAbstractTransfersList);
         qDebug() << "Transactions SET";
 
         /* Aggregates transactions */
-        std::map<QString,TransactionModel*> lTransactionsMap;
-        for( TransactionModel* lTransaction : pTransfers ) {
+        std::map<QString,TransactionModel*> lTransactionsMap = aggregateTransactions(pTransactions);
 
-            if (lTransactionsMap.count(lTransaction->getId()) == 0) {
-                lTransactionsMap[lTransaction->getId()] = new TransactionModel(lTransaction->getId(), 0, true, false);
-            }
-
-            TransactionModel* lAggregatedTransaction = lTransactionsMap[lTransaction->getId()];
-            lAggregatedTransaction->setAmount( lAggregatedTransaction->getAmount() + lTransaction->getAmount() );
-            lAggregatedTransaction->setSpendable( lAggregatedTransaction->isSpendable() && lTransaction->isSpendable() );
-        }
 
         QList<QObject*> lAbstractAggregatedTransfersList;
         for ( std::pair<QString,TransactionModel*> lAggregatedTransaction : lTransactionsMap) {
             lAbstractAggregatedTransfersList.append(lAggregatedTransaction.second);
         }
+
+        qSort(lAbstractAggregatedTransfersList.begin(), lAbstractAggregatedTransfersList.end(), TransactionModel::dereferencedLessThan);
 
         wallet_model.setAggregatedTransactions(lAbstractAggregatedTransfersList);
 
@@ -101,11 +94,26 @@ protected:
 
     }
 
-//    void setMoneroInterface(MoneroInterface* pMoneroInterface) {
-//        monero_interface = pMoneroInterface;
-//    }
-
 private:
+    std::map<QString,TransactionModel*> aggregateTransactions(const QList<Transaction>& pTransactions)
+    {
+        std::map<QString,TransactionModel*> lTransactionsMap;
+        for (const Transaction& lTransaction : pTransactions) {
+
+            if (lTransactionsMap.count(lTransaction.hash) == 0) {
+                lTransactionsMap[lTransaction.hash] = new TransactionModel(
+                                                        lTransaction.block_height, lTransaction.hash, 0, true, false, monero_interface.getBlockDateTime(lTransaction.block_height));
+            }
+
+            TransactionModel* lAggregatedTransaction = lTransactionsMap[lTransaction.hash];
+            lAggregatedTransaction->setAmount(lAggregatedTransaction->getAmount() + lTransaction.amount);
+            lAggregatedTransaction->setSpendable(lAggregatedTransaction->isSpendable() && lTransaction.spendable);
+        }
+
+        return lTransactionsMap;
+    }
+
+
     WalletModel& wallet_model;
 
     const MoneroInterface& monero_interface;
