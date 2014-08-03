@@ -9,8 +9,6 @@ TableView {
     sortIndicatorOrder: Qt.DescendingOrder
     sortIndicatorVisible: true
 
-//    model: (mainWindow.advancedInterface && advancedViewCheckbox.checked) ? wallet.transactions : wallet.aggregated_transactions
-
 
     TableViewColumn {
         role: "block_height" ;
@@ -18,27 +16,6 @@ TableView {
         width: 80;
     }
 
-//    TableViewColumn {
-//        role: "date" ;
-//        title: qsTr("Date", "(tx list)");
-//        width: 120;
-
-
-//        delegate: Text {
-//            text: Qt.formatDateTime(styleData.value)
-//        }
-//    }
-
-//        TableViewColumn {
-
-//            role: "type";
-//            title: qsTr("Type", "(tx list)");
-//            width: 45
-
-//            delegate: Text {
-//                text: styleData.value ? styleData.value : " ?"
-//            }
-//        }
 
     TableViewColumn{
 
