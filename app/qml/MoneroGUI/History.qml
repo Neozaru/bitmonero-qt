@@ -2,6 +2,7 @@ import QtQuick 2.0
 import QtQuick.Controls 1.1
 import QtQuick.Layouts 1.0
 
+import "Common"
 
 ColumnLayout {
 
@@ -39,18 +40,26 @@ ColumnLayout {
             }
         }
 
-        CheckBox {
-            id: advancedViewCheckbox
-
-            visible: mainWindow.advancedInterface
-            text: qsTr("Detailled transfers")
-        }
 
     }
 
-    TableView {
 
-        id: transactionsTable
+    Connections {
+        target: mainWindow
+        onAdvancedInterfaceChanged: {
+            if (mainWindow.advancedInterface) {
+                userTransactionsTabView.addTab("Details", detailledTransfersTab);
+            }
+            else if (userTransactionsTabView.count >= 3) {
+                userTransactionsTabView.removeTab(2);
+
+            }
+        }
+    }
+
+
+    TabView {
+        id: userTransactionsTabView
 
         anchors {
             top: controlsLayout.bottom
@@ -58,73 +67,52 @@ ColumnLayout {
             bottom: parent.bottom
             left: parent.left
             right: parent.right
+            margins: Qt.platform.os === "osx" ? 12 : 2
         }
 
-        alternatingRowColors: true
-        sortIndicatorColumn: 1
-        sortIndicatorOrder: Qt.DescendingOrder
-        sortIndicatorVisible: true
+        Tab {
+            id: userIncomingTransfersTab
 
+            title: qsTr("Received", "Transaction history tab title")
 
-        model: (mainWindow.advancedInterface && advancedViewCheckbox.checked) ? wallet.transactions : wallet.aggregated_transactions
+            UserTransfersTable {
 
+                id: userIncomingTransfersTable
 
-        TableViewColumn {
-            role: "block_height" ;
-            title: qsTr("Block", "(tx list)");
-            width: 80;
-        }
+                model: wallet.aggregated_incoming_transactions
 
-        TableViewColumn {
-            role: "date" ;
-            title: qsTr("Date", "(tx list)");
-            width: 120;
-
-
-            delegate: Text {
-                text: Qt.formatDateTime(styleData.value)
             }
         }
 
-//        TableViewColumn {
+        Tab {
+            id: userOutgoingTransfersTab
 
-//            role: "type";
-//            title: qsTr("Type", "(tx list)");
-//            width: 45
+            title: qsTr("Sent", "Transaction history tab title2")
 
-//            delegate: Text {
-//                text: styleData.value ? styleData.value : " ?"
-//            }
-//        }
+            UserTransfersTable {
 
-        TableViewColumn{
+                id: userOutgoingTransfersTable
 
-            role: "amount";
-            title: qsTr("Amount", "(tx list)");
-            width: 120;
+                model: wallet.aggregated_outgoing_transactions
 
-            delegate: Text {
-                text: (Math.pow(10,-12)*parseInt(styleData.value)).toFixed(12)
-            }
-        }
-        TableViewColumn{
-            role: "spendable" ;
-            title: qsTr("Spendable","(tx list)") ;
-            width: 40;
-
-            delegate: Text {
-                text: styleData.value ? qsTr("yes") : qsTr("no")
             }
         }
 
-        TableViewColumn {
-            role: "id" ;
-            title: qsTr("Tx hash", "(tx list)");
-            width: 750;
-        }
 
 
     }
 
+
+    Component {
+        id: detailledTransfersTab
+
+        RawTransfersTable {
+
+            id: detailledTransfersTable
+
+            model: wallet.transactions
+
+        }
+    }
 
 }

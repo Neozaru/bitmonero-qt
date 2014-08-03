@@ -69,18 +69,33 @@ protected:
         wallet_model.setTransactions(lAbstractTransfersList);
         qDebug() << "Transactions SET";
 
-        /* Aggregates transactions */
-        std::map<QString,TransactionModel*> lTransactionsMap = aggregateTransactions(pTransactions);
+        /* Aggregates incoming transactions */
+        std::map<QString,TransactionModel*> lIncomingTransactionsMap = aggregateIncomingTransactions(pTransactions);
 
 
-        QList<QObject*> lAbstractAggregatedTransfersList;
-        for ( std::pair<QString,TransactionModel*> lAggregatedTransaction : lTransactionsMap) {
-            lAbstractAggregatedTransfersList.append(lAggregatedTransaction.second);
+        QList<QObject*> lAbstractAggregatedIncomingTransfersList;
+        for ( std::pair<QString,TransactionModel*> lAggregatedTransaction : lIncomingTransactionsMap) {
+            lAbstractAggregatedIncomingTransfersList.append(lAggregatedTransaction.second);
         }
 
-        qSort(lAbstractAggregatedTransfersList.begin(), lAbstractAggregatedTransfersList.end(), TransactionModel::dereferencedLessThan);
+        qSort(lAbstractAggregatedIncomingTransfersList.begin(), lAbstractAggregatedIncomingTransfersList.end(), TransactionModel::dereferencedLessThan);
 
-        wallet_model.setAggregatedTransactions(lAbstractAggregatedTransfersList);
+        wallet_model.setAggregatedIncomingTransactions(lAbstractAggregatedIncomingTransfersList);
+
+
+
+        /* Aggregates outgoing transactions */
+        std::map<unsigned long long,TransactionModel*> lOutgoingTransactionsMap = aggregateOutgoingTransactions(pTransactions);
+
+
+        QList<QObject*> lAbstractAggregatedOutgoingTransfersList;
+        for ( std::pair<unsigned long long,TransactionModel*> lAggregatedTransaction : lOutgoingTransactionsMap) {
+            lAbstractAggregatedOutgoingTransfersList.append(lAggregatedTransaction.second);
+        }
+
+        qSort(lAbstractAggregatedOutgoingTransfersList.begin(), lAbstractAggregatedOutgoingTransfersList.end(), TransactionModel::dereferencedLessThan);
+
+        wallet_model.setAggregatedOutgoingTransactions(lAbstractAggregatedOutgoingTransfersList);
 
     }
 
@@ -95,7 +110,7 @@ protected:
     }
 
 private:
-    std::map<QString,TransactionModel*> aggregateTransactions(const QList<Transaction>& pTransactions)
+    std::map<QString,TransactionModel*> aggregateIncomingTransactions(const QList<Transaction>& pTransactions)
     {
         std::map<QString,TransactionModel*> lTransactionsMap;
         for (const Transaction& lTransaction : pTransactions) {
@@ -113,6 +128,27 @@ private:
         return lTransactionsMap;
     }
 
+    std::map<unsigned long long,TransactionModel*> aggregateOutgoingTransactions(const QList<Transaction>& pTransactions)
+    {
+        std::map<unsigned long long,TransactionModel*> lTransactionsMap;
+        for (const Transaction& lTransaction : pTransactions) {
+
+            if (!lTransaction.spendable && lTransaction.spent_block_height != 0) {
+
+                if (lTransactionsMap.count(lTransaction.spent_block_height) == 0) {
+                    lTransactionsMap[lTransaction.spent_block_height] = new TransactionModel(
+                                                            lTransaction.spent_block_height, "", 0, true, false, monero_interface.getBlockDateTime(lTransaction.spent_block_height));
+                }
+
+                TransactionModel* lAggregatedTransaction = lTransactionsMap[lTransaction.spent_block_height];
+                lAggregatedTransaction->setAmount(lAggregatedTransaction->getAmount() + lTransaction.amount);
+                lAggregatedTransaction->setSpendable(false);
+            }
+
+        }
+
+        return lTransactionsMap;
+    }
 
     WalletModel& wallet_model;
 

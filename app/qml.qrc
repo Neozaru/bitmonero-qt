@@ -28,5 +28,7 @@
         <file>qml/MoneroGUI/ConfirmTransferDialog.qml</file>
         <file>qml/HappyEnding.qml</file>
         <file>qml/MoneroGUI/SettingsWindow.qml</file>
+        <file>qml/MoneroGUI/Common/RawTransfersTable.qml</file>
+        <file>qml/MoneroGUI/Common/UserTransfersTable.qml</file>
     </qresource>
 </RCC>

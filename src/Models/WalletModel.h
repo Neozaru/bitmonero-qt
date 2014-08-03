@@ -19,7 +19,8 @@ class WalletModel : public AbstractModel
     Q_PROPERTY(double unlocked_balance READ getUnlockedBalance WRITE setUnlockedBalance NOTIFY unlockedBalanceChanged)
     Q_PROPERTY(QString address READ getAddress NOTIFY addressChanged)
     Q_PROPERTY(QList<QObject*> transactions READ getTransactions NOTIFY transactionsChanged)
-    Q_PROPERTY(QList<QObject*> aggregated_transactions READ getAggregatedTransactions NOTIFY aggregatedTransactionsChanged)
+    Q_PROPERTY(QList<QObject*> aggregated_incoming_transactions READ getAggregatedIncomingTransactions NOTIFY aggregatedIncomingTransactionsChanged)
+    Q_PROPERTY(QList<QObject*> aggregated_outgoing_transactions READ getAggregatedOutgoingTransactions NOTIFY aggregatedOutgoingTransactionsChanged)
 
 public:
     WalletModel();
@@ -100,26 +101,42 @@ public:
     }
 
     /* Not invokable from QML */
-    void setAggregatedTransactions(const QList<QObject*>& pAggregatedTransactions) {
+    void setAggregatedIncomingTransactions(const QList<QObject*>& pAggregatedTransactions) {
 
         /* Basic comparison : TODO */
-        if ( aggregated_transactions.size() != pAggregatedTransactions.size() ) {
+        if ( aggregated_incoming_transactions.size() != pAggregatedTransactions.size() ) {
 
-            qDeleteAll(aggregated_transactions);
-            aggregated_transactions = pAggregatedTransactions;
-            emit aggregatedTransactionsChanged(pAggregatedTransactions);
+            qDeleteAll(aggregated_incoming_transactions);
+            aggregated_incoming_transactions = pAggregatedTransactions;
+            emit aggregatedIncomingTransactionsChanged(pAggregatedTransactions);
         }
     }
 
+    /* Not invokable from QML */
+    void setAggregatedOutgoingTransactions(const QList<QObject*>& pAggregatedTransactions) {
+
+        /* Basic comparison : TODO */
+        if ( aggregated_outgoing_transactions.size() != pAggregatedTransactions.size() ) {
+
+            qDeleteAll(aggregated_outgoing_transactions);
+            aggregated_outgoing_transactions = pAggregatedTransactions;
+            emit aggregatedOutgoingTransactionsChanged(pAggregatedTransactions);
+        }
+    }
 
     bool isReady() const
     {
         return ready;
     }
 
-    QList<QObject*> getAggregatedTransactions() const
+    QList<QObject*> getAggregatedIncomingTransactions() const
     {
-        return aggregated_transactions;
+        return aggregated_incoming_transactions;
+    }
+
+    QList<QObject*> getAggregatedOutgoingTransactions() const
+    {
+        return aggregated_outgoing_transactions;
     }
 
 signals:
@@ -131,7 +148,8 @@ signals:
     void unlockedBalanceChanged(double unlocked_balance);
 
     void transactionsChanged(QList<QObject*> transactions);
-    void aggregatedTransactionsChanged(QList<QObject*> aggregated_transactions);
+    void aggregatedIncomingTransactionsChanged(QList<QObject*> aggregated_incoming_transactions);
+    void aggregatedOutgoingTransactionsChanged(QList<QObject*> aggregated_outgoing_transactions);
 
     void readyChanged(bool ready);
 
@@ -157,8 +175,11 @@ private:
     QString address;
     double unlocked_balance;
     QList<QObject*> transactions;
-    QList<QObject*> aggregated_transactions;
+    QList<QObject*> aggregated_incoming_transactions;
+    QList<QObject*> aggregated_outgoing_transactions;
+
     bool ready;
+
 };
 
 #endif // WALLET_H

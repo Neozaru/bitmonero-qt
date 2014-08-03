@@ -14,6 +14,7 @@ ApplicationWindow {
 
     property bool advancedInterface: false
 
+//    signal advancedInterfaceToggled(bool enabled)
 
     onClosing: {
         console.log("CLOSING")
@@ -95,6 +96,7 @@ ApplicationWindow {
                 checked: mainWindow.advancedInterface
                 onCheckedChanged: {
                     mainWindow.advancedInterface = checked;
+//                    mainWindow.advancedInterfaceToggled(checked) // This is available in all editors.
                 }
 
             }
