@@ -99,7 +99,7 @@ void WrapperWallet::getIncomingTransfers(const QString& pFilter) {
 
     QList<Transaction> lTransfersModels;
     for (Monero::Transfer lTransfer : lTransfers) {
-        lTransfersModels.append(Transaction(lTransfer.block_height, QString::fromStdString(lTransfer.transaction_id), lTransfer.amount_mini, !lTransfer.spent));
+        lTransfersModels.append(Transaction(lTransfer.block_height, QString::fromStdString(lTransfer.transaction_id), lTransfer.amount_mini, !lTransfer.spent, lTransfer.spent_block_height));
     }
 
     this->onIncomingTransfersUpdated(lTransfersModels);
