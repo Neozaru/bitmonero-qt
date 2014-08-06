@@ -113,7 +113,11 @@ void WrapperWallet::store() {
 
 bool WrapperWallet::refreshWallet() {
 
-//    QtConcurrent::run([this]() {
+    QtConcurrent::run([this]() {
+
+      if (!refresh_mutex.tryLock()) {
+          return;
+      }
 
       qDebug() << "Refreshing wallet...";
 
@@ -121,11 +125,14 @@ bool WrapperWallet::refreshWallet() {
 
       getAddress();
       getBalance();
-      getIncomingTransfers();
 
       qDebug() << "Done Refreshing";
 
-//    });
+      refresh_mutex.unlock();
+
+    });
+
+    getIncomingTransfers();
 
     return true;
 

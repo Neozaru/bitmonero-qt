@@ -2,6 +2,7 @@
 #define WRAPPERWALLET_H
 
 #include <QTimer>
+#include <QMutex>
 
 #include "Interfaces/WalletInterface.h"
 #include "WalletSettings.h"
@@ -34,6 +35,8 @@ private:
     const WalletSettings& settings;
 
     QTimer refresh_timer;
+
+    QMutex refresh_mutex;
 };
 
 #endif // WRAPPERWALLET_H
