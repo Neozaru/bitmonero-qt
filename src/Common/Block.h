@@ -10,7 +10,7 @@ public:
 
     static Block fromJson(const QJsonObject& pJson);
 
-    unsigned int height;
+    unsigned long long height;
     unsigned int timestamp;
 
 

@@ -28,6 +28,8 @@ public:
 
     QDateTime getBlockDateTime(unsigned int pBlockIndex) const;
 
+    void getBlockInfo(unsigned long long pBlockIndex);
+
     void enable();
 
 public slots:
@@ -36,18 +38,18 @@ public slots:
 //    TODO : Move this in another process
     void saveBlockchain();
 
-
 private:
 
 //    void pullBlockByWindow(unsigned int pStartIndex = 1, unsigned int pEndIndex = 0, unsigned int pWindowSize = 10);
-    void pullBlocks(unsigned int pStartIndex, unsigned int pEndIndex, unsigned int pParallelRequests = 1);
-    void pullBlock(unsigned int pIndex);
+//    void pullBlocks(unsigned long longpStartIndex, unsigned long long pEndIndex, unsigned int pParallelRequests = 1);
+//    void pullBlock(unsigned long long pIndex);
 
     void processBlock(const Block& pBlock);
 
 
     void blockchainHeightUpdated(unsigned int pNewHeight);
 
+    void getBlock(unsigned long long pIndex, std::function<void(Block)> pCallback);
 
 
     DaemonHandler daemon_handler;
@@ -62,9 +64,9 @@ private:
     BlocksProcessor blocks_processor;
 
     unsigned int blockchain_height;
-    unsigned int last_pulled_block;
+//    unsigned int last_pulled_block;
 
-    bool block_pull_in_process;
+//    bool block_pull_in_process;
 
 };
 

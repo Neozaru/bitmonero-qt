@@ -14,15 +14,10 @@ public:
 public:
 
     unsigned long long block_height;
-    unsigned long long spent_block_height;
     QString hash;
-
     double amount;
-
     bool spendable;
-
-
-
+    unsigned long long spent_block_height;
 };
 
 #endif // TRANSACTION_H

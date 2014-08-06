@@ -9,9 +9,6 @@
 #include "Interfaces/MinerInterface.h"
 
 #include "RPC/RPCMonero.h"
-//#include "RPC/RPCWallet.h"
-//#include "RPC/RPCMiner.h"
-//#include "RPC/WalletHandlerProcess.h"
 
 #include <QQuickWindow>
 

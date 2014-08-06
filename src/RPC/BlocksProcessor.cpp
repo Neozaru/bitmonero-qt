@@ -8,8 +8,8 @@
 
 QString gBlocksInfoFile("blocksinfo.json");
 
-BlocksProcessor::BlocksProcessor()
-    : blocks_processed_from(0), blocks_processed_to(0)
+BlocksProcessor::BlocksProcessor(tBlockGetter pBlockGetter)
+    : blocks_processed_from(0), blocks_processed_to(0), blockGetter(pBlockGetter), block_pull_in_process(false)
 {
     QObject::connect(this, SIGNAL(blockProcessed(uint)), this, SLOT(onBlockProcessed(uint)));
     loadBlocksInfo();
@@ -80,6 +80,74 @@ bool BlocksProcessor::loadBlocksInfo()
 
 }
 
+void BlocksProcessor::update(unsigned long long pNewHeight)
+{
+    int lDifference = pNewHeight - blocks_processed_to;
+
+
+    /* If high difference, launch parallel processing */
+    if (lDifference >= 100) {
+        pullBlocks(blocks_processed_to+1, pNewHeight, 10);
+    }
+    else {
+        pullBlocks(blocks_processed_to+1, pNewHeight);
+    }
+
+}
+
+void BlocksProcessor::pullBlocks(unsigned long longpStartIndex, unsigned long long pEndIndex, unsigned int pParallelRequests)
+{
+
+    if (block_pull_in_process) {
+        qDebug() << "Blocks processing already in process";
+        return;
+    }
+    //dbug
+//    pParallelRequests =1;
+    if (pParallelRequests < 1) {
+        pParallelRequests = 1;
+    }
+
+    if (pEndIndex < longpStartIndex) {
+        qWarning() << "Asked block pull from " << longpStartIndex << " to " << pEndIndex << ". Aborting.";
+        return;
+    }
+
+    block_pull_in_process = true;
+    auto lNextWindowCallback = [this, pEndIndex, pParallelRequests] (unsigned int pBlockIndex) {
+        if(pBlockIndex < pEndIndex) {
+            pullBlock(pBlockIndex+pParallelRequests);
+        }
+        else {
+            block_pull_in_process = false;
+        }
+    };
+    QObject::connect(this, &BlocksProcessor::blockProcessed, lNextWindowCallback);
+
+    for (unsigned int i=0; i<pParallelRequests; i++) {
+        pullBlock(longpStartIndex+i);
+    }
+
+
+}
+
+void BlocksProcessor::pullBlock(unsigned long long pIndex)
+{
+
+    qDebug() << "Pulling block " << pIndex;
+    if (isBlockProcessed(pIndex)) {
+        qDebug() << "Block already processed" << pIndex;
+        emit blockProcessed(pIndex);
+        return;
+    }
+
+    blockGetter(pIndex, [this](Block pBlock) {
+        processBlock(pBlock);
+    });
+
+}
+
+
 void BlocksProcessor::processBlock(const Block& pBlock)
 {
     /* TODO : Check if async HTTP requests runs in threads or event loop */
@@ -95,6 +163,8 @@ void BlocksProcessor::processBlock(const Block& pBlock)
 
 void BlocksProcessor::onBlockProcessed(unsigned int pBlockIndex)
 {
+    qDebug() << "Processed : " << pBlockIndex;
+
     if (pBlockIndex < blocks_processed_from) {
         blocks_processed_from = pBlockIndex;
     }

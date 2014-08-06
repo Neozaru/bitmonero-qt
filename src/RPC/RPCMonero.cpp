@@ -18,7 +18,8 @@
 #include "JsonRPCRequest.h"
 
 RPCMonero::RPCMonero(MoneroModel& pMoneroModel, const WalletSettings& pSettings)
-    : MoneroInterface(pMoneroModel), daemon_handler(pSettings), rpc(pSettings.getMoneroUri(),pSettings.getMoneroPort()), blockchain_height(0), last_pulled_block(0), block_pull_in_process(false)
+    : MoneroInterface(pMoneroModel), daemon_handler(pSettings), rpc(pSettings.getMoneroUri(),pSettings.getMoneroPort()), blockchain_height(0),
+      blocks_processor(std::bind(&RPCMonero::getBlock, this, std::placeholders::_1, std::placeholders::_2))
 {
     should_spawn_daemon = pSettings.shouldSpawnDaemon();
 }
@@ -117,44 +118,61 @@ void RPCMonero::enable()
 
 void RPCMonero::blockchainHeightUpdated(unsigned int pNewHeight)
 {
-    int lDifference = pNewHeight - blockchain_height;
-
-//    TODO: For debug
-    if (lDifference < 1) {
-        return;
-    }
-
-    qDebug() << "New blockchain height : " << pNewHeight << ". Difference : " << lDifference;
-
-    if (lDifference <= 1) {
-        return;
-    }
-
-
-    /* If high difference, launch parallel processing */
-    if (lDifference >= 100) {
-        pullBlocks(blockchain_height, pNewHeight-1, 10);
-    }
-    else {
-        pullBlocks(blockchain_height, pNewHeight-1);
-    }
-
     blockchain_height = pNewHeight;
+
+    blocks_processor.update(blockchain_height-2);
+
 }
 
-void RPCMonero::pullBlock(unsigned int pIndex)
-{
 
-    if (blocks_processor.isBlockProcessed(pIndex)) {
-        qDebug() << "Block already processed" << pIndex;
-        emit blocks_processor.blockProcessed(pIndex);
-        return;
-    }
+
+//void RPCMonero::getBlock(unsigned long long pIndex, std::function<void(Block)> pCallback) {
+//    getBlockInfo(pIndex);
+//    qDebug() << "GET block " << pIndex;
+//    QObject::connect(this, &MoneroInterface::blockInfoReceived, [pIndex, pCallback](Block pBlockInfo) {
+//        qDebug() << "RECV block " << pIndex << "/" << pBlockInfo.height;
+//        pCallback(pBlockInfo);
+//    });
+//}
+
+//void RPCMonero::getBlockInfo(unsigned long long pBlockIndex)
+//{
+//    QJsonObject lParams;
+//    lParams["height"] = QJsonValue::fromVariant(pBlockIndex);
+//    JsonRPCRequest* lReq = rpc.sendRequest("getblockheaderbyheight",lParams);
+//    QObject::connect(lReq, &JsonRPCRequest::jsonResponseReceived,[this, lReq, pBlockIndex](const QJsonObject pJsonResponse) {
+
+//        const QString& lStatus = pJsonResponse["status"].toString();
+
+//        if ( lStatus == "OK" ) {
+
+//            try {
+//                const Block lBlock = Block::fromJson(pJsonResponse);
+////                blocks_processor.processBlock(lBlock);
+//                this->onBlockInfoReceived(lBlock);
+//            }
+//            catch(std::runtime_error e) {
+//                qCritical() << "Block pull aborted.";
+//            }
+
+
+//        }
+//        else {
+//            qWarning() << "Bad status for 'getblockheaderbyheight' (" << QString::number(pBlockIndex) << ") : " << lStatus;
+
+//        }
+//    });
+//}
+
+
+void RPCMonero::getBlock(unsigned long long pIndex, std::function<void(Block)> pCallback) {
+
+    qDebug() << "GET block " << pIndex;
 
     QJsonObject lParams;
     lParams["height"] = QJsonValue::fromVariant(pIndex);
     JsonRPCRequest* lReq = rpc.sendRequest("getblockheaderbyheight",lParams);
-    QObject::connect(lReq, &JsonRPCRequest::jsonResponseReceived,[this, lReq, pIndex](const QJsonObject pJsonResponse) {
+    QObject::connect(lReq, &JsonRPCRequest::jsonResponseReceived,[this, pIndex, pCallback](const QJsonObject pJsonResponse) {
 
         const QString& lStatus = pJsonResponse["status"].toString();
 
@@ -162,7 +180,9 @@ void RPCMonero::pullBlock(unsigned int pIndex)
 
             try {
                 const Block lBlock = Block::fromJson(pJsonResponse);
-                blocks_processor.processBlock(lBlock);
+//                blocks_processor.processBlock(lBlock);
+                qDebug() << "RECV block " << pIndex << "/" << lBlock.height;
+                pCallback(lBlock);
             }
             catch(std::runtime_error e) {
                 qCritical() << "Block pull aborted.";
@@ -175,41 +195,19 @@ void RPCMonero::pullBlock(unsigned int pIndex)
 
         }
     });
+
+
+    QObject::connect(this, &MoneroInterface::blockInfoReceived, [pIndex, pCallback](Block pBlockInfo) {
+        qDebug() << "RECV block " << pIndex << "/" << pBlockInfo.height;
+        pCallback(pBlockInfo);
+    });
 }
 
-
-void RPCMonero::pullBlocks(unsigned int pStartIndex, unsigned int pEndIndex, unsigned int pParallelRequests)
+void RPCMonero::getBlockInfo(unsigned long long pBlockIndex)
 {
-
-    if (block_pull_in_process) {
-        qDebug() << "Blocks processing already in process";
-        return;
-    }
-
-    if (pParallelRequests < 1) {
-        pParallelRequests = 1;
-    }
-
-    if (pEndIndex < pStartIndex) {
-        qWarning() << "Asked block pull from " << pStartIndex << " to " << pEndIndex << ". Aborting.";
-        return;
-    }
-
-    block_pull_in_process = true;
-    auto lNextWindowCallback = [this, pEndIndex, pParallelRequests] (unsigned int pBlockIndex) {
-        if(pBlockIndex < pEndIndex) {
-            pullBlock(pBlockIndex+pParallelRequests);
-        }
-        else {
-            block_pull_in_process = false;
-        }
-    };
-    QObject::connect(&blocks_processor, &BlocksProcessor::blockProcessed, lNextWindowCallback);
-
-    for (unsigned int i=0; i<pParallelRequests; i++) {
-        pullBlock(pStartIndex+i);
-    }
-
+    getBlock(pBlockIndex, [this](Block pBlockInfo){
+        this->onBlockInfoReceived(pBlockInfo);
+    });
 
 }
 
